@@ -31,9 +31,7 @@ export const HamburgerContent: FC = () => {
       >
         <section>
           <DropdownMenu.Label
-            className={
-              "animate-fadein pl-4 text-xs leading-[25px] font-medium opacity-50"
-            }
+            className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
           >
             Unit toggles
           </DropdownMenu.Label>
