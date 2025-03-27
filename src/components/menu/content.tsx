@@ -24,14 +24,16 @@ export const HamburgerContent: FC = () => {
     <DropdownMenu.Portal>
       <DropdownMenu.Content
         className={
-          "data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade min-w-[220px] rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] select-none"
+          "data-[side=bottom]:animate-slide-down-and-fade data-[side=left]:animate-slide-left-and-fade data-[side=right]:animate-slide-up-and-fade data-[side=top]:animate-slide-right-and-fade min-w-[220px] rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] select-none"
         }
         sideOffset={5}
         align={"end"}
       >
         <section>
           <DropdownMenu.Label
-            className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
+            className={
+              "animate-fadein pl-4 text-xs leading-[25px] font-medium opacity-50"
+            }
           >
             Unit toggles
           </DropdownMenu.Label>
@@ -66,7 +68,7 @@ export const HamburgerContent: FC = () => {
           </DropdownMenu.Label>
           <DropdownMenu.Item
             className={
-              "relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] text-sm leading-none outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+              "relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pr-[5px] pl-[25px] text-sm leading-none outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
             }
             onClick={() => setLoggedIn((current) => !current)}
           >

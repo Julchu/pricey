@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import { FC } from "react";
 import { Menu } from "@/components/menu/hamburger";
 
