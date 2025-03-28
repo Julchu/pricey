@@ -1,22 +1,34 @@
 "use client";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback } from "react";
 import { DropdownMenu } from "radix-ui";
 import { MassType, Unit, VolumeType } from "@/utils/interfaces";
 import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
 import { usePathname } from "next/navigation";
+import { useUserStore } from "@/providers/user-store-provider";
 
-export const HamburgerContent: FC = () => {
-  const [mass, setMass] = useState<MassType>(Unit.KILOGRAM);
-  const [liquidVolume, setLiquidVolume] = useState<VolumeType>(Unit.LITRE);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+export const UserMenu: FC = () => {
+  const {
+    mass,
+    setMass,
+    liquidVolume,
+    setLiquidVolume,
+    loggedIn,
+    setLoggedIn,
+  } = useUserStore((state) => state);
 
-  const toggleMass = useCallback((massType: string) => {
-    setMass(massType as MassType);
-  }, []);
+  const toggleMass = useCallback(
+    (massType: string) => {
+      setMass(massType as MassType);
+    },
+    [setMass],
+  );
 
-  const toggleLiquidVolume = useCallback((liquidType: string) => {
-    setLiquidVolume(liquidType as VolumeType);
-  }, []);
+  const toggleLiquidVolume = useCallback(
+    (liquidType: string) => {
+      setLiquidVolume(liquidType as VolumeType);
+    },
+    [setLiquidVolume,
+  );
 
   const activePage = usePathname();
 
@@ -33,7 +45,7 @@ export const HamburgerContent: FC = () => {
           <DropdownMenu.Label
             className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
           >
-            Unit toggles
+            Mass
           </DropdownMenu.Label>
           <DropdownMenu.RadioGroup value={mass} onValueChange={toggleMass}>
             <MenuRadioItem value={Unit.KILOGRAM} name={"Kilograms (kg)"} />
@@ -46,6 +58,11 @@ export const HamburgerContent: FC = () => {
             }
           />
 
+          <DropdownMenu.Label
+            className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
+          >
+            Liquids
+          </DropdownMenu.Label>
           <DropdownMenu.RadioGroup
             value={liquidVolume}
             onValueChange={toggleLiquidVolume}
@@ -66,9 +83,9 @@ export const HamburgerContent: FC = () => {
           </DropdownMenu.Label>
           <DropdownMenu.Item
             className={
-              "relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pr-[5px] pl-[25px] text-sm leading-none outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+              "relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
             }
-            onClick={() => setLoggedIn((current) => !current)}
+            onClick={setLoggedIn}
           >
             {loggedIn ? "Login" : "Logout"}
           </DropdownMenu.Item>

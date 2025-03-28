@@ -4,9 +4,7 @@ import { Menu } from "@/components/menu/hamburger";
 
 export const Header: FC = () => {
   return (
-    <header
-      className={"flex h-[3rem] flex-row justify-between bg-gray-100 md:h-auto"}
-    >
+    <header className={"flex h-[3rem] flex-row justify-between md:h-auto"}>
       <Link
         href={"/"}
         className={

@@ -16,6 +16,12 @@ const config: Config = {
         ...mauve,
         ...violet,
       },
+      shadow: {
+        normal: `rgba(99, 99, 99, 0.2) 0px 2px 8px 0px`,
+        hover: `rgba(100, 100, 111, 0.2) 0px 7px 29px 0px`,
+        focus: `rgba(0, 0, 0, 0.35) 0px 5px 15px`,
+        under: `rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px`,
+      },
       keyframes: {
         slideDownAndFade: {
           from: { opacity: "0", transform: "translateY(-2px)" },

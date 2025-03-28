@@ -26,9 +26,10 @@ export type Ingredient = {
   url: string;
 };
 
+// TODO: similar ingredient card to Calculator card
 export const Card: FC<Ingredient> = ({ name }) => {
   return (
-    <div className={"rounded-sm border-amber-50 border-2 bg-red-900"}>
+    <div className={"rounded-sm border-2 border-amber-50 bg-red-900"}>
       {name}
     </div>
   );

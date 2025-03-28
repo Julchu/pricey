@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Card, IngredientsFetch } from "@/components/card";
+import { Card, IngredientsFetch } from "@/components/results/card";
 
 export const Results: FC = async () => {
   const ingredientList = await fetch("https://swapi.py4e.com/api/vehicles/");
@@ -7,12 +7,10 @@ export const Results: FC = async () => {
     await ingredientList.json();
 
   return (
-    <div className={"flex h-full flex-col bg-gray-400"}>
+    <div className={"flex h-full w-full flex-col bg-gray-400 p-4"}>
       <div>Ingredients</div>
 
-      <div
-        className={"grid h-full grid-cols-2 gap-6 overflow-auto bg-green-700"}
-      >
+      <div className={"grid h-full w-full grid-cols-2 gap-6 bg-green-700"}>
         {fetchedIngredients.map((ingredient, index) => {
           return <Card key={`${ingredient.name}_${index}`} {...ingredient} />;
         })}

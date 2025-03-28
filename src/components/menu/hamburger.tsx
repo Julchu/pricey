@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Avatar, DropdownMenu } from "radix-ui";
-import { HamburgerContent } from "@/components/menu/content";
+import { UserMenu } from "@/components/menu/content";
 
 export const Menu: FC<{ firstName: string; lastName: string }> = ({
   firstName,
@@ -16,7 +16,7 @@ export const Menu: FC<{ firstName: string; lastName: string }> = ({
         </Avatar.Root>
       </DropdownMenu.Trigger>
 
-      <HamburgerContent />
+      <UserMenu />
     </DropdownMenu.Root>
   );
 };
