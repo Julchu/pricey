@@ -27,7 +27,7 @@ export const UserMenu: FC = () => {
     (liquidType: string) => {
       setLiquidVolume(liquidType as VolumeType);
     },
-    [setLiquidVolume,
+    [setLiquidVolume],
   );
 
   const activePage = usePathname();

@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix '**/*.{ts,tsx}'",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
