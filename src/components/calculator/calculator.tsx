@@ -30,7 +30,7 @@ export const CalculatorInputs: FC = () => {
   return (
     <div className={"flex h-2/3 flex-col gap-4"}>
       <div className={"flex flex-col"}>
-        <Label.Root className={"text-muted-foreground"} htmlFor={"name"}>
+        <Label.Root className={"text-sm opacity-50"} htmlFor={"name"}>
           Name
         </Label.Root>
         <input
@@ -45,7 +45,7 @@ export const CalculatorInputs: FC = () => {
 
       <div className={"flex flex-row gap-4"}>
         <div className={"flex w-1/2 flex-col"}>
-          <Label.Root className={"text-muted-foreground"} htmlFor={"price"}>
+          <Label.Root className={"text-sm opacity-50"} htmlFor={"price"}>
             Price ($)
           </Label.Root>
           <input
@@ -59,12 +59,12 @@ export const CalculatorInputs: FC = () => {
         </div>
 
         <div className={"flex w-1/2 flex-col"}>
-          <Label.Root className={"text-muted-foreground"} htmlFor={"quantity"}>
+          <Label.Root className={"text-sm opacity-50"} htmlFor={"quantity"}>
             (Quantity)
           </Label.Root>
           <input
             className={
-              "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
+              "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none opacity-50 outline-none"
             }
             placeholder={"6"}
             id={"quantity"}
@@ -75,7 +75,7 @@ export const CalculatorInputs: FC = () => {
 
       <div className={"flex flex-row gap-4"}>
         <div className={"flex w-1/2 flex-col"}>
-          <Label.Root className={"text-muted-foreground"} htmlFor={"capacity"}>
+          <Label.Root className={"text-sm opacity-50"} htmlFor={"capacity"}>
             Capacity
           </Label.Root>
           <input
@@ -89,7 +89,9 @@ export const CalculatorInputs: FC = () => {
         </div>
 
         <div className={"flex w-1/2 flex-col"}>
-          <Label.Root className={"text-muted-foreground"}>Unit</Label.Root>
+          <Label.Root className={"text-sm opacity-50"} htmlFor={"unit"}>
+            Unit
+          </Label.Root>
           <UnitSelect>
             <UnitSelectDropdown />
           </UnitSelect>

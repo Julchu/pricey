@@ -16,7 +16,11 @@ export const UnitSelect: FC<{ children: ReactNode }> = ({ children }) => {
         }
         aria-label="Unit"
       >
-        <Select.Value placeholder={"Kilogram"} defaultValue={Unit.KILOGRAM} />
+        <Select.Value
+          placeholder={"Kilogram"}
+          defaultValue={Unit.KILOGRAM}
+          id={"capacity"}
+        />
         <Select.Icon>
           <ChevronDownIcon />
         </Select.Icon>
