@@ -13,18 +13,17 @@ export enum Unit {
   ITEM = "item",
 }
 
+export type UnitType = MassType | LiquidType | OtherType;
+
+export type OtherType = Unit.ITEM | Unit.CUP | Unit.TABLESPOON | Unit.TEASPOON;
+
 export type MassType = Unit.KILOGRAM | Unit.POUND;
 
-export type VolumeType =
-  | Unit.LITRE
-  | Unit.QUART
-  | Unit.CUP
-  | Unit.TABLESPOON
-  | Unit.TEASPOON;
+export type LiquidType = Unit.LITRE | Unit.QUART;
 
 export type UnitCategory = {
   mass: MassType;
-  volume: VolumeType;
+  volume: LiquidType;
 };
 
 export enum Color {

@@ -1,12 +1,12 @@
 "use client";
-import { FC, useCallback } from "react";
+import { useCallback } from "react";
 import { DropdownMenu } from "radix-ui";
-import { MassType, Unit, VolumeType } from "@/utils/interfaces";
+import { LiquidType, MassType, Unit } from "@/utils/interfaces";
 import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/providers/user-store-provider";
 
-export const UserMenu: FC = () => {
+export const UserMenu = () => {
   const {
     mass,
     setMass,
@@ -25,7 +25,7 @@ export const UserMenu: FC = () => {
 
   const toggleLiquidVolume = useCallback(
     (liquidType: string) => {
-      setLiquidVolume(liquidType as VolumeType);
+      setLiquidVolume(liquidType as LiquidType);
     },
     [setLiquidVolume],
   );
@@ -83,7 +83,7 @@ export const UserMenu: FC = () => {
           </DropdownMenu.Label>
           <DropdownMenu.Item
             className={
-              "relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+              "relative flex h-[25px] cursor-pointer items-center rounded-md p-4 pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
             }
             onClick={setLoggedIn}
           >

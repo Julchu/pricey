@@ -1,15 +1,15 @@
 import { createStore } from "zustand/vanilla";
-import { MassType, Unit, VolumeType } from "@/utils/interfaces";
+import { LiquidType, MassType, Unit } from "@/utils/interfaces";
 
 export type UserState = {
   mass: MassType;
-  liquidVolume: VolumeType;
+  liquidVolume: LiquidType;
   loggedIn: boolean;
 };
 
 export type UserActions = {
   setMass: (mass: MassType) => void;
-  setLiquidVolume: (liquidType: VolumeType) => void;
+  setLiquidVolume: (liquidType: LiquidType) => void;
   setLoggedIn: () => void;
 };
 

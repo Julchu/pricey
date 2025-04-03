@@ -1,11 +1,13 @@
-import { FC } from "react";
 import { DropdownMenu } from "radix-ui";
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-export const MenuRadioItem: FC<{ value: string; name: string }> = ({
+export const MenuRadioItem = ({
   value,
   name,
+}: {
+  value: string;
+  name: string;
 }) => {
   return (
     <DropdownMenu.RadioItem
@@ -23,7 +25,7 @@ export const MenuRadioItem: FC<{ value: string; name: string }> = ({
   );
 };
 
-export const MenuLinks: FC<{ activePage: string }> = ({ activePage }) => {
+export const MenuLinks = ({ activePage }: { activePage: string }) => {
   const links = [
     { href: "/", title: "Ingredients" },
     { href: "/groceries", title: "Groceries" },
@@ -49,10 +51,7 @@ export const MenuLinks: FC<{ activePage: string }> = ({ activePage }) => {
   );
 };
 
-export const MenuLink: FC<{
-  href: string;
-  title: string;
-}> = ({ href, title }) => {
+export const MenuLink = ({ href, title }: { href: string; title: string }) => {
   return (
     <Link href={href}>
       <DropdownMenu.Item

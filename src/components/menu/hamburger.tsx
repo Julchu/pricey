@@ -1,10 +1,12 @@
-import { FC } from "react";
 import { Avatar, DropdownMenu } from "radix-ui";
 import { UserMenu } from "@/components/menu/content";
 
-export const Menu: FC<{ firstName: string; lastName: string }> = ({
+export const Menu = ({
   firstName,
   lastName,
+}: {
+  firstName: string;
+  lastName: string;
 }) => {
   return (
     <DropdownMenu.Root>

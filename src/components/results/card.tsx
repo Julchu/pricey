@@ -1,5 +1,3 @@
-import { FC } from "react";
-
 export type IngredientsFetch = {
   count: number;
   next: string;
@@ -27,9 +25,9 @@ export type Ingredient = {
 };
 
 // TODO: similar ingredient card to Calculator card
-export const Card: FC<Ingredient> = ({ name }) => {
+export const Card = ({ name }: Ingredient) => {
   return (
-    <div className={"rounded-sm border-2 border-amber-50 bg-red-900"}>
+    <div className={"rounded-md border-2 border-amber-50 bg-red-900"}>
       {name}
     </div>
   );

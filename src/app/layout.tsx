@@ -24,7 +24,7 @@ export default function RootLayout({
         <UserStoreProvider>
           <main
             className={
-              "container mx-auto flex h-dvh w-screen flex-col gap-4 p-4"
+              "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
             }
           >
             <Header />
