@@ -1,6 +1,11 @@
 "use client";
 import { Label } from "radix-ui";
-import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
+import {
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { Ingredient, UnitType } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/calculator/unit-select";
 import { useState } from "react";
@@ -14,8 +19,8 @@ export type IngredientFields = {
 };
 
 export const Calculator = ({
-                             ingredientLis,
-                           }: {
+  ingredientLis,
+}: {
   ingredientList: Ingredient[];
 }) => {
   const methods = useForm<IngredientFields>({
@@ -24,13 +29,13 @@ export const Calculator = ({
       price: undefined,
       quantity: undefined,
       capacity: undefined,
-      unit: undefine,
-    ,
+      unit: undefined,
+    },
   });
   const { reset, handleSubmit } = methods;
-  
+
   const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
-  
+
   const onSubmitHandler: SubmitHandler<IngredientFields> = (data) => {
     console.log(data);
     reset();
@@ -67,8 +72,8 @@ export const CalculatorResults = () => {
 };
 
 export const CalculatorInputs = ({
-                                   selectResetKey
-                                 }: {
+  selectResetKey,
+}: {
   selectResetKey: number;
 }) => {
   const {
@@ -77,16 +82,16 @@ export const CalculatorInputs = ({
     resetField,
     setValue,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext();
-  
+
   const resetHandler = () => {
     reset({
       name: "",
       price: "",
       quantity: "",
       capacity: "",
-      unit: ""
+      unit: "",
     });
   };
 
@@ -102,34 +107,34 @@ export const CalculatorInputs = ({
         </Label.Root>
         <Input placeholder={"Pepsi"} id={"name"} type={"text"} /> {/*required*/}
       </div>
-      
+
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"price"}>
             Price ($)
           </Label.Root>
-          
+
           <Input placeholder={"4.99"} id={"price"} type={"number"} />
         </div>
-        
+
         <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"quantity"}>
             (Quantity)
           </Label.Root>
-          
+
           <Input placeholder={"6"} id={"quantity"} type={"number"} />
         </div>
       </div>
-      
+
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"capacity"}>
             Capacity
           </Label.Root>
-          
+
           <Input placeholder={"0.710"} id={"capacity"} type={"number"} />
         </div>
-        
+
         <div>
           <Label.Root className={"text-md opacity-50"} htmlFor={"unit"}>
             Unit
@@ -137,7 +142,7 @@ export const CalculatorInputs = ({
           <UnitSelect selectKey={selectResetKey} />
         </div>
       </div>
-      
+
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
           <button
@@ -150,7 +155,7 @@ export const CalculatorInputs = ({
             Reset
           </button>
         </div>
-        
+
         <div>
           <button
             className={
@@ -167,11 +172,11 @@ export const CalculatorInputs = ({
 };
 
 export const Input = ({
-                        id,
-                        placeholder,
-                        type,
-                        required
-                      }: {
+  id,
+  placeholder,
+  type,
+  required,
+}: {
   id: string;
   placeholder?: string;
   type: string;
@@ -181,13 +186,13 @@ export const Input = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext();
-  
+
   return (
     <input
       className={
-        "text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
+        "text-md rounded-d flex h-10 w-full bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
       }
       id={id}
       placeholder={placeholder}
