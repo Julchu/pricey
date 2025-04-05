@@ -1,119 +1,199 @@
+"use client";
 import { Label } from "radix-ui";
-import { FC } from "react";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
+import { Ingredient, UnitType } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/calculator/unit-select";
-import { UnitSelectDropdown } from "@/components/calculator/unit-select-dropdown";
+import { useState } from "react";
 
-export const Calculator: FC = () => {
+export type IngredientFields = {
+  name: string;
+  price: number;
+  quantity?: number;
+  capacity: number;
+  unit: UnitType;
+};
+
+export const Calculator = ({
+                             ingredientLis,
+                           }: {
+  ingredientList: Ingredient[];
+}) => {
+  const methods = useForm<IngredientFields>({
+    defaultValues: {
+      name: undefined,
+      price: undefined,
+      quantity: undefined,
+      capacity: undefined,
+      unit: undefine,
+    ,
+  });
+  const { reset, handleSubmit } = methods;
+  
+  const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
+  
+  const onSubmitHandler: SubmitHandler<IngredientFields> = (data) => {
+    console.log(data);
+    reset();
+    setSelectResetKey(+new Date());
+  };
+
   return (
-    <div className={"flex h-full flex-col p-4"}>
-      <CalculatorResults />
-      <CalculatorInputs />
-    </div>
+    <FormProvider {...methods}>
+      <form
+        className={"flex h-full flex-col gap-4"}
+        onSubmit={handleSubmit(onSubmitHandler)}
+      >
+        <CalculatorResults />
+        <CalculatorInputs selectResetKey={selectResetKey} />
+      </form>
+    </FormProvider>
   );
 };
 
-export const CalculatorResults: FC = () => {
+export const CalculatorResults = () => {
+  const { watch } = useFormContext();
+
   return (
     <div
       className={
-        "flex h-1/3 flex-col items-center justify-center bg-purple-600"
+        "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
       }
     >
       {/* TODO: preview or existing ingredient card*/}
-      <h2 className="mb-4 text-2xl font-bold">Ingredient name</h2>
+      <h2 className="mb-4 text-2xl font-bold">{watch("name")}</h2>
       <div>Upload image</div>
     </div>
   );
 };
 
-export const CalculatorInputs: FC = () => {
+export const CalculatorInputs = ({
+                                   selectResetKey
+                                 }: {
+  selectResetKey: number;
+}) => {
+  const {
+    register,
+    reset,
+    resetField,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useFormContext();
+  
+  const resetHandler = () => {
+    reset({
+      name: "",
+      price: "",
+      quantity: "",
+      capacity: "",
+      unit: ""
+    });
+  };
+
   return (
-    <div className={"flex h-2/3 flex-col gap-4"}>
-      <div className={"flex flex-col"}>
+    <div
+      className={
+        "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-purple-300 p-4"
+      }
+    >
+      <div className={"grid grid-cols-1"}>
         <Label.Root className={"text-sm opacity-50"} htmlFor={"name"}>
           Name
         </Label.Root>
-        <input
-          className={
-            "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
-          }
-          placeholder={"Pepsi"}
-          id={"name"}
-          type={"text"}
-        />
+        <Input placeholder={"Pepsi"} id={"name"} type={"text"} /> {/*required*/}
       </div>
-
-      <div className={"flex flex-row gap-4"}>
-        <div className={"flex w-1/2 flex-col"}>
+      
+      <div className={"grid grid-cols-2 gap-4"}>
+        <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"price"}>
             Price ($)
           </Label.Root>
-          <input
-            className={
-              "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
-            }
-            placeholder={"4.99"}
-            id={"price"}
-            type={"number"}
-          />
+          
+          <Input placeholder={"4.99"} id={"price"} type={"number"} />
         </div>
-
-        <div className={"flex w-1/2 flex-col"}>
+        
+        <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"quantity"}>
             (Quantity)
           </Label.Root>
-          <input
-            className={
-              "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none opacity-50 outline-none"
-            }
-            placeholder={"6"}
-            id={"quantity"}
-            defaultValue={1}
-          />
+          
+          <Input placeholder={"6"} id={"quantity"} type={"number"} />
         </div>
       </div>
-
-      <div className={"flex flex-row gap-4"}>
-        <div className={"flex w-1/2 flex-col"}>
+      
+      <div className={"grid grid-cols-2 gap-4"}>
+        <div>
           <Label.Root className={"text-sm opacity-50"} htmlFor={"capacity"}>
             Capacity
           </Label.Root>
-          <input
-            className={
-              "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
-            }
-            placeholder={"0.710"}
-            id={"capacity"}
-            defaultValue={1}
-          />
+          
+          <Input placeholder={"0.710"} id={"capacity"} type={"number"} />
         </div>
-
-        <div className={"flex w-1/2 flex-col"}>
-          <Label.Root className={"text-sm opacity-50"} htmlFor={"unit"}>
+        
+        <div>
+          <Label.Root className={"text-md opacity-50"} htmlFor={"unit"}>
             Unit
           </Label.Root>
-          <UnitSelect>
-            <UnitSelectDropdown />
-          </UnitSelect>
+          <UnitSelect selectKey={selectResetKey} />
         </div>
       </div>
-
-      <div className={"flex flex-row justify-evenly"}>
-        <button
-          className={
-            "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
-          }
-        >
-          Reset
-        </button>
-        <button
-          className={
-            "shadow-normal hover:shadow-hover focus:shadow-focus inline-flex h-[35px] items-center justify-center gap-[5px] rounded px-[15px] text-sm leading-none outline-none"
-          }
-        >
-          Save
-        </button>
+      
+      <div className={"grid grid-cols-2 gap-4"}>
+        <div>
+          <button
+            className={
+              "text-md flex h-10 w-full items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
+            }
+            onClick={resetHandler}
+            type={"reset"}
+          >
+            Reset
+          </button>
+        </div>
+        
+        <div>
+          <button
+            className={
+              "text-md flex h-10 w-full items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
+            }
+            type={"submit"}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
+  );
+};
+
+export const Input = ({
+                        id,
+                        placeholder,
+                        type,
+                        required
+                      }: {
+  id: string;
+  placeholder?: string;
+  type: string;
+  required?: boolean;
+}) => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors }
+  } = useFormContext();
+  
+  return (
+    <input
+      className={
+        "text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
+      }
+      id={id}
+      placeholder={placeholder}
+      type={type}
+      required={required}
+      {...register(id)}
+    />
   );
 };

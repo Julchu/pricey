@@ -53,9 +53,7 @@ export const UserMenu = () => {
           </DropdownMenu.RadioGroup>
 
           <DropdownMenu.Separator
-            className={
-              "animate-waggle relative m-[5px] flex h-px bg-black opacity-20"
-            }
+            className={"relative m-[5px] flex h-px bg-black opacity-20"}
           />
 
           <DropdownMenu.Label
@@ -83,7 +81,7 @@ export const UserMenu = () => {
           </DropdownMenu.Label>
           <DropdownMenu.Item
             className={
-              "relative flex h-[25px] cursor-pointer items-center rounded-md p-4 pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+              "text-md relative flex h-[25px] cursor-pointer items-center rounded-md p-4 pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
             }
             onClick={setLoggedIn}
           >

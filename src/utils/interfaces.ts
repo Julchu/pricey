@@ -34,10 +34,10 @@ export enum Color {
 export type ColorMode = Color.LIGHT | Color.DARK;
 
 export enum Season {
-  spring = "spring",
-  winter = "winter",
-  summer = "summer",
-  fall = "fall",
+  SPRING = "spring",
+  WINTER = "winter",
+  SUMMER = "summer",
+  FALL = "fall",
 }
 
 export enum Role {
@@ -58,6 +58,56 @@ export interface Ingredient {
   // createdAt?: Timestamp | FieldValue;
   // lastUpdated?: Timestamp | FieldValue;
 }
+
+export const tempIngredientList: Ingredient[] = [
+  {
+    name: "Tomato",
+    price: 2.5,
+    unit: Unit.KILOGRAM,
+    image: "https://example.com/tomato.jpg",
+    capacity: 5,
+    quantity: 2,
+    userId: "user_123",
+    season: Season.SUMMER,
+  },
+  {
+    name: "Olive Oil",
+    price: 10,
+    unit: Unit.LITRE,
+    image: "https://example.com/olive_oil.jpg",
+    capacity: 1,
+    quantity: 0.5,
+    userId: "user_123",
+  },
+  {
+    name: "Basil",
+    price: 1.5,
+    unit: Unit.ITEM,
+    image: "https://example.com/basil.jpg",
+    capacity: 3,
+    quantity: 1,
+    userId: "user_123",
+    season: Season.SPRING,
+  },
+  {
+    name: "Chicken Breast",
+    price: 7,
+    unit: Unit.KILOGRAM,
+    image: "https://example.com/chicken.jpg",
+    capacity: 2,
+    quantity: 1,
+    userId: "user_123",
+  },
+  {
+    name: "Garlic",
+    price: 3,
+    unit: Unit.KILOGRAM,
+    image: "https://example.com/garlic.jpg",
+    capacity: 2,
+    quantity: 1,
+    userId: "user_123",
+  },
+];
 
 export interface PersonalIngredient extends Ingredient {
   price: number;

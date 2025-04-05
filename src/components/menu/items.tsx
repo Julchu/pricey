@@ -12,7 +12,7 @@ export const MenuRadioItem = ({
   return (
     <DropdownMenu.RadioItem
       className={
-        "relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+        "text-md relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
       }
       value={value}
       onSelect={(event) => event.preventDefault()}
@@ -56,7 +56,7 @@ export const MenuLink = ({ href, title }: { href: string; title: string }) => {
     <Link href={href}>
       <DropdownMenu.Item
         className={
-          "relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] text-sm leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+          "text-md relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
         }
       >
         {title}
