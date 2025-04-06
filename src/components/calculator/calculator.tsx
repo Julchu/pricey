@@ -19,7 +19,7 @@ export type IngredientFields = {
 };
 
 export const Calculator = ({
-  ingredientLis,
+  ingredientList,
 }: {
   ingredientList: Ingredient[];
 }) => {
