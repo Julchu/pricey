@@ -192,7 +192,7 @@ export const Input = ({
   return (
     <input
       className={
-        "text-md rounded-d flex h-10 w-full bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
+        "text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
       }
       id={id}
       placeholder={placeholder}
