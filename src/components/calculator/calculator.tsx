@@ -36,8 +36,12 @@ export const Calculator = ({
 
   const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
 
-  const onSubmitHandler: SubmitHandler<IngredientFields> = (data) => {
+  const onSubmitHandler: SubmitHandler<IngredientFields> = async (data) => {
     console.log(data);
+    await fetch("api/ingredient", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
     reset();
     setSelectResetKey(+new Date());
   };

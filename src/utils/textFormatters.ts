@@ -45,10 +45,10 @@ export const priceConverter = (
     return price * 1.05669;
   else if (fromUnit === Unit.QUART && toUnits?.volume === Unit.LITRE)
     return price / 1.05669;
-  else if (fromUnit === Unit.TABLESPOON && toUnits?.volume === Unit.CUP)
-    return price * 16;
-  else if (fromUnit === Unit.CUP && toUnits?.volume === Unit.TABLESPOON)
-    return price / 16;
+  // else if (fromUnit === Unit.TABLESPOON && toUnits?.volume === Unit.CUP)
+  //   return price * 16;
+  // else if (fromUnit === Unit.CUP && toUnits?.volume === Unit.TABLESPOON)
+  //   return price / 16;
 
   return price;
 };
