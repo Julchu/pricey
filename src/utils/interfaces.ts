@@ -46,14 +46,14 @@ export enum Role {
 }
 
 // Public user data (aka not private auth data)
-export interface User {
+export type User = {
   id: number;
   email: string;
   photoURL?: string;
   name?: string;
   location?: Address;
   preferences?: UserPreferences;
-}
+};
 
 /**
  * @param: prefered units
@@ -66,7 +66,7 @@ export type UserPreferences = {
   displayName?: string;
 };
 
-export interface Ingredient {
+export type Ingredient = {
   id: number;
   name: string;
   userId: number;
@@ -76,15 +76,15 @@ export interface Ingredient {
   unit: Unit;
   image?: string;
   season?: Season;
-}
+};
 
-export interface GroceryList {
+export type GroceryList = {
   id: number;
   name: string;
   ingredients: Ingredient[];
   userId: number;
   public?: boolean;
-}
+};
 
 export type Recipe = {
   id: number;
@@ -94,7 +94,12 @@ export type Recipe = {
   public?: boolean;
 };
 
-export type OmitType = Omit<GroceryList, "name">;
+type FormData<T> = Omit<T, "id" | "userId">;
+
+export type IngredientFormData = FormData<Ingredient>;
+export type UserFormData = FormData<User>;
+export type GroceryListFormData = FormData<GroceryList>;
+export type RecipeFormData = FormData<Recipe>;
 
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
 
@@ -107,8 +112,8 @@ export type OmitType = Omit<GroceryList, "name">;
 /* TODO: ask user if they want to save address of lowest ingredient
  * City, province/state, country
  */
-export interface Address {
+export type Address = {
   locality: string;
   administrative_area_level_1: string;
   country: string;
-}
+};

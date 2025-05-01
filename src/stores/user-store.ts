@@ -1,16 +1,17 @@
 import { createStore } from "zustand/vanilla";
-import { LiquidType, MassType, Unit } from "@/utils/interfaces";
+import { LiquidType, MassType, Unit, UserFormData } from "@/utils/interfaces";
 
 export type UserState = {
   mass: MassType;
   liquidVolume: LiquidType;
-  loggedIn: boolean;
+  userInfo: UserFormData | undefined;
 };
 
 export type UserActions = {
   setMass: (mass: MassType) => void;
   setLiquidVolume: (liquidType: LiquidType) => void;
-  setLoggedIn: () => void;
+  login: (loginInfo: UserFormData) => void;
+  logout: () => void;
 };
 
 export type UserStore = UserState & UserActions;
@@ -22,7 +23,7 @@ export const initUserStore = (): UserState => {
 export const defaultInitState: UserState = {
   mass: Unit.KILOGRAM,
   liquidVolume: Unit.LITRE,
-  loggedIn: false,
+  userInfo: undefined,
 };
 
 export const createUserStore = (initState: UserState = defaultInitState) => {
@@ -30,6 +31,20 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
     ...initState,
     setMass: (massType) => set(() => ({ mass: massType })),
     setLiquidVolume: (liquidType) => set(() => ({ liquidVolume: liquidType })),
-    setLoggedIn: () => set((state) => ({ loggedIn: !state.loggedIn })),
+
+    login: async (loginFormData) => {
+      await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(loginFormData),
+      });
+      set(() => ({ userInfo: loginFormData }));
+    },
+
+    logout: async () => {
+      await fetch("/api/logout", {
+        method: "POST",
+      });
+      set(() => ({ userInfo: undefined }));
+    },
   }));
 };

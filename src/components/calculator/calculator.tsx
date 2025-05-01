@@ -6,24 +6,16 @@ import {
   useForm,
   useFormContext,
 } from "react-hook-form";
-import { Ingredient, UnitType } from "@/utils/interfaces";
+import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/calculator/unit-select";
 import { useState } from "react";
-
-export type IngredientFields = {
-  name: string;
-  price: number;
-  quantity?: number;
-  capacity: number;
-  unit: UnitType;
-};
 
 export const Calculator = ({
   ingredientList,
 }: {
   ingredientList: Ingredient[];
 }) => {
-  const methods = useForm<IngredientFields>({
+  const methods = useForm<IngredientFormData>({
     defaultValues: {
       name: undefined,
       price: undefined,
@@ -33,10 +25,9 @@ export const Calculator = ({
     },
   });
   const { reset, handleSubmit } = methods;
-
   const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
 
-  const onSubmitHandler: SubmitHandler<IngredientFields> = async (data) => {
+  const onSubmitHandler: SubmitHandler<IngredientFormData> = async (data) => {
     console.log(data);
     await fetch("api/ingredient", {
       method: "POST",

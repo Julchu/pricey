@@ -12,8 +12,9 @@ export const UserMenu = () => {
     setMass,
     liquidVolume,
     setLiquidVolume,
-    loggedIn,
-    setLoggedIn,
+    userInfo,
+    login,
+    logout,
   } = useUserStore((state) => state);
 
   const toggleMass = useCallback(
@@ -29,6 +30,14 @@ export const UserMenu = () => {
     },
     [setLiquidVolume],
   );
+
+  const loginHandler = async () => {
+    if (userInfo) logout();
+    else
+      login({
+        email: "test@test.com",
+      });
+  };
 
   const activePage = usePathname();
 
@@ -83,9 +92,9 @@ export const UserMenu = () => {
             className={
               "text-md relative flex h-[25px] cursor-pointer items-center rounded-md p-4 pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
             }
-            onClick={setLoggedIn}
+            onClick={loginHandler}
           >
-            {loggedIn ? "Login" : "Logout"}
+            {userInfo ? "Logout" : "Login"}
           </DropdownMenu.Item>
         </section>
 

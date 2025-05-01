@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { IngredientFormData } from "../../../../old_pricey/components/HomeDashboard";
+import { IngredientFormData } from "@/utils/interfaces";
 
-export async function POST(req: NextRequest) {
+export const POST = async (req: NextRequest) => {
   const formData: IngredientFormData = await req.json();
   const name = formData["name"];
   const price = formData["price"];
@@ -27,4 +27,4 @@ export async function POST(req: NextRequest) {
   );
 
   return Response.json({ ingredient: saveIngredient });
-}
+};

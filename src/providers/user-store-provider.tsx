@@ -15,9 +15,9 @@ export const UserStoreContext = createContext<UserStoreApi | undefined>(
   undefined,
 );
 
-export interface UserStoreProviderProps {
+export type UserStoreProviderProps = {
   children: ReactNode;
-}
+};
 
 export const UserStoreProvider = ({ children }: UserStoreProviderProps) => {
   const storeRef = useRef<UserStoreApi | null>(null);
