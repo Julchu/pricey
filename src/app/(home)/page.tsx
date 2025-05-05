@@ -1,91 +1,48 @@
 import { Results } from "@/components/results/results";
 import { Calculator } from "@/components/calculator/calculator";
-import { Ingredient, Season, Unit } from "@/utils/interfaces";
+import { cookies } from "next/headers";
+import { Ingredient } from "@/utils/interfaces";
 
 const Home = async () => {
-  let ingredientsFetch = undefined;
+  let ingredients: Ingredient[] = [];
 
   try {
-    const fetchedIngredients = await fetch(
-      "https://swapi.py4e.com/api/vehiclesw/",
-    );
+    const browserCookies = await cookies();
+    const token = browserCookies.get("pricey_access_token")?.value;
+    if (token) {
+      const ingredientsResponse = await fetch(
+        `${process.env.PRICEY_BACKEND_URL}/ingredient`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-    ingredientsFetch = fetchedIngredients.ok
-      ? await fetchedIngredients.json()
-      : undefined;
+      const {
+        success,
+        data,
+        error: responseError,
+      } = await ingredientsResponse.json();
+
+      if (success) ingredients = data;
+      else console.error(responseError);
+    }
   } catch (error) {
     console.log(error);
   }
 
-  const ingredientList = ingredientsFetch
-    ? ingredientsFetch.results
-    : tempIngredientList;
-
   return (
     <div className="flex h-full w-full snap-both snap-mandatory flex-row gap-4 overflow-x-scroll bg-gray-100 md:overflow-x-auto">
       <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
-        <Calculator ingredientList={ingredientList} />
+        <Calculator ingredients={ingredients} />
       </div>
       <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
-        <Results ingredientList={ingredientList} />
+        <Results ingredients={ingredients} />
       </div>
     </div>
   );
 };
-
-const tempIngredientList: Ingredient[] = [
-  {
-    id: 0,
-    name: "Tomato",
-    price: 2.5,
-    unit: Unit.KILOGRAM,
-    image: "https://example.com/tomato.jpg",
-    capacity: 5,
-    quantity: 2,
-    userId: 0,
-    season: Season.SUMMER,
-  },
-  {
-    id: 1,
-    name: "Olive Oil",
-    price: 10,
-    unit: Unit.LITRE,
-    image: "https://example.com/olive_oil.jpg",
-    capacity: 1,
-    quantity: 0.5,
-    userId: 1,
-  },
-  {
-    id: 2,
-    name: "Basil",
-    price: 1.5,
-    unit: Unit.ITEM,
-    image: "https://example.com/basil.jpg",
-    capacity: 3,
-    quantity: 1,
-    userId: 2,
-    season: Season.SPRING,
-  },
-  {
-    id: 3,
-    name: "Chicken Breast",
-    price: 7,
-    unit: Unit.KILOGRAM,
-    image: "https://example.com/chicken.jpg",
-    capacity: 2,
-    quantity: 1,
-    userId: 3,
-  },
-  {
-    id: 4,
-    name: "Garlic",
-    price: 3,
-    unit: Unit.KILOGRAM,
-    image: "https://example.com/garlic.jpg",
-    capacity: 2,
-    quantity: 1,
-    userId: 4,
-  },
-];
 
 export default Home;

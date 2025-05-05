@@ -4,7 +4,7 @@ import { LiquidType, MassType, Unit, UserFormData } from "@/utils/interfaces";
 export type UserState = {
   mass: MassType;
   liquidVolume: LiquidType;
-  userInfo: UserFormData | undefined;
+  userInfo?: UserFormData;
 };
 
 export type UserActions = {
@@ -16,8 +16,8 @@ export type UserActions = {
 
 export type UserStore = UserState & UserActions;
 
-export const initUserStore = (): UserState => {
-  return defaultInitState;
+export const initUserStore = (userInfo?: UserFormData): UserState => {
+  return { ...defaultInitState, userInfo };
 };
 
 export const defaultInitState: UserState = {
@@ -33,18 +33,44 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
     setLiquidVolume: (liquidType) => set(() => ({ liquidVolume: liquidType })),
 
     login: async (loginFormData) => {
-      await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify(loginFormData),
-      });
-      set(() => ({ userInfo: loginFormData }));
+      try {
+        const { userInfo } = await tryLogin(loginFormData);
+        set(() => ({ userInfo }));
+      } catch (error) {
+        throw new Error("Unable to login", { cause: error });
+      }
     },
 
     logout: async () => {
-      await fetch("/api/logout", {
-        method: "POST",
-      });
-      set(() => ({ userInfo: undefined }));
+      try {
+        const { userInfo } = await tryLogout();
+        set(() => ({ userInfo }));
+      } catch (error) {
+        throw new Error("Unable to logout", { cause: error });
+      }
     },
   }));
+};
+
+const tryLogin = async (loginFormData: UserFormData) => {
+  try {
+    const fetchUser = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify(loginFormData),
+    });
+    return await fetchUser.json();
+  } catch (error) {
+    throw new Error("Unable to fetch login", { cause: error });
+  }
+};
+
+const tryLogout = async () => {
+  try {
+    const fetchUser = await fetch("/api/logout", {
+      method: "POST",
+    });
+    return await fetchUser.json();
+  } catch (error) {
+    throw new Error("Unable to fetch logout", { cause: error });
+  }
 };

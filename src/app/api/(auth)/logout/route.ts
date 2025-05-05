@@ -1,28 +1,33 @@
 import { cookies } from "next/headers";
 
 export async function POST() {
-  const browserCookies = await cookies();
-
   try {
-    const loginResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/user/logout`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${browserCookies.get("pricey_token")?.value}`,
-        },
-      },
-    );
+    const browserCookies = await cookies();
+    const token = browserCookies.get("pricey_access_token")?.value;
 
-    const setCookie = loginResponse.headers.get("set-cookie");
-    if (setCookie) {
-      return new Response(JSON.stringify({ loginResponse }), {
+    if (token) {
+      const logoutResponse = await fetch(
+        `${process.env.PRICEY_BACKEND_URL}/user/logout`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const { success, data, error } = await logoutResponse.json();
+      const setCookie = logoutResponse.headers.get("set-cookie");
+
+      if (!success || !setCookie) return new Response(error, { status: 400 });
+
+      return new Response(JSON.stringify({ userInfo: data }), {
         status: 200,
         headers: { "Set-Cookie": setCookie },
       });
     }
   } catch (error) {
-    return new Response(`Login error: ${error}`, {
+    return new Response(`Logout error: ${error}`, {
       status: 400,
     });
   }

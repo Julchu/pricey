@@ -47,9 +47,8 @@ export enum Role {
 
 // Public user data (aka not private auth data)
 export type User = {
-  id: number;
   email: string;
-  photoURL?: string;
+  image?: string;
   name?: string;
   location?: Address;
   preferences?: UserPreferences;
@@ -96,6 +95,7 @@ export type Recipe = {
 
 type FormData<T> = Omit<T, "id" | "userId">;
 
+// TODO: fix types; form data might differ from public returned types, but ids aren't included
 export type IngredientFormData = FormData<Ingredient>;
 export type UserFormData = FormData<User>;
 export type GroceryListFormData = FormData<GroceryList>;

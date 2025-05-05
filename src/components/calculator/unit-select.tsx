@@ -1,4 +1,3 @@
-// "use client";
 import { Select } from "radix-ui";
 import {
   CaretRightIcon,
@@ -45,37 +44,6 @@ export const UnitSelect = ({ selectKey }: { selectKey: number }) => {
     />
   );
 };
-
-/*
-* <Select.Root
-      onValueChange={onChangeHandler}
-      value={watch("unit")}
-      key={selectKey}
-    >
-      <Select.Trigger
-        className={
-          "animate-slide-down-and-fade text-md flex h-10 w-full items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
-        }
-        aria-label={"Unit"}
-      >
-        <Select.Value
-          placeholder={"Kilogram"}
-          id={"unit"}
-          {...register("unit")}
-        />
-        <Select.Icon>
-          <ChevronDownIcon />
-        </Select.Icon>
-      </Select.Trigger>
-
-      <Select.Portal>
-        <UnitSelectDropdown />
-      </Select.Portal>
-    </Select.Root>
-  );
-   />
-  *
-* */
 
 export const UnitSelectDropdown = () => {
   const units = {

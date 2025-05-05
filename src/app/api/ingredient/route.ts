@@ -1,30 +1,38 @@
 import { NextRequest } from "next/server";
 import { IngredientFormData } from "@/utils/interfaces";
+import { cookies } from "next/headers";
 
 export const POST = async (req: NextRequest) => {
-  const formData: IngredientFormData = await req.json();
-  const name = formData["name"];
-  const price = formData["price"];
-  const unit = formData["unit"];
-  const capacity = formData["capacity"];
-  const quantity = formData["quantity"];
+  try {
+    const browserCookies = await cookies();
+    const token = browserCookies.get("pricey_access_token")?.value;
+    const ingredientData: IngredientFormData = await req.json();
 
-  const saveIngredient = await fetch(
-    `${process.env.PRICEY_BACKEND_URL}/ingredient`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ingredient: {
-          name,
-          price,
-          unit,
-          capacity,
-          quantity,
-        },
-      }),
-    },
-  );
+    if (!token) return new Response("Login error", { status: 400 });
 
-  return Response.json({ ingredient: saveIngredient });
+    const saveIngredientResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/ingredient`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${browserCookies.get("pricey_access_token")?.value}`,
+       },
+
+        body: JSON.stringify({
+          ingredient: ingredientData,
+        }),
+     },
+    )
+
+    cost { success, data, error; } = await saveIngredientResponse.json();
+
+    if (!success) return new Response(error, { status: 400 });
+
+    return Response.json({ ingredient: data });
+  } catch (error) {
+    return new Response(`Login error: ${error}`, {
+      status: 400
+    });
+  }
 };

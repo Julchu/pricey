@@ -10,11 +10,7 @@ import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/calculator/unit-select";
 import { useState } from "react";
 
-export const Calculator = ({
-  ingredientList,
-}: {
-  ingredientList: Ingredient[];
-}) => {
+export const Calculator = ({ ingredients }: { ingredients: Ingredient[] }) => {
   const methods = useForm<IngredientFormData>({
     defaultValues: {
       name: undefined,

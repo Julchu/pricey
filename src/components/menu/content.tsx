@@ -35,7 +35,7 @@ export const UserMenu = () => {
     if (userInfo) logout();
     else
       login({
-        email: "test@test.com",
+        email: "julianchutor@gmail.com",
       });
   };
 
