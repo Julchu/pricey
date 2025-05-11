@@ -1,3 +1,4 @@
+import { InputHTMLAttributes, ReactNode } from "react";
 import { Select } from "radix-ui";
 import {
   CaretRightIcon,
@@ -5,43 +6,37 @@ import {
   ChevronUpIcon,
 } from "@radix-ui/react-icons";
 import { Unit } from "@/utils/interfaces";
-import { ReactNode } from "react";
-import { Controller, useFormContext } from "react-hook-form";
 
-export const UnitSelect = ({ selectKey }: { selectKey: number }) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext();
-
+export const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <Controller
-      control={control}
-      name={"unit"}
-      render={({ field }) => (
-        <Select.Root
-          onValueChange={field.onChange}
-          key={selectKey}
-          value={field.value}
-        >
-          <Select.Trigger
-            className={
-              "animate-slide-down-and-fade text-md flex h-10 w-full items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
-            }
-            aria-label={"Unit"}
-          >
-            <Select.Value placeholder={"Kilogram"} id={"unit"} />
-            <Select.Icon>
-              <ChevronDownIcon />
-            </Select.Icon>
-          </Select.Trigger>
-
-          <Select.Portal>
-            <UnitSelectDropdown />
-          </Select.Portal>
-        </Select.Root>
-      )}
+    <input
+      className={
+        "text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
+      }
+      {...props}
     />
+  );
+};
+
+const SelectItem = ({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: string;
+}) => {
+  return (
+    <Select.Item
+      className={
+        "text-md relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pl-[25px] leading-none outline-none select-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+      }
+      value={value}
+    >
+      <Select.ItemText>{children}</Select.ItemText>
+      <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
+        <CaretRightIcon />
+      </Select.ItemIndicator>
+    </Select.Item>
   );
 };
 
@@ -137,27 +132,5 @@ export const UnitSelectDropdown = () => {
         <ChevronDownIcon />
       </Select.ScrollDownButton>
     </Select.Content>
-  );
-};
-
-const SelectItem = ({
-  children,
-  value,
-}: {
-  children: ReactNode;
-  value: string;
-}) => {
-  return (
-    <Select.Item
-      className={
-        "text-md relative flex h-[25px] cursor-pointer items-center rounded-[3px] p-4 pl-[25px] leading-none outline-none select-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
-      }
-      value={value}
-    >
-      <Select.ItemText>{children}</Select.ItemText>
-      <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
-        <CaretRightIcon />
-      </Select.ItemIndicator>
-    </Select.Item>
   );
 };

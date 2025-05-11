@@ -17,7 +17,11 @@ export type UserActions = {
 export type UserStore = UserState & UserActions;
 
 export const initUserStore = (userInfo?: UserFormData): UserState => {
-  return { ...defaultInitState, userInfo };
+  return {
+    userInfo,
+    mass: userInfo?.preferences?.units?.mass,
+    liquidVolume: userInfo?.preferences?.units?.volume,
+  };
 };
 
 export const defaultInitState: UserState = {

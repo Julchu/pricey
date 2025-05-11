@@ -17,22 +17,22 @@ export const POST = async (req: NextRequest) => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${browserCookies.get("pricey_access_token")?.value}`,
-       },
+        },
 
         body: JSON.stringify({
           ingredient: ingredientData,
         }),
-     },
-    )
+      },
+    );
 
-    cost { success, data, error; } = await saveIngredientResponse.json();
+    const { success, data, error } = await saveIngredientResponse.json();
 
     if (!success) return new Response(error, { status: 400 });
 
     return Response.json({ ingredient: data });
   } catch (error) {
     return new Response(`Login error: ${error}`, {
-      status: 400
+      status: 400,
     });
   }
 };

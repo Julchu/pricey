@@ -1,21 +1,29 @@
 import { Avatar, DropdownMenu } from "radix-ui";
 import { UserMenu } from "@/components/menu/content";
 import { UserAvatar } from "@/components/menu/user-avatar";
+import { UserFormData } from "@/utils/interfaces";
 import { AvatarIcon } from "@radix-ui/react-icons";
 
-export const Hamburger = () => {
+export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
+  const [firstName, lastName] = userInfo?.name?.split(" ") ?? [];
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <Avatar.Root className="inline-flex aspect-square h-full cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold text-white select-none">
           <UserAvatar />
           <Avatar.Fallback aria-label={"User menu"}>
-            <Avatar.Image
-              alt={"User avatar"}
-              className={"rounded-full object-contain"}
-            >
-              <AvatarIcon className={"size-1/2 rounded-full"} />
-            </Avatar.Image>
+            {firstName && lastName ? (
+              <>
+                {firstName[0]} {lastName[0]}
+              </>
+            ) : (
+              <Avatar.Image
+                alt={"User avatar"}
+                className={"rounded-full object-contain"}
+              >
+                <AvatarIcon className={"size-1/2 rounded-full"} />
+              </Avatar.Image>
+            )}
           </Avatar.Fallback>
         </Avatar.Root>
       </DropdownMenu.Trigger>

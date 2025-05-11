@@ -66,32 +66,27 @@ export const unitConverter = (
   return Unit.ITEM;
 };
 
+// TODO: verify amount cents
 // Price per measurement per unit; takes care of float by multiplying by 100 to cents
-export const calcIndividualPrice = (
+export const calcPricePerUnit = (
   price: number,
   capacity: number = 1, // default 1 for GroceryList ingredients that might not have measurements added
   quantity: number = 1,
 ): number => {
-  return (
-    (price * 100) /
-    (capacity > 0 ? capacity : 1) /
-    (quantity > 0 ? quantity : 1) /
-    100
-  );
+  return price / (capacity > 0 ? capacity : 1) / (quantity > 0 ? quantity : 1);
 };
 
+// TODO: verify amount cents
 // Total price based on price per measurement and capacity/quantity
 export const calcTotalPrice = (
   price: number,
   capacity?: number,
   quantity?: number,
 ): number => {
-  return (
-    (price * 100 * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
-  );
+  return price * (capacity ? capacity : 1) * (quantity ? quantity : 1);
 };
 
-export const currencyFormatter = new Intl.NumberFormat(undefined, {
+export const CurrencyFormatter = new Intl.NumberFormat(undefined, {
   style: "currency",
   currency: "USD",
   minimumFractionDigits: 2,
@@ -103,7 +98,7 @@ export const getPercentChange = (
   laterPrice: number,
 ): number => ((laterPrice - earlierPrice) / earlierPrice) * 100;
 
-export const percentageFormatter = new Intl.NumberFormat(undefined, {
+export const PercentageFormatter = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });

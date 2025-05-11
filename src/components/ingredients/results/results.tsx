@@ -1,4 +1,4 @@
-import { Card } from "@/components/results/card";
+import { Card } from "@/components/ingredients/results/card";
 import { Ingredient } from "@/utils/interfaces";
 
 export const Results = ({ ingredients }: { ingredients: Ingredient[] }) => {

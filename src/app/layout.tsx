@@ -30,10 +30,8 @@ export default async function RootLayout({
       },
     );
 
-    const { success, data, error } = await loginResponse.json();
-
-    if (!success) return new Response(error, { status: 400 });
-    userInfo = data;
+    const { success, data } = await loginResponse.json();
+    if (success) userInfo = data;
   } catch (error) {
     console.log(error);
   }
@@ -50,7 +48,7 @@ export default async function RootLayout({
               "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
             }
           >
-            <Header />
+            <Header test={"userInfo"} />
             {children}
           </main>
         </UserStoreProvider>

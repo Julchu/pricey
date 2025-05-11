@@ -1,4 +1,4 @@
-// TODO: similar ingredient card to Calculator card
+// TODO: similar ingredient card to Ingredients card
 import { Ingredient } from "@/utils/interfaces";
 
 export const Card = ({ name }: Ingredient) => {
