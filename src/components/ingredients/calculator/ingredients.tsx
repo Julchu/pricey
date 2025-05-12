@@ -20,9 +20,10 @@ import {
 } from "@/utils/textFormatters";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import { useUserStore } from "@/stores/user-store";
+import { useShallow } from "zustand/react/shallow";
 
 export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
-  const { userInfo } = useUserStore();
+  const userInfo = useUserStore(({ userInfo }) => userInfo);
   const [fetchedIngredients, setFetchedIngredients] =
     useState<Ingredient[]>(ingredients);
 
@@ -91,9 +92,16 @@ export const CalculatorResults = ({
 }: {
   ingredients: Ingredient[];
 }) => {
-  const { userInfo } = useUserStore();
+  const [mass, liquidVolume] = useUserStore(
+    useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
+  );
+
+  const unitToggles = {
+    mass,
+    volume: liquidVolume,
+  };
+
   const { watch } = useFormContext();
-  console.log(userInfo?.preferences?.units);
 
   const [name, price, unit, capacity, quantity] = watch([
     "name",
@@ -125,11 +133,7 @@ export const CalculatorResults = ({
   }, [existingIngredient, inputIndividualPrice]);
 
   const formattedPrice = CurrencyFormatter.format(
-    priceConverter(
-      inputIndividualPrice / 100,
-      unit,
-      userInfo?.preferences?.units,
-    ),
+    priceConverter(inputIndividualPrice / 100, unit, unitToggles),
   );
 
   return (
@@ -156,7 +160,7 @@ export const CalculatorInputs = ({
 }: {
   selectResetKey: number;
 }) => {
-  const { userInfo } = useUserStore();
+  const userInfo = useUserStore(({ userInfo }) => userInfo);
   const { register, reset } = useFormContext();
 
   const resetHandler = () => {

@@ -5,9 +5,20 @@ import { LiquidType, MassType, Unit } from "@/utils/interfaces";
 import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/user-store";
+import { useShallow } from "zustand/react/shallow";
 
 export const UserMenu = () => {
-  const {
+  // const {
+  //   mass,
+  //   setMass,
+  //   liquidVolume,
+  //   setLiquidVolume,
+  //   userInfo,
+  //   login,
+  //   logout,
+  // } = useUserStore();
+
+  const [
     mass,
     setMass,
     liquidVolume,
@@ -15,7 +26,27 @@ export const UserMenu = () => {
     userInfo,
     login,
     logout,
-  } = useUserStore();
+  ] = useUserStore(
+    useShallow(
+      ({
+        mass,
+        setMass,
+        liquidVolume,
+        setLiquidVolume,
+        userInfo,
+        login,
+        logout,
+      }) => [
+        mass,
+        setMass,
+        liquidVolume,
+        setLiquidVolume,
+        userInfo,
+        login,
+        logout,
+      ],
+    ),
+  );
 
   const toggleMass = useCallback(
     (massType: string) => {

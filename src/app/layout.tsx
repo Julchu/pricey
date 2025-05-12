@@ -48,7 +48,7 @@ export default async function RootLayout({
             "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
           }
         >
-          <Header test={"userInfo"} />
+          <Header />
           {children}
         </main>
       </body>

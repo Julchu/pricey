@@ -3,11 +3,9 @@
 import { Avatar } from "radix-ui";
 import { useUserStore } from "@/stores/user-store";
 import { PersonIcon } from "@radix-ui/react-icons";
-// import { AvatarIcon } from "@radix-ui/react-icons";
 
-// TODO: check faster load from prop vs store render
 export const UserAvatar = () => {
-  const { userInfo } = useUserStore();
+  const userInfo = useUserStore(({ userInfo }) => userInfo);
 
   const imageUrl = userInfo?.image;
 

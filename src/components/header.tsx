@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Hamburger } from "@/components/menu/hamburger";
 
-export const Header = ({ test }: { test?: string }) => {
+export const Header = () => {
   return (
     <header className={"flex h-[3rem] flex-row justify-between bg-gray-100"}>
       <Link
