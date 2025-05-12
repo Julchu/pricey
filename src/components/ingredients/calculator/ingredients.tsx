@@ -9,20 +9,20 @@ import {
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { useEffect, useMemo, useState } from "react";
-import { useUserStore } from "@/providers/user-store-provider";
 import { fetchIngredient } from "@/components/ingredients/calculator/fetch-ingredient";
-import { Results } from "@/components/ingredients/results/results";
+import { IngredientsList } from "@/components/ingredients/results/ingredients-list";
 import {
-  calcPricePerUnit,
+  calcIndividualPrice,
   CurrencyFormatter,
   getPercentChange,
   PercentageFormatter,
   priceConverter,
 } from "@/utils/textFormatters";
 import { Input } from "@/components/ingredients/calculator/inputs";
+import { useUserStore } from "@/stores/user-store";
 
 export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
-  const { userInfo } = useUserStore((state) => state);
+  const { userInfo } = useUserStore();
   const [fetchedIngredients, setFetchedIngredients] =
     useState<Ingredient[]>(ingredients);
 
@@ -33,6 +33,9 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
         setFetchedIngredients(await fetchIngredient());
       };
       response().then((r) => r);
+    } else {
+      console.log("empty ingredients");
+      setFetchedIngredients([]);
     }
   }, [userInfo]);
 
@@ -77,7 +80,7 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
       </div>
 
       <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
-        <Results ingredients={fetchedIngredients} />
+        <IngredientsList ingredients={fetchedIngredients} />
       </div>
     </FormProvider>
   );
@@ -88,8 +91,10 @@ export const CalculatorResults = ({
 }: {
   ingredients: Ingredient[];
 }) => {
-  const { userInfo } = useUserStore((state) => state);
+  const { userInfo } = useUserStore();
   const { watch } = useFormContext();
+  console.log(userInfo?.preferences?.units);
+
   const [name, price, unit, capacity, quantity] = watch([
     "name",
     "price",
@@ -97,29 +102,34 @@ export const CalculatorResults = ({
     "capacity",
     "quantity",
   ]);
+
   const existingIngredient = ingredients.find((ingredient) => {
     if (ingredient.name && name)
       return ingredient.name.toLowerCase() === name.toLowerCase();
   });
 
+  const inputIndividualPrice = calcIndividualPrice(price, capacity, quantity);
+
   const delta = useMemo(() => {
     if (!existingIngredient) return;
 
-    const existingIndividualPrice = calcPricePerUnit(
+    const existingIndividualPrice = calcIndividualPrice(
       existingIngredient.price,
       existingIngredient.capacity,
       existingIngredient.quantity,
     );
 
-    const inputIndividualPrice = calcPricePerUnit(price, capacity, quantity);
-
     return PercentageFormatter.format(
       getPercentChange(existingIndividualPrice, inputIndividualPrice),
     );
-  }, [capacity, existingIngredient, price, quantity]);
+  }, [existingIngredient, inputIndividualPrice]);
 
   const formattedPrice = CurrencyFormatter.format(
-    priceConverter(price / 100, unit, userInfo?.preferences?.units),
+    priceConverter(
+      inputIndividualPrice / 100,
+      unit,
+      userInfo?.preferences?.units,
+    ),
   );
 
   return (
@@ -136,7 +146,6 @@ export const CalculatorResults = ({
       ) : null}
 
       {delta ? <h3 className={"mb-4 text-xl"}>{delta}</h3> : null}
-
       {/* TODO: Upload image */}
     </>
   );
@@ -147,16 +156,8 @@ export const CalculatorInputs = ({
 }: {
   selectResetKey: number;
 }) => {
-  const { userInfo } = useUserStore((state) => state);
-
-  const {
-    register,
-    reset,
-    resetField,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useFormContext();
+  const { userInfo } = useUserStore();
+  const { register, reset } = useFormContext();
 
   const resetHandler = () => {
     reset({

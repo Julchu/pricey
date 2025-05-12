@@ -42,16 +42,15 @@ export default async function RootLayout({
         className={`${montserrat.className} ${geistMono.variable} antialiased`}
       >
         <ReactScan />
-        <UserStoreProvider userInfo={userInfo}>
-          <main
-            className={
-              "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
-            }
-          >
-            <Header test={"userInfo"} />
-            {children}
-          </main>
-        </UserStoreProvider>
+        <UserStoreProvider userInfo={userInfo} />
+        <main
+          className={
+            "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
+          }
+        >
+          <Header test={"userInfo"} />
+          {children}
+        </main>
       </body>
     </html>
   );

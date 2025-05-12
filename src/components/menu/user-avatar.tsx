@@ -1,13 +1,13 @@
 "use client";
 
-import { useUserStore } from "@/providers/user-store-provider";
 import { Avatar } from "radix-ui";
-// import { AvatarIcon } from "@radix-ui/react-icons";
+import { useUserStore } from "@/stores/user-store";
 import { PersonIcon } from "@radix-ui/react-icons";
+// import { AvatarIcon } from "@radix-ui/react-icons";
 
 // TODO: check faster load from prop vs store render
 export const UserAvatar = () => {
-  const { userInfo } = useUserStore((state) => state);
+  const { userInfo } = useUserStore();
 
   const imageUrl = userInfo?.image;
 

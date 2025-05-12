@@ -4,7 +4,7 @@ import { DropdownMenu } from "radix-ui";
 import { LiquidType, MassType, Unit } from "@/utils/interfaces";
 import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
 import { usePathname } from "next/navigation";
-import { useUserStore } from "@/providers/user-store-provider";
+import { useUserStore } from "@/stores/user-store";
 
 export const UserMenu = () => {
   const {
@@ -15,7 +15,7 @@ export const UserMenu = () => {
     userInfo,
     login,
     logout,
-  } = useUserStore((state) => state);
+  } = useUserStore();
 
   const toggleMass = useCallback(
     (massType: string) => {

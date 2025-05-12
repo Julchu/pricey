@@ -68,12 +68,17 @@ export const unitConverter = (
 
 // TODO: verify amount cents
 // Price per measurement per unit; takes care of float by multiplying by 100 to cents
-export const calcPricePerUnit = (
+export const calcIndividualPrice = (
   price: number,
   capacity: number = 1, // default 1 for GroceryList ingredients that might not have measurements added
   quantity: number = 1,
 ): number => {
-  return price / (capacity > 0 ? capacity : 1) / (quantity > 0 ? quantity : 1);
+  return (
+    (price * 100) /
+    (capacity > 0 ? capacity : 1) /
+    (quantity > 0 ? quantity : 1) /
+    100
+  );
 };
 
 // TODO: verify amount cents
@@ -83,7 +88,9 @@ export const calcTotalPrice = (
   capacity?: number,
   quantity?: number,
 ): number => {
-  return price * (capacity ? capacity : 1) * (quantity ? quantity : 1);
+  return (
+    (price * 100 * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
+  );
 };
 
 export const CurrencyFormatter = new Intl.NumberFormat(undefined, {
