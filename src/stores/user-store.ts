@@ -14,6 +14,7 @@ export type UserActions = {
   login: (loginInfo: UserFormData) => void;
   logout: () => void;
 };
+
 export type UserStore = UserState & UserActions;
 
 export const initUserStore = (userInfo?: UserFormData): UserState => {
@@ -32,7 +33,7 @@ export const defaultInitState: UserState = {
   userInfo: undefined,
 };
 
-export const useUserStore = create<UserStore>((set, get) => ({
+export const useUserStore = create<UserStore>((set) => ({
   ...defaultInitState,
   setUser: (userInfo) => set(() => ({ userInfo })),
   setMass: (massType) => set(() => ({ mass: massType })),

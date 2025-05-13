@@ -1,6 +1,6 @@
-import { Ingredients } from "@/components/ingredients/calculator/ingredients";
 import { Ingredient } from "@/utils/interfaces";
 import { fetchIngredient } from "@/components/ingredients/calculator/fetch-ingredient";
+import { Ingredients } from "@/components/ingredients/ingredients/ingredients";
 
 const Home = async () => {
   const ingredients: Ingredient[] = (await fetchIngredient()) || [];

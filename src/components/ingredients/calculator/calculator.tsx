@@ -1,16 +1,8 @@
-"use client";
 import { Label } from "radix-ui";
-import {
-  FormProvider,
-  SubmitHandler,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
-import { Ingredient, IngredientFormData } from "@/utils/interfaces";
+import { useFormContext, useWatch } from "react-hook-form";
+import { Ingredient } from "@/utils/interfaces";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
-import { useEffect, useMemo, useState } from "react";
-import { fetchIngredient } from "@/components/ingredients/calculator/fetch-ingredient";
-import { IngredientsList } from "@/components/ingredients/results/ingredients-list";
+import { useMemo } from "react";
 import {
   calcIndividualPrice,
   CurrencyFormatter,
@@ -21,71 +13,6 @@ import {
 import { Input } from "@/components/ingredients/calculator/inputs";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
-
-export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
-  const userInfo = useUserStore(({ userInfo }) => userInfo);
-  const [fetchedIngredients, setFetchedIngredients] =
-    useState<Ingredient[]>(ingredients);
-
-  useEffect(() => {
-    if (userInfo) {
-      console.log("re-fetched ingredients");
-      const response = async () => {
-        setFetchedIngredients(await fetchIngredient());
-      };
-      response().then((r) => r);
-    } else {
-      console.log("empty ingredients");
-      setFetchedIngredients([]);
-    }
-  }, [userInfo]);
-
-  const methods = useForm<IngredientFormData>({
-    defaultValues: {
-      name: undefined,
-      price: undefined,
-      quantity: undefined,
-      capacity: undefined,
-      unit: undefined,
-    },
-  });
-
-  const { reset, handleSubmit } = methods;
-  const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
-
-  const onSubmitHandler: SubmitHandler<IngredientFormData> = async (data) => {
-    await fetch("api/ingredient", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-    reset();
-    setSelectResetKey(+new Date());
-  };
-
-  return (
-    <FormProvider {...methods}>
-      <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
-        <form
-          className={"flex h-full flex-col gap-4"}
-          onSubmit={handleSubmit(onSubmitHandler)}
-        >
-          <div
-            className={
-              "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
-            }
-          >
-            <CalculatorResults ingredients={fetchedIngredients} />
-          </div>
-          <CalculatorInputs selectResetKey={selectResetKey} />
-        </form>
-      </div>
-
-      <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
-        <IngredientsList ingredients={fetchedIngredients} />
-      </div>
-    </FormProvider>
-  );
-};
 
 export const CalculatorResults = ({
   ingredients,
@@ -101,15 +28,9 @@ export const CalculatorResults = ({
     volume: liquidVolume,
   };
 
-  const { watch } = useFormContext();
-
-  const [name, price, unit, capacity, quantity] = watch([
-    "name",
-    "price",
-    "unit",
-    "capacity",
-    "quantity",
-  ]);
+  const [name, price, unit, capacity, quantity] = useWatch({
+    name: ["name", "price", "unit", "capacity", "quantity"],
+  });
 
   const existingIngredient = ingredients.find((ingredient) => {
     if (ingredient.name && name)
@@ -164,13 +85,7 @@ export const CalculatorInputs = ({
   const { register, reset } = useFormContext();
 
   const resetHandler = () => {
-    reset({
-      name: "",
-      price: "",
-      quantity: "",
-      capacity: "",
-      unit: "",
-    });
+    reset();
   };
 
   return (
