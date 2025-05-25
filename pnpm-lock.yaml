@@ -48,6 +48,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.0.14
         version: 4.0.14
+      '@types/google.accounts':
+        specifier: ^0.0.16
+        version: 0.0.16
       '@types/node':
         specifier: ^20
         version: 20.17.24
@@ -1512,6 +1515,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/google.accounts@0.0.16':
+    resolution: {integrity: sha512-llwLXm6qVFMrY31VNyGe87pyRU36J5/Z+NF1+hMraPjxYPdjjw953JozeG+/+tbjzlFkmd/gIzXAK7hyJ8ukqA==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -4389,6 +4395,8 @@ snapshots:
     optional: true
 
   '@types/estree@1.0.6': {}
+
+  '@types/google.accounts@0.0.16': {}
 
   '@types/json-schema@7.0.15': {}
 
