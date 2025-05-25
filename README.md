@@ -93,6 +93,16 @@ pnpm type-check
 - With Husky and Lint-Staged, project will automatically run these basic checks when trying to commit changes or deploy
   the project, and will block the commit/deployment on errors (not warnings)
 
+Deploying app to test Google Auth on mobile, with `ngrok`
+
+- ```
+    npm install -g ngrok
+    # Create ngrok account
+    ngrok config add-authtoken <AuthToken>
+    ttps://dashboard.ngrok.com/get-started/your-authtoken
+    ngrok http 3000
+  ```
+
 # Notes
 
 Projects can be split into
