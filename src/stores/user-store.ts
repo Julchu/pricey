@@ -11,7 +11,6 @@ export type UserActions = {
   setUser: (userInfo: UserFormData) => void;
   setMass: (mass: MassType) => void;
   setLiquidVolume: (liquidType: LiquidType) => void;
-  loginGoogle: (googleToken: google.accounts.id.CredentialResponse) => void;
   logout: () => void;
 };
 
@@ -35,19 +34,9 @@ export const defaultInitState: UserState = {
 
 export const useUserStore = create<UserStore>((set) => ({
   ...defaultInitState,
-  setUser: (userInfo) => set(() => ({ userInfo })),
-  setMass: (massType) => set(() => ({ mass: massType })),
-  setLiquidVolume: (liquidType) => set(() => ({ liquidVolume: liquidType })),
-
-  loginGoogle: async (googleToken: google.accounts.id.CredentialResponse) => {
-    try {
-      const { userInfo } = await tryLogin(googleToken);
-      const { mass, liquidVolume } = initUserStore(userInfo);
-      set(() => ({ userInfo, mass, liquidVolume }));
-    } catch (error) {
-      throw new Error("Unable to login", { cause: error });
-    }
-  },
+  setUser: (userInfo) => set({ userInfo }),
+  setMass: (massType) => set({ mass: massType }),
+  setLiquidVolume: (liquidType) => set({ liquidVolume: liquidType }),
 
   logout: async () => {
     try {
@@ -59,22 +48,6 @@ export const useUserStore = create<UserStore>((set) => ({
     }
   },
 }));
-
-const tryLogin = async (googleToken: google.accounts.id.CredentialResponse) => {
-  try {
-    const idToken = googleToken.credential;
-
-    const fetchUser = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken }),
-    });
-
-    return await fetchUser.json();
-  } catch (error) {
-    throw new Error("Unable to fetch login", { cause: error });
-  }
-};
 
 const tryLogout = async () => {
   try {

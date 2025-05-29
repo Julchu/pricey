@@ -1,13 +1,20 @@
 import {
-  Montserrat,
   Amatic_SC,
-  Inter,
-  Urbanist,
   Geist,
   Geist_Mono,
+  Inter,
+  Montserrat,
+  Roboto,
+  Urbanist,
 } from "next/font/google";
 
-export const montserrat = Montserrat({ subsets: ["latin"] });
+export const roboto = Roboto({
+  subsets: ["latin"],
+});
+
+export const montserrat = Montserrat({
+  subsets: ["latin"],
+});
 
 export const urbanist = Urbanist({
   weight: ["400", "500", "600", "700", "800", "900"],
