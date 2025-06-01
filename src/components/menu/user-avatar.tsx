@@ -9,7 +9,8 @@ export const UserAvatar = () => {
 
   const imageUrl = userInfo?.image;
 
-  if (!userInfo) return <PersonIcon className={"size-1/2 rounded-full"} />;
+  if (!userInfo?.image)
+    return <PersonIcon className={"size-1/2 rounded-full"} />;
 
   return (
     <Avatar.Image

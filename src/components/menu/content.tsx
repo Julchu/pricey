@@ -55,7 +55,11 @@ export const UserMenu = () => {
             >
               Mass
             </DropdownMenu.Label>
-            <DropdownMenu.RadioGroup value={mass} onValueChange={toggleMass}>
+            <DropdownMenu.RadioGroup
+              value={mass}
+              onValueChange={toggleMass}
+              className={"cursor-pointer"}
+            >
               <MenuRadioItem value={Unit.KILOGRAM} name={"Kilograms (kg)"} />
               <MenuRadioItem value={Unit.POUND} name={"Pounds (lb)"} />
             </DropdownMenu.RadioGroup>
@@ -72,6 +76,7 @@ export const UserMenu = () => {
             <DropdownMenu.RadioGroup
               value={liquidVolume}
               onValueChange={toggleLiquidVolume}
+              className={"cursor-pointer"}
             >
               <MenuRadioItem value={Unit.LITRE} name={"Litres (L)"} />
               <MenuRadioItem value={Unit.QUART} name={"Quarts (qt)"} />
@@ -94,7 +99,7 @@ export const UserMenu = () => {
               }
             >
               {userInfo ? (
-                <p onClick={logout} className={"ml-[25px]"}>
+                <p onClick={logout} className={"ml-[25px] cursor-pointer"}>
                   Logout
                 </p>
               ) : (

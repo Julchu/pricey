@@ -1,80 +1,8 @@
 import { Label } from "radix-ui";
-import { useFormContext, useWatch } from "react-hook-form";
-import { Ingredient } from "@/utils/interfaces";
+import { useFormContext } from "react-hook-form";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
-import { useMemo } from "react";
-import {
-  calcIndividualPrice,
-  CurrencyFormatter,
-  getPercentChange,
-  PercentageFormatter,
-  priceConverter,
-} from "@/utils/textFormatters";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import { useUserStore } from "@/stores/user-store";
-import { useShallow } from "zustand/react/shallow";
-
-export const CalculatorResults = ({
-  ingredients,
-}: {
-  ingredients: Ingredient[];
-}) => {
-  const [mass, liquidVolume] = useUserStore(
-    useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
-  );
-
-  const unitToggles = {
-    mass,
-    volume: liquidVolume,
-  };
-
-  const [name, price, unit, capacity, quantity] = useWatch({
-    name: ["name", "price", "unit", "capacity", "quantity"],
-  });
-
-  const existingIngredient = ingredients.find((ingredient) => {
-    if (ingredient.name && name)
-      return ingredient.name.toLowerCase() === name.toLowerCase();
-  });
-
-  const inputIndividualPrice = calcIndividualPrice(price, capacity, quantity);
-
-  const delta = useMemo(() => {
-    if (!existingIngredient) return;
-
-    const existingIndividualPrice = calcIndividualPrice(
-      existingIngredient.price,
-      existingIngredient.capacity,
-      existingIngredient.quantity,
-    );
-
-    return PercentageFormatter.format(
-      getPercentChange(existingIndividualPrice, inputIndividualPrice),
-    );
-  }, [existingIngredient, inputIndividualPrice]);
-
-  const formattedPrice = CurrencyFormatter.format(
-    priceConverter(inputIndividualPrice / 100, unit, unitToggles),
-  );
-
-  return (
-    <>
-      <h1 className={"mb-4 text-3xl font-bold"}>
-        {name ? name : "Enter an ingredient"}
-      </h1>
-      {price || unit ? (
-        <h3 className={"mb-4 text-xl"}>
-          {formattedPrice}
-          {formattedPrice && unit ? "/" : null}
-          {unit}
-        </h3>
-      ) : null}
-
-      {delta ? <h3 className={"mb-4 text-xl"}>{delta}</h3> : null}
-      {/* TODO: Upload image */}
-    </>
-  );
-};
 
 export const CalculatorInputs = ({
   selectResetKey,

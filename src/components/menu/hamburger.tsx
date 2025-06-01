@@ -2,7 +2,7 @@ import { Avatar, DropdownMenu } from "radix-ui";
 import { UserMenu } from "@/components/menu/content";
 import { UserAvatar } from "@/components/menu/user-avatar";
 import { UserFormData } from "@/utils/interfaces";
-import { AvatarIcon } from "@radix-ui/react-icons";
+import { PersonIcon } from "@radix-ui/react-icons";
 
 export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
   const [firstName, lastName] = userInfo?.name?.split(" ") ?? [];
@@ -21,7 +21,7 @@ export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
                 alt={"User avatar"}
                 className={"rounded-full object-contain"}
               >
-                <AvatarIcon className={"size-1/2 rounded-full"} />
+                <PersonIcon className={"size-1/2 rounded-full"} />
               </Avatar.Image>
             )}
           </Avatar.Fallback>

@@ -5,10 +5,8 @@ import { useEffect, useState } from "react";
 import { fetchIngredient } from "@/components/ingredients/calculator/fetch-ingredient";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { IngredientsList } from "@/components/ingredients/ingredients/ingredients-list";
-import {
-  CalculatorInputs,
-  CalculatorResults,
-} from "@/components/ingredients/calculator/calculator";
+import { CalculatorInputs } from "@/components/ingredients/calculator/calculator";
+import { Calculations } from "@/components/ingredients/calculator/calculations";
 
 export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);
@@ -61,7 +59,7 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
               "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
             }
           >
-            <CalculatorResults ingredients={fetchedIngredients} />
+            <Calculations ingredients={fetchedIngredients} />
           </div>
           <CalculatorInputs selectResetKey={selectResetKey} />
         </form>

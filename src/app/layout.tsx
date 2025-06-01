@@ -18,22 +18,25 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let userInfo: UserFormData | undefined;
-  try {
-    const browserCookies = await cookies();
 
-    const loginResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${browserCookies.get("pricey_access_token")?.value}`,
+  const browserCookies = await cookies();
+  const idToken = browserCookies.get("pricey_access_token")?.value;
+  if (idToken) {
+    try {
+      const loginResponse = await fetch(
+        `${process.env.PRICEY_BACKEND_URL}/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
         },
-      },
-    );
+      );
 
-    const { success, data } = await loginResponse.json();
-    if (success) userInfo = data;
-  } catch (error) {
-    console.log(error);
+      const { success, data } = await loginResponse.json();
+      if (success) userInfo = data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
