@@ -16,11 +16,12 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
   useEffect(() => {
     if (userInfo) {
       const response = async () => {
-        setFetchedIngredients(await fetchIngredient());
+        return await fetchIngredient();
       };
-      response().then((r) => r);
+      response().then(async (results) => {
+        setFetchedIngredients(results);
+      });
     } else {
-      console.log("empty ingredients");
       setFetchedIngredients([]);
     }
   }, [userInfo]);

@@ -8,7 +8,7 @@ import { UserFormData } from "@/utils/interfaces";
 export const UserStoreProvider = ({
   userInfo,
 }: {
-  userInfo?: UserFormData;
+  userInfo?: UserFormData | null;
 }) => {
   const { setUser, setMass, setLiquidVolume } = useUserStore();
 

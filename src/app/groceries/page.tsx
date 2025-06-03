@@ -5,13 +5,13 @@ const Groceries = async () => {
   let groceryLists: GroceryList[] = [];
   try {
     const browserCookies = await cookies();
-
+    const token = browserCookies.get("pricey_access_token")?.value;
     const fetchedGroceries = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/grocery-list`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${browserCookies.get("pricey_access_token")?.value}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     );
@@ -23,7 +23,6 @@ const Groceries = async () => {
     } = await fetchedGroceries.json();
 
     if (success) groceryLists = data;
-    else console.error(responseError);
   } catch (error) {
     console.error(error);
   }

@@ -99,7 +99,10 @@ export const UserMenu = () => {
               }
             >
               {userInfo ? (
-                <p onClick={logout} className={"ml-[25px] cursor-pointer"}>
+                <p
+                  onClick={logout}
+                  className={"ml-[25px] w-full cursor-pointer"}
+                >
                   Logout
                 </p>
               ) : (

@@ -4,7 +4,7 @@ import { LiquidType, MassType, Unit, UserFormData } from "@/utils/interfaces";
 export type UserState = {
   mass: MassType;
   liquidVolume: LiquidType;
-  userInfo?: UserFormData;
+  userInfo?: UserFormData | null;
 };
 
 export type UserActions = {

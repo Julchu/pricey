@@ -35,11 +35,14 @@ export async function POST() {
     );
 
     const { success, data, error } = await loginResponse.json();
+    const setCookie = loginResponse.headers.get("set-cookie");
 
-    if (!success) return new Response(`Error: ${error}`, { status: 400 });
+    if (!success || error)
+      return new Response(`Error: ${error}`, { status: 400 });
 
     return new Response(JSON.stringify({ userInfo: data }), {
       status: 200,
+      ...(setCookie && { headers: { "Set-Cookie": setCookie } }),
     });
   } catch (error) {
     console.log(error);
