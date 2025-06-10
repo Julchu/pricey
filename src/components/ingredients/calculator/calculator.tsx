@@ -42,6 +42,7 @@ export const CalculatorInputs = ({
 
           <Input
             placeholder={"4.99"}
+            step={"0.01"}
             id={"price"}
             type={"number"}
             {...register("price", { setValueAs: (val) => val * 100 })}
@@ -70,6 +71,7 @@ export const CalculatorInputs = ({
 
           <Input
             placeholder={"0.710"}
+            step={"0.01"}
             id={"capacity"}
             type={"number"}
             {...register("capacity")}

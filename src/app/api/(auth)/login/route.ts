@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST() {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get("pricey_access_token")?.value;
+    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const loginResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/user`,
@@ -35,16 +35,31 @@ export async function POST() {
     );
 
     const { success, data, error } = await loginResponse.json();
-    const setCookie = loginResponse.headers.get("set-cookie");
-
+    // const setCookie = loginResponse.headers.get("set-cookie");
+    // console.log(
+    //   "Set-Cookie from backend:",
+    //   loginResponse.headers.get("set-cookie"),
+    // );
     if (!success || error)
       return new Response(`Error: ${error}`, { status: 400 });
 
     return new Response(JSON.stringify({ userInfo: data }), {
       status: 200,
-      ...(setCookie && { headers: { "Set-Cookie": setCookie } }),
+      // ...(setCookie && { headers: { "Set-Cookie": setCookie } }),
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
+
+/*
+* import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/apiFetch";
+
+export const useUser = () =>
+  useQuery({
+    queryKey: ["user"],
+    queryFn: () => apiFetch("/api/login", { method: "POST" }), // calls your backend-proxy route
+    retry: false,
+  });
+  * */

@@ -2,7 +2,7 @@
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { useUserStore } from "@/stores/user-store";
 import { useEffect, useState } from "react";
-import { fetchIngredient } from "@/components/ingredients/calculator/fetch-ingredient";
+import { fetchIngredient } from "@/utils/server-actions/fetch-ingredient";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { IngredientsList } from "@/components/ingredients/ingredients/ingredients-list";
 import { CalculatorInputs } from "@/components/ingredients/calculator/calculator";
@@ -14,17 +14,10 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
     useState<Ingredient[]>(ingredients);
 
   useEffect(() => {
-    if (userInfo) {
-      const response = async () => {
-        return await fetchIngredient();
-      };
-      response().then(async (results) => {
-        setFetchedIngredients(results);
-      });
-    } else {
-      setFetchedIngredients([]);
-    }
-  }, [userInfo]);
+    if (!userInfo || ingredients) return;
+
+    fetchIngredient().then(setFetchedIngredients);
+  }, [ingredients, userInfo]);
 
   const methods = useForm<IngredientFormData>({
     defaultValues: {

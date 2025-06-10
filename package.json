@@ -30,7 +30,6 @@
     "@next/eslint-plugin-next": "^15.2.4",
     "@tailwindcss/postcss": "^4.0.14",
     "@tanstack/eslint-plugin-query": "^5.74.7",
-    "@types/google.accounts": "^0.0.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

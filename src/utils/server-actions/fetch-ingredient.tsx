@@ -5,8 +5,7 @@ import { cookies } from "next/headers";
 export const fetchIngredient = async () => {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get("pricey_access_token")?.value;
-    if (!token) return [];
+    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const ingredientsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,
@@ -20,8 +19,9 @@ export const fetchIngredient = async () => {
     const { success, data, error } = await ingredientsResponse.json();
 
     if (success) return data;
+    if (error) console.error("fetch-ingredient error", error);
     else return [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

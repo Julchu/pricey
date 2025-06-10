@@ -25,19 +25,23 @@ export default async function Layout({ children }: { children: ReactNode }) {
   let userInfo: UserFormData | null | undefined = undefined;
 
   const browserCookies = await cookies();
-  const token = browserCookies.get("pricey_access_token")?.value;
+  const accessToken = browserCookies.get(
+    `${process.env.ACCESS_TOKEN_KEY}`,
+  )?.value;
 
   try {
     const userResponse = await fetch(`${process.env.PRICEY_BACKEND_URL}/user`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
     const { success, data, error } = await userResponse.json();
     if (success) userInfo = data;
+
+    if (error) console.error("Root layout", error);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return (

@@ -10,6 +10,9 @@ export const UnitSelect = ({ selectKey }: { selectKey: number }) => {
     formState: { errors },
   } = useFormContext();
 
+  if (errors.root) {
+    console.error("Errors in calc", errors);
+  }
   return (
     <Controller
       control={control}

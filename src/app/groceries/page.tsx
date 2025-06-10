@@ -1,11 +1,13 @@
 import { cookies } from "next/headers";
 import { GroceryList } from "@/utils/interfaces";
 
+export const dynamic = "force-dynamic";
+
 const Groceries = async () => {
   let groceryLists: GroceryList[] = [];
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get("pricey_access_token")?.value;
+    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
     const fetchedGroceries = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/grocery-list`,
       {
@@ -16,13 +18,10 @@ const Groceries = async () => {
       },
     );
 
-    const {
-      success,
-      data,
-      error: responseError,
-    } = await fetchedGroceries.json();
+    const { success, data, error } = await fetchedGroceries.json();
 
     if (success) groceryLists = data;
+    if (error) console.error("Error in groceries", error);
   } catch (error) {
     console.error(error);
   }
