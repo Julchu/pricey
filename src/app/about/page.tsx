@@ -1,5 +1,3 @@
-import { TestComponent } from "@/app/about/test";
-
 export const dynamic = "force-dynamic";
 
 const About = () => {
