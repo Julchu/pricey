@@ -11,6 +11,7 @@ import {
 } from "@/utils/text-formatters";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
+import { ingredientControl } from "@/providers/ingredient-form-provider";
 
 export const Calculations = ({
   ingredients,
@@ -28,6 +29,7 @@ export const Calculations = ({
 
   const [name, price, unit, capacity, quantity] = useWatch({
     name: ["name", "price", "unit", "capacity", "quantity"],
+    control: ingredientControl,
   });
 
   const existingIngredient = ingredients.find((ingredient) => {

@@ -30,16 +30,21 @@ export default async function Layout({ children }: { children: ReactNode }) {
   )?.value;
 
   try {
-    const userResponse = await fetch(`${process.env.PRICEY_BACKEND_URL}/user`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    if (accessToken) {
+      const userResponse = await fetch(
+        `${process.env.PRICEY_BACKEND_URL}/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
 
-    const { success, data, error } = await userResponse.json();
-    if (success) userInfo = data;
+      const { success, data, error } = await userResponse.json();
+      if (success) userInfo = data;
 
-    if (error) console.error("Root layout", error);
+      if (error) console.error("Root layout", error);
+    }
   } catch (error) {
     console.error(error);
   }

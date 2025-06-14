@@ -1,19 +1,17 @@
 import { Label } from "radix-ui";
-import { useFormContext } from "react-hook-form";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import { useUserStore } from "@/stores/user-store";
+import {
+  ingredientRegister,
+  ingredientReset,
+} from "@/providers/ingredient-form-provider";
 
-export const CalculatorInputs = ({
-  selectResetKey,
-}: {
-  selectResetKey: number;
-}) => {
+export const Calculator = () => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);
-  const { register, reset } = useFormContext();
 
   const resetHandler = () => {
-    reset();
+    ingredientReset();
   };
 
   return (
@@ -30,7 +28,7 @@ export const CalculatorInputs = ({
           placeholder={"Pepsi"}
           id={"name"}
           type={"text"}
-          {...register("name")}
+          {...ingredientRegister("name")}
         />
       </div>
 
@@ -45,7 +43,7 @@ export const CalculatorInputs = ({
             step={"0.01"}
             id={"price"}
             type={"number"}
-            {...register("price", { setValueAs: (val) => val * 100 })}
+            {...ingredientRegister("price", { setValueAs: (val) => val * 100 })}
           />
         </div>
 
@@ -58,7 +56,7 @@ export const CalculatorInputs = ({
             placeholder={"6"}
             id={"quantity"}
             type={"number"}
-            {...register("quantity")}
+            {...ingredientRegister("quantity")}
           />
         </div>
       </div>
@@ -71,10 +69,10 @@ export const CalculatorInputs = ({
 
           <Input
             placeholder={"0.710"}
-            step={"0.01"}
+            step={"0.001"}
             id={"capacity"}
             type={"number"}
-            {...register("capacity")}
+            {...ingredientRegister("capacity")}
           />
         </div>
 
@@ -82,7 +80,7 @@ export const CalculatorInputs = ({
           <Label.Root className={"text-md opacity-50"} htmlFor={"unit"}>
             Unit
           </Label.Root>
-          <UnitSelect selectKey={selectResetKey} />
+          <UnitSelect />
         </div>
       </div>
 

@@ -3,10 +3,14 @@ import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { useUserStore } from "@/stores/user-store";
 import { useEffect, useState } from "react";
 import { fetchIngredient } from "@/utils/server-actions/fetch-ingredient";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form";
 import { IngredientsList } from "@/components/ingredients/ingredients/ingredients-list";
-import { CalculatorInputs } from "@/components/ingredients/calculator/calculator";
+import { Calculator } from "@/components/ingredients/calculator/calculator";
 import { Calculations } from "@/components/ingredients/calculator/calculations";
+import {
+  handleIngredientSubmit,
+  ingredientReset,
+} from "@/providers/ingredient-form-provider";
 
 export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);
@@ -15,38 +19,24 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
 
   useEffect(() => {
     if (!userInfo || ingredients) return;
-
     fetchIngredient().then(setFetchedIngredients);
   }, [ingredients, userInfo]);
 
-  const methods = useForm<IngredientFormData>({
-    defaultValues: {
-      name: undefined,
-      price: undefined,
-      quantity: undefined,
-      capacity: undefined,
-      unit: undefined,
-    },
-  });
-
-  const { reset, handleSubmit } = methods;
-  const [selectResetKey, setSelectResetKey] = useState<number>(+new Date());
-
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (data) => {
-    await fetch("api/ingredient", {
+    await fetch("/api/ingredient", {
       method: "POST",
       body: JSON.stringify(data),
     });
-    reset();
-    setSelectResetKey(+new Date());
+
+    ingredientReset();
   };
 
   return (
-    <FormProvider {...methods}>
+    <>
       <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
         <form
           className={"flex h-full flex-col gap-4"}
-          onSubmit={handleSubmit(onSubmitHandler)}
+          onSubmit={handleIngredientSubmit(onSubmitHandler)}
         >
           <div
             className={
@@ -55,13 +45,13 @@ export const Ingredients = ({ ingredients }: { ingredients: Ingredient[] }) => {
           >
             <Calculations ingredients={fetchedIngredients} />
           </div>
-          <CalculatorInputs selectResetKey={selectResetKey} />
+          <Calculator />
         </form>
       </div>
 
       <div className="w-full flex-none snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col">
         <IngredientsList ingredients={fetchedIngredients} />
       </div>
-    </FormProvider>
+    </>
   );
 };
