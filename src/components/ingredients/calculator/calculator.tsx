@@ -3,12 +3,29 @@ import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import { useUserStore } from "@/stores/user-store";
 import {
+  handleIngredientSubmit,
   ingredientRegister,
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
+import { SubmitHandler } from "react-hook-form";
+import { IngredientFormData } from "@/utils/interfaces";
 
 export const Calculator = () => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);
+
+  const onSubmitHandler: SubmitHandler<IngredientFormData> = async (data) => {
+    const submitResponse = await fetch("/api/ingredient", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const { success } = await submitResponse.json();
+
+    if (success) ingredientReset();
+  };
 
   const resetHandler = () => {
     ingredientReset();
@@ -103,7 +120,7 @@ export const Calculator = () => {
               className={
                 "text-md flex h-10 w-full items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              type={"submit"}
+              onClick={handleIngredientSubmit(onSubmitHandler)}
             >
               Save
             </button>

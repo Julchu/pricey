@@ -36,6 +36,8 @@ export const POST = async (req: NextRequest) => {
       `${process.env.ACCESS_TOKEN_KEY}`,
     )?.value;
 
+    if (!accessToken) return new Response();
+
     const ingredientData: IngredientFormData = await req.json();
 
     const saveIngredientResponse = await fetch(
@@ -44,8 +46,8 @@ export const POST = async (req: NextRequest) => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           ingredient: ingredientData,
         }),
