@@ -38,7 +38,7 @@ export const Calculations = ({
     newQuantity,
   );
 
-  const newPricePerItem = calcIndividualPrice(newPrice, newCapacity);
+  const newPricePerItem = calcIndividualPrice(newPrice, newQuantity);
 
   const formattedPricePerItem = formatCurrency(
     priceConverter(newPricePerItem, newUnit, userUnits),
