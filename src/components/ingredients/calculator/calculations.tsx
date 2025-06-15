@@ -1,9 +1,8 @@
 import { useWatch } from "react-hook-form";
 import { Ingredient } from "@/utils/interfaces";
-import { useMemo } from "react";
 import {
   calcIndividualPrice,
-  CurrencyFormatter,
+  formatCurrency,
   getPercentChange,
   PercentageFormatter,
   priceConverter,
@@ -12,6 +11,7 @@ import {
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 
 export const Calculations = ({
   ingredients,
@@ -22,68 +22,89 @@ export const Calculations = ({
     useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
   );
 
-  const unitToggles = {
+  const userUnits = {
     mass,
     volume: liquidVolume,
   };
 
-  const [name, price, unit, capacity, quantity] = useWatch({
+  const [newName, newPrice, newUnit, newCapacity, newQuantity] = useWatch({
     name: ["name", "price", "unit", "capacity", "quantity"],
     control: ingredientControl,
   });
 
+  const newPricePerMeasurement = calcIndividualPrice(
+    newPrice,
+    newCapacity,
+    newQuantity,
+  );
+
+  const newPricePerItem = calcIndividualPrice(newPrice, newCapacity);
+
+  const formattedPricePerItem = formatCurrency(
+    priceConverter(newPricePerItem, newUnit, userUnits),
+  );
+
   const existingIngredient = ingredients.find((ingredient) => {
-    if (ingredient.name && name)
-      return ingredient.name.toLowerCase() === name.toLowerCase();
+    if (ingredient.name && newName)
+      return ingredient.name.toLowerCase() === newName.toLowerCase();
   });
 
-  const inputIndividualPrice = calcIndividualPrice(price, capacity, quantity);
+  const existingPricePerMeasurement = calcIndividualPrice(
+    existingIngredient?.price,
+    existingIngredient?.capacity,
+    existingIngredient?.quantity,
+  );
 
-  const delta = useMemo(() => {
-    if (!existingIngredient) return;
+  const delta = getPercentChange(
+    existingPricePerMeasurement,
+    newPricePerMeasurement,
+  );
 
-    const existingIndividualPrice = calcIndividualPrice(
-      existingIngredient.price,
-      existingIngredient.capacity,
-      existingIngredient.quantity,
-    );
-
-    return PercentageFormatter.format(
-      getPercentChange(existingIndividualPrice, inputIndividualPrice),
-    );
-  }, [existingIngredient, inputIndividualPrice]);
-
-  const formattedPrice = CurrencyFormatter.format(
-    priceConverter(inputIndividualPrice / 100, unit, unitToggles),
+  const formattedPricePerMeasurement = formatCurrency(
+    priceConverter(newPricePerMeasurement, newUnit, userUnits),
   );
 
   const formattedUnit =
-    formattedPrice && unit ? `/${unitConverter(unit, unitToggles)}` : null;
+    formattedPricePerMeasurement && newUnit
+      ? `/${unitConverter(newUnit, userUnits)}`
+      : null;
 
   return (
-    <>
-      <h1 className={"mb-4 text-3xl font-bold"}>
-        {name ? name : "Enter an ingredient"}
+    <div
+      className={
+        "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
+      }
+    >
+      <h1 className={"mb-4 text-4xl font-bold"}>
+        {newName ? newName : "Enter an ingredient"}
       </h1>
 
       {/* Price per unit */}
-      {price || unit ? (
-        <h3 className={"mb-4 text-xl"}>
-          {formattedPrice}
+      {newPrice || newUnit ? (
+        <h3 className={"mb-4 text-2xl"}>
+          {formattedPricePerMeasurement}
           {formattedUnit}
         </h3>
       ) : null}
 
       {/* Price per item */}
-      {price || unit ? (
-        <h3 className={"mb-4 text-xl"}>
-          {formattedPrice}
-          {formattedUnit}
-        </h3>
+      {newPrice || newUnit ? (
+        <h3 className={"mb-4 text-2xl"}>{formattedPricePerItem} each</h3>
       ) : null}
 
-      {delta ? <h3 className={"mb-4 text-xl"}>{delta}</h3> : null}
+      {delta ? (
+        <h3 className={"mb-4 flex flex-row text-2xl"}>
+          <div className={"flex h-full w-full items-center"}>
+            {delta > 0 ? (
+              <TriangleUpIcon className={"size-full text-green-500"} />
+            ) : (
+              <TriangleDownIcon className={"size-full text-red-700"} />
+            )}
+          </div>
+          {PercentageFormatter.format(delta)}%
+        </h3>
+      ) : null}
       {/* TODO: Upload image */}
-    </>
+    </div>
   );
 };

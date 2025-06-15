@@ -5,7 +5,7 @@ import { ingredientSetValue } from "@/providers/ingredient-form-provider";
 export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
   const cardClickHandler = () => {
     ingredientSetValue("name", name);
-    ingredientSetValue("price", price);
+    ingredientSetValue("price", price / 100);
     ingredientSetValue("quantity", quantity);
     ingredientSetValue("unit", unit);
     ingredientSetValue("capacity", capacity);

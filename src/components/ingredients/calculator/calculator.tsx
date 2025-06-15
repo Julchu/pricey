@@ -8,23 +8,39 @@ import {
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler } from "react-hook-form";
-import { IngredientFormData } from "@/utils/interfaces";
+import { Ingredient, IngredientFormData } from "@/utils/interfaces";
+import { Dispatch, SetStateAction } from "react";
 
-export const Calculator = () => {
+export const Calculator = ({
+  setFetchedIngredients,
+}: {
+  setFetchedIngredients: Dispatch<SetStateAction<Ingredient[]>>;
+}) => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);
 
-  const onSubmitHandler: SubmitHandler<IngredientFormData> = async (data) => {
+  const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
+    ingredientFormData,
+  ) => {
     const submitResponse = await fetch("/api/ingredient", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(ingredientFormData),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    const { success } = await submitResponse.json();
+    if (submitResponse.status === 200) {
+      const response = await submitResponse.json();
+      const { ingredient } = response;
+      setFetchedIngredients((currentIngredients) => {
+        const filteredIngredients = currentIngredients.filter(
+          (currentIngredient) => currentIngredient.id !== ingredient.id,
+        );
+        return [...filteredIngredients, ingredient];
+      });
 
-    if (success) ingredientReset();
+      ingredientReset();
+    }
   };
 
   const resetHandler = () => {

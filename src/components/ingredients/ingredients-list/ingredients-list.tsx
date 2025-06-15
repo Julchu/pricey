@@ -1,4 +1,4 @@
-import { Card } from "@/components/ingredients/ingredients/card";
+import { Card } from "@/components/ingredients/ingredients-list/card";
 import { Ingredient } from "@/utils/interfaces";
 
 export const IngredientsList = ({

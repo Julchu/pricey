@@ -1,4 +1,4 @@
-import { Ingredients } from "@/components/ingredients/ingredients/ingredients";
+import { Ingredients } from "@/components/ingredients/ingredients";
 import { Ingredient } from "@/utils/interfaces";
 import { fetchIngredient } from "@/utils/server-actions/fetch-ingredient";
 

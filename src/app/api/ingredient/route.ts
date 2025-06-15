@@ -55,13 +55,12 @@ export const POST = async (req: NextRequest) => {
     );
 
     const { success, data, error } = await saveIngredientResponse.json();
-
     if (!success) return new Response(error, { status: 400 });
     return new Response(JSON.stringify({ ingredient: data }), {
       status: 200,
     });
   } catch (error) {
-    return new Response(`Login error: ${error}`, {
+    return new Response(`Ingredient creation error: ${error}`, {
       status: 400,
     });
   }
