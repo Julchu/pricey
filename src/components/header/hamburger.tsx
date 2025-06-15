@@ -1,6 +1,6 @@
 import { Avatar, DropdownMenu } from "radix-ui";
-import { UserMenu } from "@/components/menu/content";
-import { UserAvatar } from "@/components/menu/user-avatar";
+import { UserMenu } from "@/components/header/content";
+import { UserAvatar } from "@/components/header/user-avatar";
 import { UserFormData } from "@/utils/interfaces";
 import { PersonIcon } from "@radix-ui/react-icons";
 

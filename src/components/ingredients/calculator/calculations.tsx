@@ -75,12 +75,12 @@ export const Calculations = ({
         "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
       }
     >
-      <h1 className={"mb-4 text-4xl font-bold"}>
+      <h1 className={"mb-4 text-center text-4xl font-bold"}>
         {newName ? newName : "Enter an ingredient"}
       </h1>
 
       {/* Price per unit */}
-      {newPrice || newUnit ? (
+      {formattedPricePerMeasurement && formattedUnit ? (
         <h3 className={"mb-4 text-2xl"}>
           {formattedPricePerMeasurement}
           {formattedUnit}
@@ -88,7 +88,7 @@ export const Calculations = ({
       ) : null}
 
       {/* Price per item */}
-      {newPrice || newUnit ? (
+      {formattedPricePerItem ? (
         <h3 className={"mb-4 text-2xl"}>{formattedPricePerItem} each</h3>
       ) : null}
 

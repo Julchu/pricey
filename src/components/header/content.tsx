@@ -2,7 +2,7 @@
 import { useCallback } from "react";
 import { DropdownMenu } from "radix-ui";
 import { LiquidType, MassType, Unit } from "@/utils/interfaces";
-import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
+import { MenuLinks, MenuRadioItem } from "@/components/header/items";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";

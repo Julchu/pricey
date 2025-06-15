@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { geistMono, montserrat } from "@/components/fonts";
 import "./globals.css";
-import { Header } from "@/components/header";
+import { Header } from "@/components/header/header";
 import { UserStoreProvider } from "@/providers/user-store-provider";
 import { ReactScan } from "@/components/react-scan";
 import { cookies } from "next/headers";

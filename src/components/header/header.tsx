@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Hamburger } from "@/components/menu/hamburger";
+import { Hamburger } from "@/components/header/hamburger";
 
 export const Header = () => {
   return (
