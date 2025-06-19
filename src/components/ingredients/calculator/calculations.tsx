@@ -66,7 +66,7 @@ export const Calculations = ({
 
   const formattedUnit =
     formattedPricePerMeasurement && newUnit
-      ? `/${unitConverter(newUnit, userUnits)}`
+      ? `${unitConverter(newUnit, userUnits)}`
       : null;
 
   return (
@@ -75,25 +75,24 @@ export const Calculations = ({
         "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
       }
     >
-      <h1 className={"mb-4 text-center text-4xl font-bold"}>
+      <h1 className={"mb-4 text-center text-3xl font-bold"}>
         {newName ? newName : "Enter an ingredient"}
       </h1>
 
       {/* Price per unit */}
       {formattedPricePerMeasurement && formattedUnit ? (
-        <h3 className={"mb-4 text-2xl"}>
-          {formattedPricePerMeasurement}
-          {formattedUnit}
+        <h3 className={"mb-4 text-xl"}>
+          {`${formattedPricePerMeasurement}/${formattedUnit}`}
         </h3>
       ) : null}
 
       {/* Price per item */}
       {formattedPricePerItem ? (
-        <h3 className={"mb-4 text-2xl"}>{formattedPricePerItem} each</h3>
+        <h3 className={"mb-4 text-xl"}>{formattedPricePerItem} each</h3>
       ) : null}
 
       {delta ? (
-        <h3 className={"mb-4 flex flex-row text-2xl"}>
+        <h3 className={"mb-4 flex flex-row text-xl"}>
           <div className={"flex h-full w-full items-center"}>
             {delta > 0 ? (
               <TriangleUpIcon className={"size-full text-green-500"} />

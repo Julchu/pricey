@@ -96,7 +96,7 @@ export const calcTotalPrice = (
   );
 };
 
-export const CurrencyFormatter = new Intl.NumberFormat(undefined, {
+export const CurrencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   minimumFractionDigits: 2,
@@ -104,7 +104,7 @@ export const CurrencyFormatter = new Intl.NumberFormat(undefined, {
 });
 
 export const formatCurrency = (price?: number) => {
-  if (!price) return;
+  if (!price) return "";
   return CurrencyFormatter.format(price);
 };
 

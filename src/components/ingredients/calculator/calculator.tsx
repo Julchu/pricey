@@ -58,6 +58,7 @@ export const Calculator = ({
           Name
         </Label.Root>
         <Input
+          autoComplete={"name"}
           placeholder={"Pepsi"}
           id={"name"}
           type={"text"}

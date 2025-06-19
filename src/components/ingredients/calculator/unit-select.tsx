@@ -10,10 +10,10 @@ export const UnitSelect = () => {
     <Controller
       control={ingredientControl}
       name={"unit"}
+      aria-label={"Unit"}
       render={({ field }) => {
         return (
           <Select.Root
-            {...field}
             onValueChange={field.onChange}
             defaultValue={undefined}
             value={field.value}
@@ -23,8 +23,6 @@ export const UnitSelect = () => {
               className={
                 "animate-slide-down-and-fade text-md flex h-10 w-full items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
               }
-              aria-label={"Unit"}
-              {...field}
             >
               <Select.Value placeholder={"Kilogram"} id={"unit"} />
               <Select.Icon>
