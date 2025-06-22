@@ -1,7 +1,6 @@
 import { Label } from "radix-ui";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
-import { useUserStore } from "@/stores/user-store";
 import {
   handleIngredientSubmit,
   ingredientRegister,
@@ -16,8 +15,6 @@ export const Calculator = ({
 }: {
   setFetchedIngredients: Dispatch<SetStateAction<Ingredient[]>>;
 }) => {
-  const userInfo = useUserStore(({ userInfo }) => userInfo);
-
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
   ) => {
@@ -29,7 +26,7 @@ export const Calculator = ({
       },
     });
 
-    if (submitResponse.status === 200) {
+    if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
       const { ingredient } = response;
       setFetchedIngredients((currentIngredients) => {
@@ -131,18 +128,16 @@ export const Calculator = ({
           </button>
         </div>
 
-        {userInfo ? (
-          <div>
-            <button
-              className={
-                "text-md flex h-10 w-full items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
-              }
-              onClick={handleIngredientSubmit(onSubmitHandler)}
-            >
-              Save
-            </button>
-          </div>
-        ) : null}
+        <div>
+          <button
+            className={
+              "text-md flex h-10 w-full items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
+            }
+            onClick={handleIngredientSubmit(onSubmitHandler)}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

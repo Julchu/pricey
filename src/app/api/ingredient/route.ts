@@ -36,9 +36,12 @@ export const POST = async (req: NextRequest) => {
       `${process.env.ACCESS_TOKEN_KEY}`,
     )?.value;
 
-    if (!accessToken) return new Response();
-
     const ingredientData: IngredientFormData = await req.json();
+
+    if (!accessToken)
+      return new Response(JSON.stringify({ ingredient: ingredientData }), {
+        status: 401,
+      });
 
     const saveIngredientResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,

@@ -49,15 +49,13 @@ export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
   return (
     <div
       className={
-        "h-1/4 rounded-md border-2 border-amber-50 bg-red-900 text-center"
+        "mb-4 flex w-full shrink-0 cursor-pointer flex-col flex-wrap justify-center overflow-hidden rounded-md bg-blue-500 p-4 text-center text-xl"
       }
       onClick={cardClickHandler}
     >
-      <div className={"text-3xl"}>{name}</div>
-      <div className={"text-xl"}>
-        {`${formattedPricePerMeasurement}/${formattedUnit}`}
-      </div>
-      <div className={"text-xl"}>{`${formattedPricePerItem}`}</div>
+      <div className={"text-2xl font-bold capitalize"}>{name}</div>
+      <div>{`${formattedPricePerMeasurement}/${formattedUnit}`}</div>
+      <div>{`${formattedPricePerItem}`}</div>
     </div>
   );
 };

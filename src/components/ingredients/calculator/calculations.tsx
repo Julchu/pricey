@@ -75,7 +75,9 @@ export const Calculations = ({
         "flex h-1/3 flex-col items-center justify-center rounded-md bg-purple-600 p-4"
       }
     >
-      <h1 className={"mb-4 text-center text-3xl font-bold"}>
+      <h1
+        className={`mb-4 text-center text-3xl font-bold ${newName ? "capitalize" : ""}`}
+      >
         {newName ? newName : "Enter an ingredient"}
       </h1>
 

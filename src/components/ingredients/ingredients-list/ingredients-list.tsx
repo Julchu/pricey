@@ -8,12 +8,10 @@ export const IngredientsList = ({
   ingredients: Ingredient[];
 }) => {
   return (
-    <div className={"flex h-full w-full flex-col rounded-md bg-gray-400 p-4"}>
-      <div className={"grid h-full w-full grid-cols-2 gap-6 bg-green-700"}>
-        {ingredients.map((ingredient, index) => {
-          return <Card key={`${ingredient.name}_${index}`} {...ingredient} />;
-        })}
-      </div>
+    <div className={"w-full columns-2 gap-4 rounded-md"}>
+      {ingredients.map((ingredient, index) => {
+        return <Card key={`${ingredient.name}_${index}`} {...ingredient} />;
+      })}
     </div>
   );
 };
