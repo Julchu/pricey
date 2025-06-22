@@ -49,7 +49,7 @@ export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
   return (
     <div
       className={
-        "mb-4 flex w-full shrink-0 cursor-pointer flex-col flex-wrap justify-center overflow-hidden rounded-md bg-blue-500 p-4 text-center text-xl"
+        "mb-4 w-full cursor-pointer justify-center overflow-hidden rounded-md bg-blue-500 p-4 text-center text-xl break-words"
       }
       onClick={cardClickHandler}
     >
