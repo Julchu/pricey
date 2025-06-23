@@ -76,3 +76,17 @@ export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
     </div>
   );
 };
+
+/*<dialog open={open} onClose={closeHandler}>
+        <form>
+          <button
+            type="submit"
+            aria-label="close"
+            formMethod="dialog"
+            formNoValidate
+          >
+            X
+          </button>
+        </form>
+        Ceeeee
+      </dialog>*/
