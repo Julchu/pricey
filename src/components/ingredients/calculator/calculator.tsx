@@ -9,6 +9,7 @@ import {
 import { SubmitHandler } from "react-hook-form";
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import { Dispatch, SetStateAction } from "react";
+import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
 
 export const Calculator = ({
   setFetchedIngredients,
@@ -124,6 +125,7 @@ export const Calculator = ({
             onClick={resetHandler}
             type={"reset"}
           >
+            <ResetIcon />
             Reset
           </button>
         </div>
@@ -135,6 +137,7 @@ export const Calculator = ({
             }
             onClick={handleIngredientSubmit(onSubmitHandler)}
           >
+            <CheckCircledIcon />
             Save
           </button>
         </div>

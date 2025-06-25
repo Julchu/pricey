@@ -111,8 +111,8 @@ export const formatCurrency = (price?: number) => {
 export const getPercentChange = (
   earlierPrice?: number,
   laterPrice?: number,
-): number => {
-  if (!earlierPrice || !laterPrice) return 0;
+): number | null => {
+  if (!earlierPrice || !laterPrice) return null;
   return ((laterPrice - earlierPrice) / earlierPrice) * 100;
 };
 

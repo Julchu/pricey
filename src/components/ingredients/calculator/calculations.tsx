@@ -97,16 +97,9 @@ export const Calculations = ({
   return (
     <div
       className={
-        "relative flex h-1/3 flex-col items-center justify-center gap-y-4 rounded-md bg-purple-600 p-4 text-center text-xl text-white"
+        "relative flex h-1/3 flex-col items-center justify-center gap-y-4 rounded-md bg-purple-600 p-4 text-center text-xl font-medium text-white"
       }
     >
-      {/*{*/}
-      {/*  <Image*/}
-      {/*    src={FoodPlaceholder}*/}
-      {/*    alt={"Uploaded Ingredient"}*/}
-      {/*    className={"absolute h-full w-full mix-blend-overlay blur-xs"}*/}
-      {/*  />*/}
-      {/*}*/}
       <div className={`${isInProgress ? "h-1/4`" : ""} z-1`}>
         <h1 className={`text-3xl font-bold ${newName ? "capitalize" : ""}`}>
           {newName ? newName : "Enter an ingredient"}
@@ -138,25 +131,24 @@ export const Calculations = ({
       <div className={`z-1 flex flex-col gap-2 ${isInProgress ? "h-3/4" : ""}`}>
         {/* Price per unit */}
         {formattedPricePerMeasurement && formattedUnit ? (
-          <h3 className={""}>
-            {`${formattedPricePerMeasurement}/${formattedUnit}`}
-          </h3>
+          <h3>{`${formattedPricePerMeasurement}/${formattedUnit}`}</h3>
         ) : null}
 
         {/* Price per item */}
         {formattedPricePerItem ? <h3>{formattedPricePerItem} each</h3> : null}
 
-        {/* TODO: if delta is 0%, show 0% */}
-        <div className={"flex flex-row items-center"}>
-          {delta > 0 ? (
-            <TriangleUpIcon className={"size-8 text-green-500"} />
-          ) : delta < 0 ? (
-            <TriangleDownIcon className={"size-8 text-red-700"} />
-          ) : (
-            <TextAlignJustifyIcon className={"size-8 text-gray-500"} />
-          )}
-          <h3 className={"bg-red-900"}>{PercentageFormatter.format(delta)}%</h3>
-        </div>
+        {delta !== null ? (
+          <div className={"flex flex-row items-center"}>
+            {delta > 0 ? (
+              <TriangleUpIcon className={"size-8 text-green-500"} />
+            ) : delta < 0 ? (
+              <TriangleDownIcon className={"size-8 text-red-700"} />
+            ) : (
+              <TextAlignJustifyIcon className={"size-8 text-gray-500"} />
+            )}
+            <h3>{PercentageFormatter.format(delta)}%</h3>
+          </div>
+        ) : null}
       </div>
     </div>
   );
