@@ -1,37 +1,36 @@
 "use client";
 // TODO: similar ingredient card to Ingredients card
-import { Ingredient } from "@/utils/interfaces";
-import {
-  ingredientControl,
-  ingredientSetValue,
-} from "@/providers/ingredient-form-provider";
+import { ingredientSetValue } from "@/providers/ingredient-form-provider";
 import {
   calcIndividualPrice,
   formatCurrency,
+  getPercentChange,
+  PercentageFormatter,
   priceConverter,
   unitConverter,
 } from "@/utils/text-formatters";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
-import { useWatch } from "react-hook-form";
-import { useDebouncedState } from "@/app/hooks/use-debounced-state";
-import { useEffect } from "react";
+import { Ingredient, IngredientFormData } from "@/utils/interfaces";
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 
-export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
+export const Card = ({
+  ingredient,
+  searchedIngredient,
+}: {
+  ingredient: Ingredient;
+  searchedIngredient: IngredientFormData;
+}) => {
+  const { name, price, quantity, unit, capacity } = ingredient;
+  const {
+    price: searchPrice,
+    quantity: searchQuantity,
+    capacity: searchCapacity,
+  } = searchedIngredient;
+
   const [mass, liquidVolume] = useUserStore(
     useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
   );
-
-  const [searchName] = useWatch({
-    name: ["name"],
-    control: ingredientControl,
-  });
-
-  const debouncedSearchName = useDebouncedState(searchName, 500);
-
-  useEffect(() => {
-    console.log("debouncedSearchName:", debouncedSearchName);
-  }, [debouncedSearchName]);
 
   const userUnits = {
     mass,
@@ -46,16 +45,19 @@ export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
     ingredientSetValue("capacity", capacity);
   };
 
-  const newPricePerMeasurement = calcIndividualPrice(price, capacity, quantity);
-
-  const newPricePerItem = calcIndividualPrice(price, quantity);
-
-  const formattedPricePerItem = formatCurrency(
-    priceConverter(newPricePerItem, unit, userUnits),
+  const ingredientPricePerMeasurement = calcIndividualPrice(
+    price,
+    capacity,
+    quantity,
+  );
+  const searchPricePerMeasurement = calcIndividualPrice(
+    searchPrice,
+    searchCapacity,
+    searchQuantity,
   );
 
   const formattedPricePerMeasurement = formatCurrency(
-    priceConverter(newPricePerMeasurement, unit, userUnits),
+    priceConverter(ingredientPricePerMeasurement, unit, userUnits),
   );
 
   const formattedUnit =
@@ -63,16 +65,35 @@ export const Card = ({ name, price, quantity, unit, capacity }: Ingredient) => {
       ? `${unitConverter(unit, userUnits)}`
       : "";
 
+  const delta = getPercentChange(
+    ingredientPricePerMeasurement,
+    searchPricePerMeasurement,
+  );
+
   return (
     <div
       className={
-        "mb-4 w-full cursor-pointer justify-center overflow-hidden rounded-md bg-blue-500 p-4 text-center text-lg break-words"
+        "mb-4 flex h-full w-full cursor-pointer flex-col items-center gap-y-2 overflow-hidden rounded-md bg-blue-500 p-4 text-center text-lg break-words"
       }
       onClick={cardClickHandler}
     >
-      <div className={"text-xl font-bold capitalize"}>{name}</div>
-      <div>{`${formattedPricePerMeasurement}/${formattedUnit}`}</div>
-      <div>{`${formattedPricePerItem}`}</div>
+      <h1 className={"text-xl font-bold capitalize"}>{name}</h1>
+
+      <h3>{`${formattedPricePerMeasurement}/${formattedUnit}`}</h3>
+
+      {/* TODO: if delta is 0%, show 0% */}
+      {delta ? (
+        <h3 className={"flex flex-row items-center"}>
+          <div className={"flex h-full w-full"}>
+            {delta > 0 ? (
+              <TriangleUpIcon className={"size-8 text-green-500"} />
+            ) : (
+              <TriangleDownIcon className={"size-8 text-red-700"} />
+            )}
+          </div>
+          {PercentageFormatter.format(delta)}%
+        </h3>
+      ) : null}
     </div>
   );
 };
