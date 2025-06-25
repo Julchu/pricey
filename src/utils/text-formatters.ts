@@ -116,7 +116,7 @@ export const getPercentChange = (
   return ((laterPrice - earlierPrice) / earlierPrice) * 100;
 };
 
-export const PercentageFormatter = new Intl.NumberFormat(undefined, {
+export const PercentageFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });

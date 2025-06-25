@@ -47,11 +47,11 @@ export const Calculator = ({
   return (
     <div
       className={
-        "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-purple-300 p-4"
+        "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-purple-300 p-4 text-sm"
       }
     >
       <div className={"grid grid-cols-1"}>
-        <Label.Root className={"text-sm opacity-50"} htmlFor={"name"}>
+        <Label.Root className={"opacity-50"} htmlFor={"name"}>
           Name
         </Label.Root>
         <Input
@@ -65,7 +65,7 @@ export const Calculator = ({
 
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
-          <Label.Root className={"text-sm opacity-50"} htmlFor={"price"}>
+          <Label.Root className={"opacity-50"} htmlFor={"price"}>
             Price ($)
           </Label.Root>
 
@@ -79,7 +79,7 @@ export const Calculator = ({
         </div>
 
         <div>
-          <Label.Root className={"text-sm opacity-50"} htmlFor={"quantity"}>
+          <Label.Root className={"opacity-50"} htmlFor={"quantity"}>
             (Quantity)
           </Label.Root>
 
@@ -94,7 +94,7 @@ export const Calculator = ({
 
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
-          <Label.Root className={"text-sm opacity-50"} htmlFor={"capacity"}>
+          <Label.Root className={"opacity-50"} htmlFor={"capacity"}>
             Capacity
           </Label.Root>
 
@@ -108,7 +108,7 @@ export const Calculator = ({
         </div>
 
         <div>
-          <Label.Root className={"text-md opacity-50"} htmlFor={"unit"}>
+          <Label.Root className={"opacity-50"} htmlFor={"unit"}>
             Unit
           </Label.Root>
           <UnitSelect />
