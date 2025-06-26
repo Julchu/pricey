@@ -27,6 +27,10 @@ export const Calculator = ({
       },
     });
 
+    if (ingredientFormData.image) {
+      URL.revokeObjectURL(ingredientFormData.image);
+    }
+
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
       const { ingredient } = response;

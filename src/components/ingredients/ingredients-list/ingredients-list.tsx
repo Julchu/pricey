@@ -16,11 +16,11 @@ export const IngredientsList = ({
       control: ingredientControl,
     });
 
-  const debouncedSearchName = useDebouncedState(searchName, 100);
-  const debouncedSearchPrice = useDebouncedState(searchPrice, 100);
-  const debouncedSearchQuantity = useDebouncedState(searchQuantity, 100);
-  const debouncedSearchUnit = useDebouncedState(searchUnit, 100);
-  const debouncedSearchCapacity = useDebouncedState(searchCapacity, 100);
+  const debouncedSearchName = useDebouncedState(searchName, 1000);
+  const debouncedSearchPrice = useDebouncedState(searchPrice, 1000);
+  const debouncedSearchQuantity = useDebouncedState(searchQuantity, 1000);
+  const debouncedSearchCapacity = useDebouncedState(searchCapacity, 1000);
+  const debouncedSearchUnit = useDebouncedState(searchUnit, 1000);
 
   const searchedIngredient = {
     name: debouncedSearchName,
@@ -40,6 +40,22 @@ export const IngredientsList = ({
         )
     );
   });
+
+  if (ingredients.length === 0)
+    return (
+      <div className={"flex h-full flex-col gap-4"}>
+        <div
+          className={
+            "flex h-1/3 flex-col justify-center p-4 text-center font-medium"
+          }
+        >
+          <h1 className={`text-3xl font-bold capitalize`}>
+            {"Add ingredients"}
+          </h1>
+        </div>
+        <div className={"flex h-2/3"}></div>
+      </div>
+    );
 
   return (
     <div className={"columns-2 gap-4 rounded-md"}>

@@ -9,14 +9,15 @@ export const UserAvatar = () => {
 
   const imageUrl = userInfo?.image;
 
-  if (!userInfo?.image) return <PersonIcon className={"size-1/2 rounded-md"} />;
+  if (!userInfo?.image)
+    return <PersonIcon className={"size-1/2 rounded-full"} />;
 
   return (
     <>
       <Avatar.Image
         src={imageUrl}
         alt={"User avatar"}
-        className={"rounded-md border-1 border-blue-500"}
+        className={"rounded-full"}
       />
       <HamburgerMenuIcon
         className={"absolute h-1/2 w-1/2 text-blue-500 mix-blend-color-dodge"}

@@ -56,9 +56,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
       >
         <ReactScan />
         <main
-          className={
-            "container mx-auto flex h-dvh w-screen flex-col gap-4 bg-gray-50 p-4"
-          }
+          className={"container mx-auto flex h-dvh w-screen flex-col gap-4 p-4"}
         >
           <UserStoreProvider userInfo={userInfo} />
           {/*<ReactQueryProvider dehydratedState={dehydratedState}>*/}

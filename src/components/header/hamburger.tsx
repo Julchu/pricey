@@ -19,9 +19,9 @@ export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
             ) : (
               <Avatar.Image
                 alt={"User avatar"}
-                className={"rounded-md object-contain"}
+                className={"rounded-full object-contain"}
               >
-                <PersonIcon className={"size-1/2 rounded-md"} />
+                <PersonIcon className={"size-1/2 rounded-full"} />
               </Avatar.Image>
             )}
           </Avatar.Fallback>
