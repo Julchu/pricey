@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
       {
         method: "POST",
         headers: {
-          Cookie: `${refreshTokenKey}=${refreshToken}`,
+          Authorization: `Bearer ${refreshToken}`,
         },
       },
     );

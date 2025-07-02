@@ -2,8 +2,7 @@
 import { useCallback } from "react";
 import { DropdownMenu } from "radix-ui";
 import { LiquidType, MassType, Unit } from "@/utils/interfaces";
-import { MenuLinks, MenuRadioItem } from "@/components/menu/items";
-import { usePathname } from "next/navigation";
+import { MenuLinks, MenuRadioItem } from "@/components/header/items";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import Link from "next/link";
@@ -36,8 +35,6 @@ export const UserMenu = () => {
     },
     [setLiquidVolume],
   );
-
-  const activePage = usePathname();
 
   return (
     <>
@@ -83,7 +80,7 @@ export const UserMenu = () => {
             </DropdownMenu.RadioGroup>
           </section>
 
-          <MenuLinks activePage={activePage} />
+          <MenuLinks />
 
           <section>
             <DropdownMenu.Separator

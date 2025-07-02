@@ -7,6 +7,8 @@ export const fetchIngredient = async () => {
     const browserCookies = await cookies();
     const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
+    if (!token) return [];
+
     const ingredientsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,
       {
@@ -20,7 +22,7 @@ export const fetchIngredient = async () => {
 
     if (success) return data;
     if (error) console.error("fetch-ingredient error", error);
-    else return [];
+    return [];
   } catch (error) {
     console.error(error);
   }

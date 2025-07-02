@@ -1,6 +1,8 @@
 import { DropdownMenu } from "radix-ui";
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { useUserStore } from "@/stores/user-store";
+import { usePathname } from "next/navigation";
 
 export const MenuRadioItem = ({
   value,
@@ -25,13 +27,20 @@ export const MenuRadioItem = ({
   );
 };
 
-export const MenuLinks = ({ activePage }: { activePage: string }) => {
-  const links = [
-    { href: "/", title: "Ingredients" },
-    { href: "/groceries", title: "Groceries" },
-    { href: "/recipes", title: "Recipes" },
+export const MenuLinks = () => {
+  const activePage = usePathname();
+  const userInfo = useUserStore(({ userInfo }) => userInfo);
+  const publicLinks = [
+    { href: "/", title: "Home" },
     { href: "/about", title: "About" },
   ];
+
+  const privateLinks = [
+    { href: "/ingredients", title: "Ingredients" },
+    { href: "/groceries", title: "Groceries" },
+    { href: "/recipes", title: "Recipes" },
+  ];
+
   return (
     <section>
       <DropdownMenu.Separator className={"m-[5px] h-px bg-black opacity-20"} />
@@ -41,11 +50,14 @@ export const MenuLinks = ({ activePage }: { activePage: string }) => {
         Links
       </DropdownMenu.Label>
 
-      {links.map(({ href, title }, index) => {
-        if (activePage != href)
-          return (
-            <MenuLink key={`${title}_${index}`} href={href} title={title} />
-          );
+      {publicLinks.map(({ href, title }, index) => {
+        if (activePage == href) return;
+        return <MenuLink key={`${title}_${index}`} href={href} title={title} />;
+      })}
+
+      {privateLinks.map(({ href, title }, index) => {
+        if (activePage == href || !userInfo) return;
+        return <MenuLink key={`${title}_${index}`} href={href} title={title} />;
       })}
     </section>
   );

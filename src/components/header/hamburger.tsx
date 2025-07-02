@@ -1,6 +1,6 @@
 import { Avatar, DropdownMenu } from "radix-ui";
-import { UserMenu } from "@/components/menu/content";
-import { UserAvatar } from "@/components/menu/user-avatar";
+import { UserMenu } from "@/components/header/content";
+import { UserAvatar } from "@/components/header/user-avatar";
 import { UserFormData } from "@/utils/interfaces";
 import { PersonIcon } from "@radix-ui/react-icons";
 
@@ -9,7 +9,7 @@ export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Avatar.Root className="inline-flex aspect-square h-full cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold text-white select-none">
+        <Avatar.Root className="relative inline-flex aspect-square h-full cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold text-white select-none">
           <UserAvatar />
           <Avatar.Fallback aria-label={"User menu"}>
             {firstName && lastName ? (

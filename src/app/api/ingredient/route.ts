@@ -38,14 +38,19 @@ export const POST = async (req: NextRequest) => {
 
     const ingredientData: IngredientFormData = await req.json();
 
+    if (!accessToken)
+      return new Response(JSON.stringify({ ingredient: ingredientData }), {
+        status: 401,
+      });
+
     const saveIngredientResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           ingredient: ingredientData,
         }),
@@ -53,13 +58,12 @@ export const POST = async (req: NextRequest) => {
     );
 
     const { success, data, error } = await saveIngredientResponse.json();
-
     if (!success) return new Response(error, { status: 400 });
     return new Response(JSON.stringify({ ingredient: data }), {
       status: 200,
     });
   } catch (error) {
-    return new Response(`Login error: ${error}`, {
+    return new Response(`Ingredient creation error: ${error}`, {
       status: 400,
     });
   }

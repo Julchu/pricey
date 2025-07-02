@@ -12,16 +12,17 @@ export const filterNullableObject = (
   );
 };
 
-export const isMass = (unit: Unit): boolean =>
+export const isMass = (unit?: Unit): boolean =>
   unit === Unit.KILOGRAM || unit === Unit.POUND;
 export const isVolume = (unit?: Unit): boolean =>
   unit === Unit.LITRE || unit === Unit.QUART;
 
 export const priceConverter = (
-  price: number,
+  price?: number,
   fromUnit?: Unit,
   toUnits?: UnitCategory,
-): number => {
+): number | undefined => {
+  if (!price) return;
   /* Prices are /lb by default; switch to kg if needed
    ** Example: $X per 1 lb, $X per 0.4536 kg, $X / 0.4536 per 1 kg = $X * 2.2046 per 1 kg
    *** $1 for 1 lb
@@ -58,7 +59,7 @@ export const priceConverter = (
  * Return opposite mass (Unit.litres)
  */
 export const unitConverter = (
-  fromUnit: Unit,
+  fromUnit?: Unit,
   toUnits: UnitCategory = { mass: Unit.KILOGRAM, volume: Unit.LITRE },
 ): Unit => {
   if (isMass(fromUnit)) return toUnits.mass;
@@ -69,12 +70,13 @@ export const unitConverter = (
 // TODO: verify amount cents
 // Price per measurement per unit; takes care of float by multiplying by 100 to cents
 export const calcIndividualPrice = (
-  price: number,
+  priceCents?: number,
   capacity: number = 1, // default 1 for GroceryList ingredients that might not have measurements added
   quantity: number = 1,
-): number => {
+): number | undefined => {
+  if (!priceCents) return;
   return (
-    (price * 100) /
+    priceCents /
     (capacity > 0 ? capacity : 1) /
     (quantity > 0 ? quantity : 1) /
     100
@@ -84,32 +86,41 @@ export const calcIndividualPrice = (
 // TODO: verify amount cents
 // Total price based on price per measurement and capacity/quantity
 export const calcTotalPrice = (
-  price: number,
+  priceCents?: number,
   capacity?: number,
   quantity?: number,
-): number => {
+): number | undefined => {
+  if (!priceCents) return;
   return (
-    (price * 100 * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
+    (priceCents * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
   );
 };
 
-export const CurrencyFormatter = new Intl.NumberFormat(undefined, {
+export const CurrencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
 
-export const getPercentChange = (
-  earlierPrice: number,
-  laterPrice: number,
-): number => ((laterPrice - earlierPrice) / earlierPrice) * 100;
+export const formatCurrency = (price?: number) => {
+  if (!price) return "";
+  return CurrencyFormatter.format(price);
+};
 
-export const PercentageFormatter = new Intl.NumberFormat(undefined, {
+export const getPercentChange = (
+  earlierPrice?: number,
+  laterPrice?: number,
+): number | null => {
+  if (!earlierPrice || !laterPrice) return null;
+  return ((laterPrice - earlierPrice) / earlierPrice) * 100;
+};
+
+export const PercentageFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
 
-export const validateIsNumber = (value: number): boolean => {
+export const validateIsNumber = (value?: number): boolean => {
   return !!value;
 };

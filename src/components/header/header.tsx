@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Hamburger } from "@/components/menu/hamburger";
+import { Hamburger } from "@/components/header/hamburger";
 
 export const Header = () => {
   return (
-    <header className={"flex h-[3rem] flex-row justify-between bg-gray-100"}>
+    <header className={"flex h-[3rem] flex-row justify-between"}>
       <Link
         href={"/"}
         className={
