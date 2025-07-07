@@ -1,26 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { Ingredient } from "@/utils/interfaces";
+import { useIngredientsStore } from "@/stores/ingredients-store";
 
-import { useUserStore } from "@/stores/user-store";
-import { UserFormData } from "@/utils/interfaces";
-
-export const UserStoreProvider = ({
-  userInfo,
+export const IngredientStoreProvider = ({
+  ingredients,
 }: {
-  userInfo?: UserFormData | null;
+  ingredients?: Ingredient[] | null;
 }) => {
-  const { setUser, setMass, setLiquidVolume } = useUserStore();
+  const setIngredients = useIngredientsStore(
+    ({ setIngredients }) => setIngredients,
+  );
 
-  useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-      if (userInfo.preferences?.units) {
-        setMass(userInfo.preferences?.units?.mass);
-        setLiquidVolume(userInfo.preferences?.units?.volume);
-      }
-    }
-  }, [setLiquidVolume, setMass, setUser, userInfo]);
+  if (ingredients) setIngredients(ingredients);
+  // useEffect(() => {
+  //   if (ingredients) {
+  //     setIngredients(ingredients);
+  //   }
+  // }, [ingredients, setIngredients]);
 
   return null;
 };

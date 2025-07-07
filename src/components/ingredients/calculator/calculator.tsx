@@ -1,3 +1,4 @@
+"use client";
 import { Label } from "radix-ui";
 import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
@@ -7,15 +8,15 @@ import {
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler } from "react-hook-form";
-import { Ingredient, IngredientFormData } from "@/utils/interfaces";
-import { Dispatch, SetStateAction } from "react";
+import { IngredientFormData } from "@/utils/interfaces";
 import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
+import { useIngredientsStore } from "@/stores/ingredients-store";
 
-export const Calculator = ({
-  setFetchedIngredients,
-}: {
-  setFetchedIngredients: Dispatch<SetStateAction<Ingredient[]>>;
-}) => {
+export const Calculator = () => {
+  const updateIngredients = useIngredientsStore(
+    ({ updateIngredients }) => updateIngredients,
+  );
+
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
   ) => {
@@ -34,13 +35,7 @@ export const Calculator = ({
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
       const { ingredient } = response;
-      setFetchedIngredients((currentIngredients) => {
-        const filteredIngredients = currentIngredients.filter(
-          (currentIngredient) => currentIngredient.id !== ingredient.id,
-        );
-        return [...filteredIngredients, ingredient];
-      });
-
+      updateIngredients(ingredient);
       ingredientReset();
     }
   };

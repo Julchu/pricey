@@ -1,5 +1,5 @@
+"use client";
 import { useWatch } from "react-hook-form";
-import { Ingredient } from "@/utils/interfaces";
 import {
   calcIndividualPrice,
   formatCurrency,
@@ -23,12 +23,10 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import { ChangeEvent } from "react";
+import { useIngredientsStore } from "@/stores/ingredients-store";
 
-export const Calculations = ({
-  ingredients,
-}: {
-  ingredients: Ingredient[];
-}) => {
+export const Calculations = () => {
+  const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
   const [mass, liquidVolume] = useUserStore(
     useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
   );

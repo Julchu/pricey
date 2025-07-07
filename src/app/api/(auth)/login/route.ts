@@ -25,7 +25,7 @@ export async function POST() {
     const browserCookies = await cookies();
     const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
-    if (!token) return new Response();
+    if (!token) return new Response(JSON.stringify({ userInfo: null }));
 
     const loginResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/user`,
