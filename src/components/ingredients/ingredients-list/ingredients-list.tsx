@@ -1,15 +1,13 @@
 "use client";
-import { Ingredient } from "@/utils/interfaces";
 import { useWatch } from "react-hook-form";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { Card } from "@/components/ingredients/ingredients-list/card";
 import { useDebouncedState } from "@/app/hooks/use-debounced-state";
+import { useIngredientsStore } from "@/stores/ingredients-store";
 
-export const IngredientsList = ({
-  ingredients,
-}: {
-  ingredients: Ingredient[];
-}) => {
+export const IngredientsList = () => {
+  const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
+
   const [searchName, searchPrice, searchQuantity, searchUnit, searchCapacity] =
     useWatch({
       name: ["name", "price", "quantity", "unit", "capacity"],

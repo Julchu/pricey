@@ -7,6 +7,7 @@ export type IngredientsState = {
 
 export type IngredientsActions = {
   setIngredients: (ingredients: Ingredient[]) => void;
+  updateIngredients: (ingredient: Ingredient) => void;
   clearIngredients: () => void;
   fetchIngredients: () => void;
 };
@@ -25,9 +26,16 @@ export const defaultInitState: IngredientsState = {
   ingredients: [],
 };
 
-export const useIngredientsStore = create<IngredientsStore>((set) => ({
+export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ...defaultInitState,
   setIngredients: (ingredients) => set({ ingredients }),
+  updateIngredients: (newIngredient) => {
+    const ingredients = get().ingredients;
+    const filteredIngredients = ingredients.filter(
+      (currentIngredient) => currentIngredient.id !== newIngredient.id,
+    );
+    set({ ingredients: [...filteredIngredients, newIngredient] });
+  },
   clearIngredients: () => set({ ingredients: [] }),
   fetchIngredients: async () => {
     try {
