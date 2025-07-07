@@ -48,42 +48,51 @@ export const Calculations = () => {
     control: ingredientControl,
   });
 
-  const newPricePerMeasurement = calcIndividualPrice(
+  const newPricePerCapacity = calcIndividualPrice(
     newPrice,
     newCapacity,
     newQuantity,
   );
 
-  const newPricePerItem = calcIndividualPrice(newPrice, newQuantity);
-
-  const formattedPricePerItem = formatCurrency(
-    priceConverter(newPricePerItem, newUnit, userUnits),
+  const newPricePerMeasurement = priceConverter(
+    newPricePerCapacity,
+    newUnit,
+    userUnits,
   );
+
+  const newPricePerItem = calcIndividualPrice(newPrice, newQuantity);
 
   const existingIngredient = ingredients.find((ingredient) => {
     if (ingredient.name && newName)
       return ingredient.name.toLowerCase() === newName.toLowerCase();
   });
 
-  const existingPricePerMeasurement = calcIndividualPrice(
+  const existingPricePerCapacity = calcIndividualPrice(
     existingIngredient?.price,
     existingIngredient?.capacity,
     existingIngredient?.quantity,
   );
 
-  const delta = getPercentChange(
-    existingPricePerMeasurement,
-    newPricePerMeasurement,
+  const existingPricePerMeasurement = priceConverter(
+    existingPricePerCapacity,
+    existingIngredient?.unit,
+    userUnits,
   );
 
-  const formattedPricePerMeasurement = formatCurrency(
-    priceConverter(newPricePerMeasurement, newUnit, userUnits),
-  );
+  // TODO: verify price per item calculation
+  const formattedPricePerItem = formatCurrency(newPricePerItem);
+
+  const formattedPricePerMeasurement = formatCurrency(newPricePerMeasurement);
 
   const formattedUnit =
     formattedPricePerMeasurement && newUnit
       ? `${unitConverter(newUnit, userUnits)}`
       : null;
+
+  const delta = getPercentChange(
+    existingPricePerMeasurement,
+    newPricePerMeasurement,
+  );
 
   const isInProgress = !!(
     newName ||
@@ -139,7 +148,7 @@ export const Calculations = () => {
 
       {isInProgress ? (
         <div className={`z-1 flex h-3/4 flex-col gap-2`}>
-          {/* Price per unit */}
+          {/* Price per unit per measurement */}
           {formattedPricePerMeasurement && formattedUnit ? (
             <h3>{`${formattedPricePerMeasurement}/${formattedUnit}`}</h3>
           ) : null}

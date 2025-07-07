@@ -4,6 +4,7 @@ import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { Card } from "@/components/ingredients/ingredients-list/card";
 import { useDebouncedState } from "@/app/hooks/use-debounced-state";
 import { useIngredientsStore } from "@/stores/ingredients-store";
+import { useMemo } from "react";
 
 export const IngredientsList = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
@@ -20,13 +21,21 @@ export const IngredientsList = () => {
   const debouncedSearchCapacity = useDebouncedState(searchCapacity, 100);
   const debouncedSearchUnit = useDebouncedState(searchUnit, 100);
 
-  const searchedIngredient = {
-    name: debouncedSearchName,
-    price: debouncedSearchPrice,
-    quantity: debouncedSearchQuantity,
-    unit: debouncedSearchUnit,
-    capacity: debouncedSearchCapacity,
-  };
+  const searchedIngredient = useMemo(() => {
+    return {
+      name: debouncedSearchName,
+      price: debouncedSearchPrice,
+      quantity: debouncedSearchQuantity,
+      unit: debouncedSearchUnit,
+      capacity: debouncedSearchCapacity,
+    };
+  }, [
+    debouncedSearchCapacity,
+    debouncedSearchName,
+    debouncedSearchPrice,
+    debouncedSearchQuantity,
+    debouncedSearchUnit,
+  ]);
 
   const filteredIngredients = ingredients.filter((ingredient) => {
     return (
