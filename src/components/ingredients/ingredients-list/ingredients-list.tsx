@@ -63,7 +63,7 @@ export const IngredientsList = () => {
     );
 
   return (
-    <div className={"columns-2 gap-4 rounded-md"}>
+    <div className={"columns-1 gap-4 rounded-md sm:columns-2"}>
       {filteredIngredients.map((ingredient, index) => {
         return (
           <Card

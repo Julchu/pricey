@@ -13,9 +13,20 @@ export const Ingredients = () => {
         </form>
       </div>
 
-      <div className="w-full flex-none snap-x snap-center overflow-y-scroll md:h-full md:w-1/2 md:flex-initial md:flex-col">
+      <div className="w-full flex-none snap-x snap-center md:h-full md:w-1/2 md:flex-initial md:flex-col md:overflow-y-scroll">
         <IngredientsList />
       </div>
     </>
   );
 };
+
+//[&::-webkit-scrollbar]:hidden
+/* Custom scrollbar
+ * [&::-webkit-scrollbar]:w-2
+ * [&::-webkit-scrollbar-track]:rounded-full
+ * [&::-webkit-scrollbar-track]:bg-gray-100
+ * [&::-webkit-scrollbar-thumb]:rounded-full
+ * [&::-webkit-scrollbar-thumb]:bg-gray-300
+ * dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+ * dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+ * */
