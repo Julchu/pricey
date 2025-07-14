@@ -1,4 +1,12 @@
-import { Unit, UnitCategory } from "@/utils/interfaces";
+import {
+  MassType,
+  MassValues,
+  Unit,
+  UnitCategory,
+  UnitType,
+  VolumeType,
+  VolumeValues,
+} from "@/utils/interfaces";
 
 export const filterNullableObject = (
   obj: Record<string, unknown>,
@@ -12,14 +20,15 @@ export const filterNullableObject = (
   );
 };
 
-export const isMass = (unit?: Unit): boolean =>
-  unit === Unit.KILOGRAM || unit === Unit.POUND;
-export const isVolume = (unit?: Unit): boolean =>
-  unit === Unit.LITRE || unit === Unit.QUART;
+export const isMass = (unit?: string): unit is MassType =>
+  MassValues.includes(unit as MassType);
+
+export const isVolume = (unit?: string): unit is VolumeType =>
+  VolumeValues.includes(unit as VolumeType);
 
 export const priceConverter = (
   price?: number,
-  fromUnit?: Unit,
+  fromUnit?: UnitType,
   toUnits?: UnitCategory,
 ): number | undefined => {
   if (!price) return;
@@ -59,9 +68,9 @@ export const priceConverter = (
  * Return opposite mass (Unit.litres)
  */
 export const unitConverter = (
-  fromUnit?: Unit,
+  fromUnit?: UnitType,
   toUnits: UnitCategory = { mass: Unit.KILOGRAM, volume: Unit.LITRE },
-): Unit => {
+): UnitType => {
   if (isMass(fromUnit)) return toUnits.mass;
   else if (isVolume(fromUnit)) return toUnits.volume;
   return Unit.ITEM;
