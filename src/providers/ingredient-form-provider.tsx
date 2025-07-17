@@ -1,5 +1,5 @@
 import { createFormControl } from "react-hook-form";
-import { IngredientFormData, Unit } from "@/utils/interfaces";
+import { IngredientFormData, UnitType } from "@/utils/interfaces";
 
 export const {
   formControl: ingredientFormControl,
@@ -22,5 +22,5 @@ export const {
 
 export const ingredientReset = () => {
   reset();
-  ingredientSetValue("unit", "" as Unit);
+  ingredientSetValue("unit", "" as UnitType);
 };

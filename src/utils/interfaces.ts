@@ -28,11 +28,11 @@ export const VolumeValues = [Unit.LITRE, Unit.QUART] as const;
 
 export type UnitType = (typeof UnitValues)[number]; // "kg" | "lb" | "L" | "qt" | "cup" | "tbsp" | "tsp" | "item";
 export type MassType = (typeof MassValues)[number]; // "kg" | "lb"
-export type VolumeType = (typeof VolumeValues)[number]; // "L" | "qt"
+export type LiquidType = (typeof VolumeValues)[number]; // "L" | "qt"
 
 export type UnitCategory = {
   mass: MassType;
-  volume: VolumeType;
+  volume: LiquidType;
 };
 
 export const Color = {
