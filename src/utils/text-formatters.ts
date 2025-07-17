@@ -1,10 +1,10 @@
 import {
+  LiquidType,
   MassType,
   MassValues,
   Unit,
   UnitCategory,
   UnitType,
-  VolumeType,
   VolumeValues,
 } from "@/utils/interfaces";
 
@@ -23,8 +23,8 @@ export const filterNullableObject = (
 export const isMass = (unit?: string): unit is MassType =>
   MassValues.includes(unit as MassType);
 
-export const isVolume = (unit?: string): unit is VolumeType =>
-  VolumeValues.includes(unit as VolumeType);
+export const isVolume = (unit?: string): unit is LiquidType =>
+  VolumeValues.includes(unit as LiquidType);
 
 export const priceConverter = (
   price?: number,

@@ -2,7 +2,15 @@
 import { cookies } from "next/headers";
 
 // TODO: paginate results
-export const fetchIngredient = async () => {
+export const serverFetch = async <T>({
+  endpoint,
+  method = "GET",
+  body,
+}: {
+  endpoint: string;
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: unknown;
+}): Promise<T[]> => {
   try {
     const browserCookies = await cookies();
     const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
@@ -10,8 +18,10 @@ export const fetchIngredient = async () => {
     if (!token) return [];
 
     const ingredientsResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/ingredient`,
+      `${process.env.PRICEY_BACKEND_URL}/${endpoint}`,
       {
+        method,
+        body: body ? JSON.stringify(body) : undefined,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -20,10 +30,11 @@ export const fetchIngredient = async () => {
 
     const { success, data, error } = await ingredientsResponse.json();
 
-    if (success) return data;
+    if (success) return data as T[];
     if (error) console.error("fetch-ingredient error", error);
     return [];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
