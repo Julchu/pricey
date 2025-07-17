@@ -108,7 +108,7 @@ export const Calculations = () => {
         "relative flex h-1/3 flex-col items-center justify-center gap-y-4 rounded-md bg-purple-600 p-4 text-center text-xl font-medium text-white"
       }
     >
-      <div className={`${isInProgress ? "h-1/4`" : ""} z-1`}>
+      <div className={`${isInProgress ? "h-1/4`" : ""}`}>
         <h1 className={`text-3xl font-bold capitalize`}>
           {newName ? newName : "Enter an ingredient"}
         </h1>
