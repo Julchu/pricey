@@ -3,19 +3,18 @@ import { Select } from "radix-ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Controller } from "react-hook-form";
 import { UnitSelectDropdown } from "@/components/ingredients/calculator/inputs";
-import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import { isMass, isVolume } from "@/utils/text-formatters";
 
-export const UnitSelect = () => {
+export const UnitSelect = ({ control }: { control: any }) => {
   const [setMass, setLiquidVolume] = useUserStore(
     useShallow(({ setMass, setLiquidVolume }) => [setMass, setLiquidVolume]),
   );
 
   return (
     <Controller
-      control={ingredientControl}
+      control={control}
       name={"unit"}
       aria-label={"Unit"}
       render={({ field }) => {

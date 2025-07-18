@@ -4,6 +4,7 @@ import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import {
   handleIngredientSubmit,
+  ingredientControl,
   ingredientRegister,
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
@@ -11,6 +12,7 @@ import { SubmitHandler } from "react-hook-form";
 import { IngredientFormData } from "@/utils/interfaces";
 import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
 import { useIngredientsStore } from "@/stores/ingredients-store";
+import { LabelProps } from "@radix-ui/react-label";
 
 export const Calculator = () => {
   const updateIngredients = useIngredientsStore(
@@ -47,13 +49,11 @@ export const Calculator = () => {
   return (
     <div
       className={
-        "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-purple-300 p-4 text-sm"
+        "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-blue-500 p-4 text-sm"
       }
     >
       <div className={"grid grid-cols-1"}>
-        <Label.Root className={"opacity-50"} htmlFor={"name"}>
-          Name
-        </Label.Root>
+        <CalculatorLabel htmlFor={"name"}>Name</CalculatorLabel>
         <Input
           autoComplete={"name"}
           placeholder={"Pepsi"}
@@ -65,9 +65,7 @@ export const Calculator = () => {
 
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
-          <Label.Root className={"opacity-50"} htmlFor={"price"}>
-            Price ($)
-          </Label.Root>
+          <CalculatorLabel htmlFor={"price"}>Price ($)</CalculatorLabel>
 
           <Input
             placeholder={"4.99"}
@@ -79,9 +77,7 @@ export const Calculator = () => {
         </div>
 
         <div>
-          <Label.Root className={"opacity-50"} htmlFor={"quantity"}>
-            (Quantity)
-          </Label.Root>
+          <CalculatorLabel htmlFor={"quantity"}>(Quantity)</CalculatorLabel>
 
           <Input
             placeholder={"6"}
@@ -94,9 +90,7 @@ export const Calculator = () => {
 
       <div className={"grid grid-cols-2 gap-4"}>
         <div>
-          <Label.Root className={"opacity-50"} htmlFor={"capacity"}>
-            Capacity
-          </Label.Root>
+          <CalculatorLabel htmlFor={"capacity"}>Capacity</CalculatorLabel>
 
           <Input
             placeholder={"0.710"}
@@ -108,10 +102,8 @@ export const Calculator = () => {
         </div>
 
         <div>
-          <Label.Root className={"opacity-50"} htmlFor={"unit"}>
-            Unit
-          </Label.Root>
-          <UnitSelect />
+          <CalculatorLabel htmlFor={"unit"}>Unit</CalculatorLabel>
+          <UnitSelect control={ingredientControl} />
         </div>
       </div>
 
@@ -142,5 +134,13 @@ export const Calculator = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const CalculatorLabel = ({ children, className, ...props }: LabelProps) => {
+  return (
+    <Label.Root className={`font-medium text-white ${className}`} {...props}>
+      {children}
+    </Label.Root>
   );
 };
