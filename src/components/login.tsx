@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useTransition } from "react";
-import { useUserStore } from "@/stores/user-store";
 import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
+import { useUserStore } from "@/providers/user-store-provider";
 
 export const LoginLoader = () => {
   const [isLoading, startTransition] = useTransition();

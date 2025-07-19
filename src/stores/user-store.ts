@@ -24,6 +24,7 @@ export const initUserStore = (userInfo?: UserFormData): UserState => {
   return {
     mass: userMass ? userMass : Unit.KILOGRAM,
     liquidVolume: userVolume ? userVolume : Unit.LITRE,
+    userInfo,
   };
 };
 
@@ -33,23 +34,27 @@ export const defaultInitState: UserState = {
   userInfo: undefined,
 };
 
-export const useUserStore = create<UserStore>((set) => ({
-  ...defaultInitState,
-  setUser: (userInfo) => set({ userInfo }),
-  setMass: (massType) => set({ mass: massType }),
-  setLiquidVolume: (liquidType) => set({ liquidVolume: liquidType }),
+export const createUserStore = (initialState: UserState = defaultInitState) => {
+  return create<UserStore>((set) => ({
+    mass: initialState.mass,
+    liquidVolume: initialState.liquidVolume,
+    userInfo: initialState.userInfo,
+    setUser: (userInfo) => set({ userInfo }),
+    setMass: (massType) => set({ mass: massType }),
+    setLiquidVolume: (liquidType) => set({ liquidVolume: liquidType }),
 
-  logout: async () => {
-    try {
-      const { userInfo } = await tryLogout();
-      const { mass, liquidVolume } = initUserStore(userInfo);
-      set(() => ({ userInfo, mass, liquidVolume }));
-      useIngredientsStore.getState().setIngredients([]);
-    } catch (error) {
-      throw new Error("Unable to logout", { cause: error });
-    }
-  },
-}));
+    logout: async () => {
+      try {
+        const { userInfo } = await tryLogout();
+        const { mass, liquidVolume } = initUserStore(userInfo);
+        set(() => ({ userInfo, mass, liquidVolume }));
+        useIngredientsStore.getState().setIngredients([]);
+      } catch (error) {
+        throw new Error("Unable to logout", { cause: error });
+      }
+    },
+  }));
+};
 
 const tryLogout = async () => {
   try {
@@ -61,3 +66,5 @@ const tryLogout = async () => {
     throw new Error("Unable to fetch logout", { cause: error });
   }
 };
+
+export type UserStoreApi = ReturnType<typeof createUserStore>;

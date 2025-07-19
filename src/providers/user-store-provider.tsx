@@ -1,33 +1,48 @@
 "use client";
 
-import { useEffect } from "react";
+import { createContext, PropsWithChildren, useContext, useRef } from "react";
 
-import { useUserStore } from "@/stores/user-store";
+import {
+  createUserStore,
+  defaultInitState,
+  initUserStore,
+  UserStore,
+  UserStoreApi,
+} from "@/stores/user-store";
 import { UserFormData } from "@/utils/interfaces";
-import { useShallow } from "zustand/react/shallow";
+import { useStore } from "zustand";
+
+export const UserStoreContext = createContext<UserStoreApi | undefined>(
+  undefined,
+);
+
+export type UserStoreProviderProps = PropsWithChildren<{
+  userInfo: UserFormData | null;
+}>;
 
 export const UserStoreProvider = ({
+  children,
   userInfo,
-}: {
-  userInfo?: UserFormData | null;
-}) => {
-  const [setUser, setMass, setLiquidVolume] = useUserStore(
-    useShallow(({ setUser, setMass, setLiquidVolume }) => [
-      setUser,
-      setMass,
-      setLiquidVolume,
-    ]),
+}: UserStoreProviderProps) => {
+  const storeRef = useRef<UserStoreApi | null>(null);
+  if (storeRef.current === null) {
+    const initialState = userInfo ? initUserStore(userInfo) : defaultInitState;
+    storeRef.current = createUserStore(initialState);
+  }
+
+  return (
+    <UserStoreContext.Provider value={storeRef.current}>
+      {children}
+    </UserStoreContext.Provider>
   );
+};
 
-  useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-      if (userInfo.preferences?.units) {
-        setMass(userInfo.preferences?.units?.mass);
-        setLiquidVolume(userInfo.preferences?.units?.volume);
-      }
-    }
-  }, [setLiquidVolume, setMass, setUser, userInfo]);
+export const useUserStore = <T,>(selector: (store: UserStore) => T): T => {
+  const userStoreContext = useContext(UserStoreContext);
 
-  return null;
+  if (!userStoreContext) {
+    throw new Error(`useUserStore must be used within UserStoreProvider`);
+  }
+
+  return useStore(userStoreContext, selector);
 };

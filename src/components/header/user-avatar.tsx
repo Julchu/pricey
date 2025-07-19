@@ -1,8 +1,8 @@
 "use client";
 
 import { Avatar } from "radix-ui";
-import { useUserStore } from "@/stores/user-store";
 import { HamburgerMenuIcon, PersonIcon } from "@radix-ui/react-icons";
+import { useUserStore } from "@/providers/user-store-provider";
 
 export const UserAvatar = () => {
   const userInfo = useUserStore(({ userInfo }) => userInfo);

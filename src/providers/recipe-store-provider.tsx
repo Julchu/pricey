@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-import { useUserStore } from "@/stores/user-store";
+import { useUserStore } from "@/providers/user-store-provider";
 import { UserFormData } from "@/utils/interfaces";
 
 export const UserStoreProvider = ({

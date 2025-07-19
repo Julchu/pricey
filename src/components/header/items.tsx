@@ -1,8 +1,8 @@
 import { DropdownMenu } from "radix-ui";
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useUserStore } from "@/stores/user-store";
 import { usePathname } from "next/navigation";
+import { useUserStore } from "@/providers/user-store-provider";
 
 export const MenuRadioItem = ({
   value,

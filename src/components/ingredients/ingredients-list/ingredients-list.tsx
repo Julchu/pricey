@@ -3,8 +3,8 @@ import { useWatch } from "react-hook-form";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { Card } from "@/components/ingredients/ingredients-list/card";
 import { useDebouncedState } from "@/app/hooks/use-debounced-state";
-import { useIngredientsStore } from "@/stores/ingredients-store";
 import { useMemo } from "react";
+import { useIngredientsStore } from "@/stores/ingredients-store";
 
 export const IngredientsList = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);

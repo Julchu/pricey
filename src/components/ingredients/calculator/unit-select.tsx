@@ -3,9 +3,9 @@ import { Select } from "radix-ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Controller } from "react-hook-form";
 import { UnitSelectDropdown } from "@/components/ingredients/calculator/inputs";
-import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import { isMass, isVolume } from "@/utils/text-formatters";
+import { useUserStore } from "@/providers/user-store-provider";
 
 export const UnitSelect = ({ control }: { control: any }) => {
   const [setMass, setLiquidVolume] = useUserStore(
