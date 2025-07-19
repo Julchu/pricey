@@ -10,12 +10,12 @@ export const serverFetch = async <T>({
   endpoint: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: unknown;
-}): Promise<T[]> => {
+}): Promise<T | null> => {
   try {
     const browserCookies = await cookies();
     const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
-    if (!token) return [];
+    if (!token) return null;
 
     const ingredientsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/${endpoint}`,
@@ -30,11 +30,11 @@ export const serverFetch = async <T>({
 
     const { success, data, error } = await ingredientsResponse.json();
 
-    if (success) return data as T[];
+    if (success) return data as T;
     if (error) console.error("fetch-ingredient error", error);
-    return [];
+    return null;
   } catch (error) {
     console.error(error);
-    return [];
+    return null;
   }
 };

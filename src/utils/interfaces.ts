@@ -117,7 +117,11 @@ type FormData<T> = Omit<T, "id" | "userId">;
 // TODO: fix types; form data might differ from public returned types, but ids aren't included
 export type IngredientFormData = FormData<Ingredient>;
 export type UserFormData = FormData<User>;
-export type GroceryListFormData = FormData<GroceryList>;
+export type GroceryListFormData = {
+  name: string;
+  ingredients: IngredientFormData[];
+  public?: boolean;
+};
 export type RecipeFormData = FormData<Recipe>;
 
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */

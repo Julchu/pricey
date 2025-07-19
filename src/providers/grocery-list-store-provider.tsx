@@ -1,26 +1,23 @@
 "use client";
 
 import { useEffect } from "react";
+import { useGroceryListsStore } from "@/stores/grocery-lists-store";
+import { GroceryList } from "@/utils/interfaces";
 
-import { useUserStore } from "@/stores/user-store";
-import { UserFormData } from "@/utils/interfaces";
-
-export const UserStoreProvider = ({
-  userInfo,
+export const GroceryListStoreProvider = ({
+  groceryLists,
 }: {
-  userInfo?: UserFormData | null;
+  groceryLists?: GroceryList[] | null;
 }) => {
-  const { setUser, setMass, setLiquidVolume } = useUserStore();
+  const setGroceryLists = useGroceryListsStore(
+    ({ setGroceryLists }) => setGroceryLists,
+  );
 
   useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-      if (userInfo.preferences?.units) {
-        setMass(userInfo.preferences?.units?.mass);
-        setLiquidVolume(userInfo.preferences?.units?.volume);
-      }
+    if (groceryLists) {
+      setGroceryLists(groceryLists);
     }
-  }, [setLiquidVolume, setMass, setUser, userInfo]);
+  }, [groceryLists, setGroceryLists]);
 
   return null;
 };
