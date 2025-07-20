@@ -26,26 +26,30 @@ export const defaultInitState: IngredientsState = {
   ingredients: [],
 };
 
-export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
-  ...defaultInitState,
-  setIngredients: (ingredients) => set({ ingredients }),
-  updateIngredients: (newIngredient) => {
-    const ingredients = get().ingredients;
-    const filteredIngredients = ingredients.filter(
-      (currentIngredient) => currentIngredient.id !== newIngredient.id,
-    );
-    set({ ingredients: [...filteredIngredients, newIngredient] });
-  },
-  clearIngredients: () => set({ ingredients: [] }),
-  fetchIngredients: async () => {
-    try {
-      const { ingredients } = await tryFetchingIngredients();
-      set(() => ({ ingredients }));
-    } catch (error) {
-      throw new Error("Unable to retrieve ingredients", { cause: error });
-    }
-  },
-}));
+export const createIngredientsStore = (
+  initialState: IngredientsState = defaultInitState,
+) => {
+  return create<IngredientsStore>((set, get) => ({
+    ...initialState,
+    setIngredients: (ingredients) => set({ ingredients }),
+    updateIngredients: (newIngredient) => {
+      const ingredients = get().ingredients;
+      const filteredIngredients = ingredients.filter(
+        (currentIngredient) => currentIngredient.id !== newIngredient.id,
+      );
+      set({ ingredients: [...filteredIngredients, newIngredient] });
+    },
+    clearIngredients: () => set({ ingredients: [] }),
+    fetchIngredients: async () => {
+      try {
+        const { ingredients } = await tryFetchingIngredients();
+        set(() => ({ ingredients }));
+      } catch (error) {
+        throw new Error("Unable to retrieve ingredients", { cause: error });
+      }
+    },
+  }));
+};
 
 const tryFetchingIngredients = async () => {
   try {
@@ -55,3 +59,5 @@ const tryFetchingIngredients = async () => {
     throw new Error("Unable to fetch ingredients", { cause: error });
   }
 };
+
+export type IngredientsStoreApi = ReturnType<typeof createIngredientsStore>;

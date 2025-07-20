@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { LiquidType, MassType, Unit, UserFormData } from "@/utils/interfaces";
-import { useIngredientsStore } from "@/stores/ingredients-store";
 
 export type UserState = {
   mass: MassType;
@@ -48,7 +47,6 @@ export const createUserStore = (initialState: UserState = defaultInitState) => {
         const { userInfo } = await tryLogout();
         const { mass, liquidVolume } = initUserStore(userInfo);
         set(() => ({ userInfo, mass, liquidVolume }));
-        useIngredientsStore.getState().setIngredients([]);
       } catch (error) {
         throw new Error("Unable to logout", { cause: error });
       }

@@ -4,7 +4,7 @@ import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { Card } from "@/components/ingredients/ingredients-list/card";
 import { useDebouncedState } from "@/app/hooks/use-debounced-state";
 import { useMemo } from "react";
-import { useIngredientsStore } from "@/stores/ingredients-store";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 
 export const IngredientsList = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);

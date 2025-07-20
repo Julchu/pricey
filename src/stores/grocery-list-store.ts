@@ -25,19 +25,23 @@ export const defaultInitState: GroceryListsState = {
   groceryLists: [],
 };
 
-export const useGroceryListsStore = create<GroceryListsStore>((set) => ({
-  ...defaultInitState,
-  setGroceryLists: (groceryLists) => set({ groceryLists }),
-  clearGroceryLists: () => set({ groceryLists: [] }),
-  fetchGroceryLists: async () => {
-    try {
-      const { groceryLists } = await tryFetchingGroceryLists();
-      set(() => ({ groceryLists }));
-    } catch (error) {
-      throw new Error("Unable to retrieve grocery lists", { cause: error });
-    }
-  },
-}));
+export const createGroceryListsStore = (
+  initialState: GroceryListsState = defaultInitState,
+) => {
+  return create<GroceryListsStore>((set) => ({
+    ...initialState,
+    setGroceryLists: (groceryLists) => set({ groceryLists }),
+    clearGroceryLists: () => set({ groceryLists: [] }),
+    fetchGroceryLists: async () => {
+      try {
+        const { groceryLists } = await tryFetchingGroceryLists();
+        set(() => ({ groceryLists }));
+      } catch (error) {
+        throw new Error("Unable to retrieve grocery lists", { cause: error });
+      }
+    },
+  }));
+};
 
 const tryFetchingGroceryLists = async () => {
   try {
@@ -47,3 +51,5 @@ const tryFetchingGroceryLists = async () => {
     throw new Error("Unable to fetch grocery lists", { cause: error });
   }
 };
+
+export type GroceryListsStoreApi = ReturnType<typeof createGroceryListsStore>;

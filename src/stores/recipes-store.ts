@@ -23,19 +23,23 @@ export const defaultInitState: RecipesState = {
   recipes: [],
 };
 
-export const useRecipesStore = create<RecipesStore>((set) => ({
-  ...defaultInitState,
-  setRecipes: (recipes) => set({ recipes }),
-  clearRecipes: () => set({ recipes: [] }),
-  fetchRecipes: async () => {
-    try {
-      const { recipes } = await tryFetchingRecipes();
-      set(() => ({ recipes }));
-    } catch (error) {
-      throw new Error("Unable to retrieve recipes", { cause: error });
-    }
-  },
-}));
+export const createRecipesStore = (
+  initialState: RecipesState = defaultInitState,
+) => {
+  return create<RecipesStore>((set) => ({
+    ...initialState,
+    setRecipes: (recipes) => set({ recipes }),
+    clearRecipes: () => set({ recipes: [] }),
+    fetchRecipes: async () => {
+      try {
+        const { recipes } = await tryFetchingRecipes();
+        set(() => ({ recipes }));
+      } catch (error) {
+        throw new Error("Unable to retrieve recipes", { cause: error });
+      }
+    },
+  }));
+};
 
 const tryFetchingRecipes = async () => {
   try {
@@ -45,3 +49,5 @@ const tryFetchingRecipes = async () => {
     throw new Error("Unable to fetch recipes", { cause: error });
   }
 };
+
+export type RecipesStoreApi = ReturnType<typeof createRecipesStore>;
