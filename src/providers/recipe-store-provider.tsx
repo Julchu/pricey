@@ -1,26 +1,49 @@
 "use client";
 
-import { useEffect } from "react";
+import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import { useStore } from "zustand";
+import {
+  createRecipesStore,
+  defaultInitState,
+  initRecipesStore,
+  RecipesStore,
+  RecipesStoreApi,
+} from "@/stores/recipes-store";
+import { Recipe } from "@/utils/interfaces";
 
-import { useUserStore } from "@/stores/user-store";
-import { UserFormData } from "@/utils/interfaces";
+export const RecipesStoreContext = createContext<RecipesStoreApi | undefined>(
+  undefined,
+);
 
-export const UserStoreProvider = ({
-  userInfo,
-}: {
-  userInfo?: UserFormData | null;
-}) => {
-  const { setUser, setMass, setLiquidVolume } = useUserStore();
+export type RecipesStoreProviderProps = PropsWithChildren<{
+  recipes?: Recipe[] | null;
+}>;
 
-  useEffect(() => {
-    if (userInfo) {
-      setUser(userInfo);
-      if (userInfo.preferences?.units) {
-        setMass(userInfo.preferences?.units?.mass);
-        setLiquidVolume(userInfo.preferences?.units?.volume);
-      }
-    }
-  }, [setLiquidVolume, setMass, setUser, userInfo]);
+export const RecipeStoreProvider = ({
+  children,
+  recipes,
+}: RecipesStoreProviderProps) => {
+  const storeRef = useRef<RecipesStoreApi | null>(null);
+  if (storeRef.current === null) {
+    const initialState = recipes ? initRecipesStore(recipes) : defaultInitState;
+    storeRef.current = createRecipesStore(initialState);
+  }
 
-  return null;
+  return (
+    <RecipesStoreContext.Provider value={storeRef.current}>
+      {children}
+    </RecipesStoreContext.Provider>
+  );
+};
+
+export const useRecipesStore = <T,>(
+  selector: (store: RecipesStore) => T,
+): T => {
+  const recipesStoreContext = useContext(RecipesStoreContext);
+
+  if (!recipesStoreContext) {
+    throw new Error(`useRecipesStore must be used within RecipeStoreProvider`);
+  }
+
+  return useStore(recipesStoreContext, selector);
 };

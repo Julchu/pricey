@@ -11,7 +11,7 @@ import {
 import { SubmitHandler } from "react-hook-form";
 import { IngredientFormData } from "@/utils/interfaces";
 import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
-import { useIngredientsStore } from "@/stores/ingredients-store";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { LabelProps } from "@radix-ui/react-label";
 
 export const Calculator = () => {

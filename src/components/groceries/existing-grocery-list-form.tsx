@@ -3,7 +3,7 @@ import { GroceryListFormData } from "@/utils/interfaces";
 // TODO: test if can remove * as React
 import * as React from "react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { useLens } from "@hookform/lenses";
@@ -24,13 +24,16 @@ export const ExistingGroceryListForm = ({
   const lens = useLens({ control });
 
   return (
-    <form>
-      <AccordionTrigger>Test title</AccordionTrigger>
-      <AccordionContent>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit((values) => console.log(values))}>
+        <AccordionTrigger>Test title</AccordionTrigger>
         {isEditing ? (
-          <IngredientArrayForm lens={lens.focus("ingredients")} />
+          <AccordionContent className={"h-full w-full"}>
+            <IngredientArrayForm lens={lens.focus("ingredients")} />
+            <input type="submit" />
+          </AccordionContent>
         ) : null}
-      </AccordionContent>
-    </form>
+      </form>
+    </FormProvider>
   );
 };

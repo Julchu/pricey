@@ -1,5 +1,5 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { GroceryListFormData, UnitType } from "@/utils/interfaces";
 import { useLens } from "@hookform/lenses";
 import { AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
@@ -29,22 +29,24 @@ export const NewGroceryListForm = () => {
   const lens = useLens({ control });
 
   return (
-    <form onSubmit={handleSubmit((values) => console.log(values))}>
-      <AccordionTrigger>
-        <Input
-          className={"w-full"}
-          autoComplete={"name"}
-          placeholder={"Costco Run"}
-          id={"name"}
-          type={"text"}
-          {...register("name")}
-        />
-      </AccordionTrigger>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit((values) => console.log(values))}>
+        <AccordionTrigger>
+          <Input
+            className={"w-full"}
+            autoComplete={"name"}
+            placeholder={"Costco Run"}
+            id={"name"}
+            type={"text"}
+            {...register("name")}
+          />
+        </AccordionTrigger>
 
-      <AccordionContent className={"h-full w-full"}>
-        <IngredientArrayForm lens={lens.focus("ingredients")} />
-        <input type="submit" />
-      </AccordionContent>
-    </form>
+        <AccordionContent className={"h-full w-full"}>
+          <IngredientArrayForm lens={lens.focus("ingredients")} />
+          <input type="submit" />
+        </AccordionContent>
+      </form>
+    </FormProvider>
   );
 };

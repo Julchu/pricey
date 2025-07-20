@@ -1,11 +1,11 @@
 "use client";
 import { Accordion } from "radix-ui";
-import { useGroceryListsStore } from "@/stores/grocery-lists-store";
 // TODO: test if can remove * as React
 import * as React from "react";
 import { AccordionItem } from "@/components/ui/accordion";
 import { ExistingGroceryListForm } from "./existing-grocery-list-form";
 import { NewGroceryListForm } from "./new-grocery-list-form";
+import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 
 export const GroceryListAccordion = () => {
   const groceryLists = useGroceryListsStore(({ groceryLists }) => groceryLists);

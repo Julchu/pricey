@@ -8,7 +8,6 @@ import {
   priceConverter,
   unitConverter,
 } from "@/utils/text-formatters";
-import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import {
   ingredientControl,
@@ -23,7 +22,8 @@ import {
   UploadIcon,
 } from "@radix-ui/react-icons";
 import { ChangeEvent } from "react";
-import { useIngredientsStore } from "@/stores/ingredients-store";
+import { useUserStore } from "@/providers/user-store-provider";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 
 export const Calculations = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);

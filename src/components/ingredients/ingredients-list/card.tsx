@@ -9,7 +9,6 @@ import {
   priceConverter,
   unitConverter,
 } from "@/utils/text-formatters";
-import { useUserStore } from "@/stores/user-store";
 import { useShallow } from "zustand/react/shallow";
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
 import {
@@ -21,6 +20,7 @@ import Image from "next/image";
 import FoodPlaceholder from "@/images/food-placeholder.png";
 import { Separator } from "radix-ui";
 import { memo } from "react";
+import { useUserStore } from "@/providers/user-store-provider";
 
 export const CardComponent = ({
   ingredient,
