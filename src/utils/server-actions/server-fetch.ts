@@ -17,7 +17,7 @@ export const serverFetch = async <T>({
 
     if (!token) return null;
 
-    const ingredientsResponse = await fetch(
+    const fetchResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/${endpoint}`,
       {
         method,
@@ -28,10 +28,10 @@ export const serverFetch = async <T>({
       },
     );
 
-    const { success, data, error } = await ingredientsResponse.json();
+    const { success, data, error } = await fetchResponse.json();
 
     if (success) return data as T;
-    if (error) console.error("fetch-ingredient error", error);
+    if (error) console.error("Fetch error", error);
     return null;
   } catch (error) {
     console.error(error);

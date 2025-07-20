@@ -23,7 +23,7 @@ export const RecipeStoreProvider = ({
   children,
   recipes,
 }: RecipesStoreProviderProps) => {
-  const storeRef = useRef<RecipesStoreApi | null>(null);
+  const storeRef = useRef<RecipesStoreApi>(null);
   if (storeRef.current === null) {
     const initialState = recipes ? initRecipesStore(recipes) : defaultInitState;
     storeRef.current = createRecipesStore(initialState);

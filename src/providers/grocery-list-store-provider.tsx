@@ -24,7 +24,7 @@ export const GroceryListStoreProvider = ({
   children,
   groceryLists,
 }: GroceryListsStoreProviderProps) => {
-  const storeRef = useRef<GroceryListsStoreApi | null>(null);
+  const storeRef = useRef<GroceryListsStoreApi>(null);
   if (storeRef.current === null) {
     const initialState = groceryLists
       ? initGroceryListsStore(groceryLists)
