@@ -3,8 +3,6 @@ import { geistMono, montserrat } from "@/components/fonts";
 import "./globals.css";
 import { Header } from "@/components/header/header";
 import { ReactScan } from "@/components/react-scan";
-import { cookies } from "next/headers";
-import { UserFormData } from "@/utils/interfaces";
 import { PropsWithChildren } from "react";
 import { Providers } from "@/providers/providers";
 
@@ -14,41 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Layout({ children }: PropsWithChildren) {
-  // const queryClient = new QueryClient();
-  //
-  // // Preload the user data
-  // await queryClient.prefetchQuery({
-  //   queryKey: userQueryKey,
-  //   queryFn: userQueryFn,
-  // });
-  // const dehydratedState = dehydrate(queryClient);
-  let userInfo: UserFormData | null | undefined = undefined;
-
-  const browserCookies = await cookies();
-  const accessToken = browserCookies.get(
-    `${process.env.ACCESS_TOKEN_KEY}`,
-  )?.value;
-
-  try {
-    if (accessToken) {
-      const userResponse = await fetch(
-        `${process.env.PRICEY_BACKEND_URL}/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      const { success, data, error } = await userResponse.json();
-      if (success) userInfo = data;
-
-      if (error) console.error("Root layout", error);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-
   return (
     <html lang={"en"}>
       <body

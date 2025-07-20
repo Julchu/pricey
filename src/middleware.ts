@@ -7,6 +7,9 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get(accessTokenKey)?.value;
   const refreshToken = req.cookies.get(refreshTokenKey)?.value;
 
+  const response = NextResponse.next();
+  response.headers.set("X-Current-Path", req.nextUrl.pathname);
+
   if (!accessToken && refreshToken) {
     const refreshRes = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/user/refresh`,
@@ -19,19 +22,15 @@ export async function middleware(req: NextRequest) {
     );
 
     if (refreshRes.ok) {
-      const response = NextResponse.redirect(req.nextUrl);
-
       const setCookies = refreshRes.headers.getSetCookie?.() || [];
 
       for (const cookie of setCookies) {
         response.headers.append("Set-Cookie", cookie);
       }
-
-      return response;
     }
-    return NextResponse.next();
   }
-  return NextResponse.next();
+
+  return response;
 }
 
 export const config = {
