@@ -32,12 +32,12 @@ export const UnitSelect = ({
           <Select.Root
             onValueChange={onChangeHandler}
             defaultValue={undefined}
-            value={field.value}
+            value={field.value || ""}
           >
             <Select.Trigger
               key={"select-trigger"}
               className={
-                "animate-slide-down-and-fade text-md flex h-10 w-full items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
+                "text-md flex h-10 w-full items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
               }
             >
               <Select.Value placeholder={"Kilogram"} id={"unit"} />

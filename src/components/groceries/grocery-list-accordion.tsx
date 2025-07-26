@@ -12,10 +12,10 @@ export const GroceryListAccordion = () => {
 
   return (
     <Accordion.Root
-      className={
-        "h-full w-full rounded-md text-white shadow-[0_2px_10px] shadow-black/5"
-      }
-      type={"multiple"}
+      className={"h-full w-full rounded-md text-white"}
+      type="single"
+      collapsible
+      defaultValue={"new-list"}
     >
       <AccordionItem value={"new-list"}>
         <NewGroceryListForm />

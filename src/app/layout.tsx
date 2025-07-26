@@ -14,6 +14,12 @@ export const metadata: Metadata = {
 export default async function Layout({ children }: PropsWithChildren) {
   return (
     <html lang={"en"}>
+      <head>
+        <script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
+      </head>
       <body
         className={`${montserrat.className} ${geistMono.variable} antialiased`}
       >

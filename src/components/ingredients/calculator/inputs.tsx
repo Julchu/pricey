@@ -10,9 +10,7 @@ import { Unit } from "@/utils/interfaces";
 export const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <input
-      className={
-        "text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400"
-      }
+      className={`text-md flex h-10 w-full rounded-md bg-blue-100 px-[15px] leading-none outline-none placeholder:text-gray-400`}
       {...props}
     />
   );

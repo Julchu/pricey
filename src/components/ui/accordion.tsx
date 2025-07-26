@@ -4,6 +4,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Accordion } from "radix-ui";
 import {
   AccordionContentProps,
+  AccordionHeaderProps,
   AccordionItemProps,
   AccordionTriggerProps,
 } from "@radix-ui/react-accordion";
@@ -23,23 +24,34 @@ export const AccordionItem = ({
   );
 };
 
+export const AccordionHeader = ({
+  children,
+  className,
+  ...props
+}: AccordionHeaderProps) => (
+  <Accordion.Header
+    className={`relative flex h-full w-full flex-row bg-blue-500 ${className}`}
+    {...props}
+  >
+    {children}
+  </Accordion.Header>
+);
+
 export const AccordionTrigger = ({
   children,
   className,
   ...props
 }: AccordionTriggerProps) => (
-  <Accordion.Header className="flex">
-    <Accordion.Trigger
-      className={`group shadow-mauve6 flex h-[45px] flex-1 cursor-default items-center justify-between bg-blue-500 px-5 text-[15px] leading-none font-medium text-white shadow-[0_1px_0] outline-none ${className}`}
-      {...props}
-    >
-      {children}
-      <ChevronDownIcon
-        className="text-violet10 transition-transform duration-300 ease-[cubic-bezier(0.87,_0,_0.13,_1)] group-data-[state=open]:rotate-180"
-        aria-hidden
-      />
-    </Accordion.Trigger>
-  </Accordion.Header>
+  <Accordion.Trigger
+    className={`group flex h-[45px] cursor-pointer items-center justify-between px-5 text-[15px] leading-none font-medium text-white outline-none ${className}`}
+    {...props}
+  >
+    {children}
+    <ChevronDownIcon
+      className="ml-auto text-white transition-transform duration-300 ease-[cubic-bezier(0.87,_0,_0.13,_1)] group-data-[state=open]:rotate-180"
+      aria-hidden
+    />
+  </Accordion.Trigger>
 );
 
 export const AccordionContent = ({

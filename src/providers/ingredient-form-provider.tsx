@@ -21,6 +21,6 @@ export const {
 });
 
 export const ingredientReset = () => {
+  ingredientSetValue("unit", undefined as unknown as UnitType);
   reset();
-  ingredientSetValue("unit", "" as UnitType);
 };

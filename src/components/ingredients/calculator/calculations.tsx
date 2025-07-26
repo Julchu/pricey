@@ -15,15 +15,14 @@ import {
 } from "@/providers/ingredient-form-provider";
 import { Label, Separator } from "radix-ui";
 import {
-  ImageIcon,
   TextAlignJustifyIcon,
   TriangleDownIcon,
   TriangleUpIcon,
-  UploadIcon,
 } from "@radix-ui/react-icons";
 import { ChangeEvent } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 
 export const Calculations = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
@@ -126,8 +125,7 @@ export const Calculations = () => {
         htmlFor={"image"}
       >
         <div className={"absolute right-0 bottom-0 m-4 flex flex-row"}>
-          <ImageIcon className={"size-6"} />
-          <UploadIcon className={"size-6"} />
+          <ImageUploadIcon />
         </div>
         {/*<Image*/}
         {/*  src={ImageUploadIcon}*/}

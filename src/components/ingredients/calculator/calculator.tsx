@@ -1,6 +1,6 @@
 "use client";
 import { Label } from "radix-ui";
-import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
+import { UnitSelect } from "@/components/ui/unit-select";
 import { Input } from "@/components/ingredients/calculator/inputs";
 import {
   handleIngredientSubmit,
