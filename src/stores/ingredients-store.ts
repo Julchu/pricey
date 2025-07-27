@@ -15,7 +15,7 @@ export type IngredientsActions = {
 export type IngredientsStore = IngredientsState & IngredientsActions;
 
 export const initIngredientsStore = (
-  ingredients?: Ingredient[],
+  ingredients: Ingredient[],
 ): IngredientsState => {
   return {
     ingredients: ingredients && ingredients.length > 0 ? ingredients : [],
