@@ -18,10 +18,6 @@ export const Providers = async ({ children }: PropsWithChildren) => {
 
   const userInfo = await serverFetch<UserFormData>({ endpoint: "user" });
 
-  if (!userInfo) {
-    return <>{children}</>;
-  }
-
   let ingredients: Ingredient[] = [];
   let groceryLists: GroceryList[] = [];
   let recipes: Recipe[] = [];
