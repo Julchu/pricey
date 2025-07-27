@@ -2,7 +2,6 @@ import { UserStoreProvider } from "./user-store-provider";
 import { IngredientStoreProvider } from "./ingredient-store-provider";
 import { GroceryListStoreProvider } from "./grocery-list-store-provider";
 import { RecipeStoreProvider } from "./recipe-store-provider";
-import { RouteDataFallback } from "@/components/route-data-fallback";
 import { PropsWithChildren } from "react";
 import { serverFetch } from "@/utils/server-actions/server-fetch";
 import {
@@ -19,26 +18,35 @@ export const Providers = async ({ children }: PropsWithChildren) => {
 
   const userInfo = await serverFetch<UserFormData>({ endpoint: "user" });
 
-  let ingredients: Ingredient[] | null = null;
-  let groceryLists: GroceryList[] | null = null;
-  let recipes: Recipe[] | null = null;
+  if (!userInfo) {
+    return <>{children}</>;
+  }
+
+  let ingredients: Ingredient[] = [];
+  let groceryLists: GroceryList[] = [];
+  let recipes: Recipe[] = [];
 
   if (
     pathname === "/" ||
     pathname.includes("/ingredients") ||
     pathname === ""
   ) {
-    ingredients = await serverFetch<Ingredient[]>({ endpoint: "ingredient" });
+    const fetchedIngredients = await serverFetch<Ingredient[]>({
+      endpoint: "ingredient",
+    });
+    ingredients = fetchedIngredients ? fetchedIngredients : [];
   }
 
   if (pathname.includes("/groceries")) {
-    groceryLists = await serverFetch<GroceryList[]>({
+    const fetchedGroceryLists = await serverFetch<GroceryList[]>({
       endpoint: "grocery-list",
     });
+    groceryLists = fetchedGroceryLists ? fetchedGroceryLists : [];
   }
 
   if (pathname.includes("/recipes")) {
-    recipes = await serverFetch<Recipe[]>({ endpoint: "recipes" });
+    const fetchedRecipes = await serverFetch<Recipe[]>({ endpoint: "recipe" });
+    recipes = fetchedRecipes ? fetchedRecipes : [];
   }
 
   return (
@@ -46,7 +54,6 @@ export const Providers = async ({ children }: PropsWithChildren) => {
       <IngredientStoreProvider ingredients={ingredients}>
         <GroceryListStoreProvider groceryLists={groceryLists}>
           <RecipeStoreProvider recipes={recipes}>
-            <RouteDataFallback />
             {children}
           </RecipeStoreProvider>
         </GroceryListStoreProvider>

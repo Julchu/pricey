@@ -16,7 +16,7 @@ export const IngredientsStoreContext = createContext<
 >(undefined);
 
 export type IngredientsStoreProviderProps = PropsWithChildren<{
-  ingredients?: Ingredient[] | null;
+  ingredients: Ingredient[];
 }>;
 
 export const IngredientStoreProvider = ({
