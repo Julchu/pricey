@@ -22,7 +22,7 @@ export const LoginLoader = () => {
           console.error(error);
         }
       }
-      router.replace("/");
+      window.location.href = "/";
     });
   }, [setUser, router, userInfo]);
 
