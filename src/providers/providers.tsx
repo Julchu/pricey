@@ -35,7 +35,6 @@ export const Providers = async ({ children }: PropsWithChildren) => {
       endpoint: "ingredient",
     });
     ingredients = fetchedIngredients ? fetchedIngredients : [];
-    console.log("ingredients", ingredients);
   }
 
   if (pathname.includes("/groceries")) {
