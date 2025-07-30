@@ -4,6 +4,7 @@ export const LoginLoader = () => {
   // useEffect(() => {
   window.location.href = "/";
   // }, []);
+  return null;
 };
 
 /*// components/User.tsx
