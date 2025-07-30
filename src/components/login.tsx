@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
+
 export const LoginLoader = () => {
-  // useEffect(() => {
-  window.location.href = "/";
-  // }, []);
+  useEffect(() => {
+    window.location.href = "/";
+  }, []);
   return null;
 };
 
