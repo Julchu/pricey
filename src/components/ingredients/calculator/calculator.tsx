@@ -10,9 +10,10 @@ import {
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler } from "react-hook-form";
 import { IngredientFormData } from "@/utils/interfaces";
-import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { LabelProps } from "@radix-ui/react-label";
+import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
+import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
 
 export const Calculator = () => {
   const updateIngredients = useIngredientsStore(
@@ -52,7 +53,7 @@ export const Calculator = () => {
         "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-blue-500 p-4 text-sm"
       }
     >
-      <div className={"grid grid-cols-1"}>
+      <div>
         <CalculatorLabel htmlFor={"name"}>Name</CalculatorLabel>
         <Input
           autoComplete={"name"}
@@ -107,7 +108,7 @@ export const Calculator = () => {
         </div>
       </div>
 
-      <div className={"grid grid-cols-2 gap-4"}>
+      <div className={"grid grid-cols-2 gap-4 pt-5"}>
         <div>
           <button
             className={
@@ -116,7 +117,7 @@ export const Calculator = () => {
             onClick={resetHandler}
             type={"reset"}
           >
-            <ResetIcon />
+            <CircleResetIcon />
             Reset
           </button>
         </div>
@@ -128,7 +129,7 @@ export const Calculator = () => {
             }
             onClick={handleIngredientSubmit(onSubmitHandler)}
           >
-            <CheckCircledIcon />
+            <AnimatedCheckIcon />
             Save
           </button>
         </div>
