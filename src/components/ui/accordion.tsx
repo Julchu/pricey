@@ -43,7 +43,7 @@ export const AccordionTrigger = ({
   ...props
 }: AccordionTriggerProps) => (
   <Accordion.Trigger
-    className={`group flex h-[45px] cursor-pointer items-center justify-between px-5 text-[15px] leading-none font-medium text-white outline-none ${className}`}
+    className={`group flex h-[45px] cursor-pointer items-center justify-between px-5 leading-none font-medium text-white outline-none ${className}`}
     {...props}
   >
     {children}
@@ -60,9 +60,9 @@ export const AccordionContent = ({
   ...props
 }: AccordionContentProps) => (
   <Accordion.Content
-    className={`bg-mauve2 text-mauve11 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown overflow-hidden text-[15px] ${className}`}
+    className={`bg-mauve2 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown overflow-hidden ${className}`}
     {...props}
   >
-    <div className="px-5 py-[15px]">{children}</div>
+    <div className="p-4">{children}</div>
   </Accordion.Content>
 );

@@ -7,11 +7,10 @@ import {
   AccordionHeader,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ingredients/calculator/inputs";
+import { Input } from "@/components/ui/input";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import * as React from "react";
 import { useEffect } from "react";
-import { SaveCartIcon } from "@/components/icons/cart/save-cart-icon";
 
 export const NewGroceryListForm = () => {
   const methods = useForm<GroceryListFormData>({
@@ -45,23 +44,19 @@ export const NewGroceryListForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <form>
-        <AccordionHeader className={"flex h-full w-full flex-row gap-4 pl-4"}>
+      <form onSubmit={(values) => console.log(values)}>
+        <AccordionHeader
+          className={"flex h-full flex-row gap-4 px-0 text-white"}
+        >
           <Input
-            className={"w-full focus:outline-none"}
+            className={"bg-blue-500 font-medium focus:outline-none"}
             autoComplete={"name"}
             placeholder={"Enter new grocery list name "}
             id={"name"}
             type={"text"}
             {...register("name")}
           />
-          <div
-            onClick={handleSubmit((values) => console.log(values))}
-            className={"flex items-center"}
-          >
-            {isDirty ? <SaveCartIcon /> : null}
-          </div>
-          <AccordionTrigger />
+          <AccordionTrigger tabIndex={-1} />
         </AccordionHeader>
 
         <AccordionContent>

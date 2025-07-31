@@ -12,7 +12,7 @@ export const GroceryListAccordion = () => {
 
   return (
     <Accordion.Root
-      className={"h-full w-full rounded-md text-white"}
+      className={"h-full w-full rounded-md"}
       type="single"
       collapsible
       defaultValue={"new-list"}
