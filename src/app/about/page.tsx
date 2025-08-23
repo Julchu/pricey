@@ -2,8 +2,6 @@ import { Ingredients } from "@/components/ingredients/ingredients";
 import Image from "next/image";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 const About = () => {
   const contributors = [
     {
