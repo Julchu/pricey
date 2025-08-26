@@ -13,11 +13,6 @@ const About = () => {
       name: "Eugene",
       link: "https://github.com/eugenern/",
     },
-    {
-      image: "https://en.wikipedia.org/static/images/icons/wikipedia.png",
-      name: "Wikipedia",
-      link: "https://en.wikipedia.org/wiki/Yes",
-    },
   ];
 
   return (
