@@ -1,7 +1,5 @@
 "use client";
 import { IngredientFormData, UnitType } from "@/utils/interfaces";
-// TODO: test if can remove * as React
-import * as React from "react";
 import { Lens } from "@hookform/lenses";
 import { useFieldArray } from "@hookform/lenses/rhf";
 import { Label } from "radix-ui";
@@ -26,7 +24,7 @@ export const IngredientArrayForm = ({
           <div className={"flex w-full flex-row gap-4"} key={value.id}>
             <div
               className={
-                "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+                "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
               }
             >
               <div className={"col-span-2"}>
@@ -118,7 +116,7 @@ export const IngredientArrayForm = ({
               ) : null}
               <button
                 name={"remove-ingredient"}
-                className={"flex flex-row text-black"}
+                className={"flex cursor-pointer flex-row text-black"}
                 onClick={() => remove(index)}
               >
                 <CircleMinusIcon />
@@ -128,7 +126,7 @@ export const IngredientArrayForm = ({
         );
       })}
 
-      <div className={"flex flex-row gap-4 text-black"}>
+      <div className={"flex flex-row gap-4 pt-2 text-black lg:pt-0"}>
         <div
           className={
             "grid w-full grid-cols-2 grid-rows-1 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:grid-rows-1"
