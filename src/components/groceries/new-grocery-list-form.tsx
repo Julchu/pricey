@@ -28,13 +28,7 @@ export const NewGroceryListForm = () => {
     },
   });
 
-  const {
-    handleSubmit,
-    control,
-    register,
-    setFocus,
-    formState: { isDirty },
-  } = methods;
+  const { control, register, setFocus } = methods;
 
   useEffect(() => {
     setFocus("name");
@@ -44,7 +38,7 @@ export const NewGroceryListForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={(values) => console.log(values)}>
+      <form>
         <AccordionHeader
           className={"flex h-full flex-row gap-4 px-0 text-white"}
         >

@@ -1,5 +1,9 @@
 "use client";
-import { IngredientFormData, UnitType } from "@/utils/interfaces";
+import {
+  GroceryListFormData,
+  IngredientFormData,
+  UnitType,
+} from "@/utils/interfaces";
 import { Lens } from "@hookform/lenses";
 import { useFieldArray } from "@hookform/lenses/rhf";
 import { Label } from "radix-ui";
@@ -9,6 +13,7 @@ import { CircleMinusIcon } from "@/components/icons/circle-minus-icon";
 import { CircleAddIcon } from "@/components/icons/circle-add-icon";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { SaveCartIcon } from "@/components/icons/cart/save-cart-icon";
+import { SubmitHandler, useFormContext } from "react-hook-form";
 
 export const IngredientArrayForm = ({
   lens,
@@ -16,6 +21,13 @@ export const IngredientArrayForm = ({
   lens: Lens<IngredientFormData[]>;
 }) => {
   const { fields, append, remove } = useFieldArray(lens.interop());
+  const { reset, handleSubmit } = useFormContext<GroceryListFormData>();
+
+  const onSubmit: SubmitHandler<GroceryListFormData> = async (data) =>
+    console.log(data);
+
+  // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
+  //   console.log(errors);
 
   return (
     <div className={"flex flex-col gap-4"}>
@@ -137,7 +149,7 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={() => console.log("reset")}
+              onClick={() => reset()}
               type={"reset"}
             >
               <CircleResetIcon />
@@ -150,7 +162,8 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={() => console.log("save")}
+              onClick={handleSubmit(onSubmit)}
+              type={"button"}
             >
               <SaveCartIcon />
               Save
