@@ -13,7 +13,9 @@ export const serverFetch = async <T>({
 }): Promise<T | null> => {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     if (!token) return null;
 

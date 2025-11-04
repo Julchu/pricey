@@ -24,8 +24,8 @@ export const Providers = async ({ children }: PropsWithChildren) => {
 
   if (
     pathname === "/" ||
-    pathname.includes("/ingredients") ||
-    pathname === ""
+    pathname === "" ||
+    pathname.includes("/ingredients")
   ) {
     const fetchedIngredients = await serverFetch<Ingredient[]>({
       endpoint: "ingredient",
