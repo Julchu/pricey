@@ -9,7 +9,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
-import { useLens } from "@hookform/lenses";
 import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
 
 export const ExistingGroceryListForm = ({
@@ -27,8 +26,9 @@ export const ExistingGroceryListForm = ({
     formState: { isDirty },
   } = methods;
 
-  const lens = useLens({ control });
-
+  /* TODO: get current searched grocery list
+   * if grocery list name is same, hide new list form and focus/edit existing name
+   */
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit((values) => console.log(values))}>
@@ -43,7 +43,7 @@ export const ExistingGroceryListForm = ({
         </AccordionHeader>
         {isDirty ? (
           <AccordionContent className={"h-full w-full"}>
-            <IngredientArrayForm lens={lens.focus("ingredients")} />
+            <IngredientArrayForm control={control} />
             <input type="submit" />
           </AccordionContent>
         ) : null}

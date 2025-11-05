@@ -1,37 +1,39 @@
 "use client";
-import {
-  GroceryListFormData,
-  IngredientFormData,
-  UnitType,
-} from "@/utils/interfaces";
-import { Lens } from "@hookform/lenses";
+import { GroceryListFormData, UnitType } from "@/utils/interfaces";
 import { useFieldArray } from "@hookform/lenses/rhf";
 import { Label } from "radix-ui";
 import { Input } from "@/components/ui/input";
-import { UnitSelect } from "@/components/ui/unit-select";
+import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
 import { CircleMinusIcon } from "@/components/icons/circle-minus-icon";
 import { CircleAddIcon } from "@/components/icons/circle-add-icon";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { SaveCartIcon } from "@/components/icons/cart/save-cart-icon";
-import { SubmitHandler, useFormContext } from "react-hook-form";
+import { Control, SubmitHandler } from "react-hook-form";
+import {
+  groceryListReset,
+  handleGroceryListSubmit,
+} from "@/providers/new-grocery-list-form-provider";
+import { useLens } from "@hookform/lenses";
 
 export const IngredientArrayForm = ({
-  lens,
+  control,
 }: {
-  lens: Lens<IngredientFormData[]>;
+  control: Control<GroceryListFormData>;
 }) => {
-  const { fields, append, remove } = useFieldArray(lens.interop());
-  const { reset, handleSubmit } = useFormContext<GroceryListFormData>();
+  const ingredientsLens = useLens({ control }).focus("ingredients");
 
-  const onSubmit: SubmitHandler<GroceryListFormData> = async (data) =>
+  const { fields, append, remove } = useFieldArray(ingredientsLens.interop());
+
+  const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (data) => {
     console.log(data);
+  };
 
   // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
   //   console.log(errors);
 
   return (
     <div className={"flex flex-col gap-4"}>
-      {lens.map(fields, (value, l, index) => {
+      {ingredientsLens.map(fields, (value, l, index) => {
         return (
           <div className={"flex w-full flex-row gap-4"} key={value.id}>
             <div
@@ -52,7 +54,7 @@ export const IngredientArrayForm = ({
                   className={"w-full"}
                   placeholder={"Pepsi"}
                   id={"name"}
-                  type={"text"}
+                  type={"search"}
                   {...l
                     .focus("name")
                     .interop(({ register }, name) => register(name))}
@@ -119,9 +121,13 @@ export const IngredientArrayForm = ({
                 >
                   Unit
                 </Label.Root>
-                <UnitSelect />
+                <GroceryFormIngredientUnitSelect
+                  control={control}
+                  index={index}
+                />
               </div>
             </div>
+
             <div className={"flex flex-col items-center justify-center"}>
               {index === 0 ? (
                 <Label.Root htmlFor={"remove-ingredient"}>&nbsp;</Label.Root>
@@ -149,7 +155,7 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={() => reset()}
+              onClick={groceryListReset}
               type={"reset"}
             >
               <CircleResetIcon />
@@ -162,7 +168,7 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleGroceryListSubmit(onSubmitHandler)}
               type={"button"}
             >
               <SaveCartIcon />
@@ -179,6 +185,7 @@ export const IngredientArrayForm = ({
                 name: "",
                 price: "" as unknown as number,
                 capacity: "" as unknown as number,
+                quantity: "" as unknown as number,
                 unit: "" as UnitType,
               })
             }

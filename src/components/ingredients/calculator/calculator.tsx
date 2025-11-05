@@ -1,10 +1,9 @@
 "use client";
 import { Label } from "radix-ui";
-import { UnitSelect } from "@/components/ui/unit-select";
+import { IngredientUnitSelect } from "@/components/ui/unit-select";
 import { Input } from "@/components/ui/input";
 import {
   handleIngredientSubmit,
-  ingredientControl,
   ingredientRegister,
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
@@ -59,7 +58,7 @@ export const Calculator = () => {
           autoComplete={"name"}
           placeholder={"Pepsi"}
           id={"name"}
-          type={"text"}
+          type={"search"}
           {...ingredientRegister("name")}
         />
       </div>
@@ -104,7 +103,7 @@ export const Calculator = () => {
 
         <div>
           <CalculatorLabel htmlFor={"unit"}>Unit</CalculatorLabel>
-          <UnitSelect control={ingredientControl} />
+          <IngredientUnitSelect />
         </div>
       </div>
 
