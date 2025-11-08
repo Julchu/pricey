@@ -35,7 +35,8 @@ export const createIngredientsStore = (
     updateIngredients: (newIngredient) => {
       const ingredients = get().ingredients;
       const filteredIngredients = ingredients.filter(
-        (currentIngredient) => currentIngredient.id !== newIngredient.id,
+        (currentIngredient) =>
+          currentIngredient.publicId !== newIngredient.publicId,
       );
       set({ ingredients: [...filteredIngredients, newIngredient] });
     },

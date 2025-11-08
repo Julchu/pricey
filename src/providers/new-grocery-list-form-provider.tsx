@@ -17,10 +17,10 @@ export const {
     ingredients: [
       {
         name: "",
-        price: "" as unknown as number,
         quantity: "" as unknown as number,
         capacity: "" as unknown as number,
         unit: "" as UnitType,
+        //   image
       },
     ],
     public: false,
@@ -31,7 +31,6 @@ export const groceryListReset = () => {
   groceryListSetValue("ingredients", [
     {
       name: "",
-      price: "" as unknown as number,
       quantity: "" as unknown as number,
       capacity: "" as unknown as number,
       unit: "" as UnitType,

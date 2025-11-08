@@ -85,9 +85,8 @@ export type UserPreferences = {
 };
 
 export type Ingredient = {
-  id: number;
+  publicId: string;
   name: string;
-  userId: number;
   price: number;
   capacity: number;
   quantity?: number;
@@ -97,29 +96,44 @@ export type Ingredient = {
 };
 
 export type GroceryList = {
-  id: number;
+  userId: string;
+  publicId: string;
   name: string;
-  ingredients: Ingredient[];
-  userId: number;
+  ingredients: GroceryListIngredient[];
   public?: boolean;
+};
+
+export type GroceryListIngredient = {
+  userId: string;
+  groceryListId: string;
+  publicId: string;
+  name: string;
+  capacity: number;
+  quantity?: number;
+  unit: UnitType;
+  image?: string;
 };
 
 export type Recipe = {
-  id: number;
+  publicId: string;
   name: string;
   ingredients: Ingredient[];
-  userId: number;
+  userId: string;
   public?: boolean;
 };
 
-type FormData<T> = Omit<T, "id" | "userId">;
+type FormData<T> = Omit<T, "userId" | "publicId">;
 
 // TODO: fix types; form data might differ from public returned types, but ids aren't included
 export type IngredientFormData = FormData<Ingredient>;
+export type GroceryListIngredientFormData = Omit<
+  FormData<GroceryListIngredient>,
+  "groceryListId"
+>;
 export type UserFormData = FormData<User>;
 export type GroceryListFormData = {
   name: string;
-  ingredients: IngredientFormData[];
+  ingredients: GroceryListIngredientFormData[];
   public?: boolean;
 };
 export type RecipeFormData = FormData<Recipe>;

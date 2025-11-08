@@ -14,6 +14,7 @@ import {
   handleGroceryListSubmit,
 } from "@/providers/new-grocery-list-form-provider";
 import { useLens } from "@hookform/lenses";
+import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 
 export const IngredientArrayForm = ({
   control,
@@ -24,8 +25,34 @@ export const IngredientArrayForm = ({
 
   const { fields, append, remove } = useFieldArray(ingredientsLens.interop());
 
+  const setGroceryLists = useGroceryListsStore(
+    ({ setGroceryLists }) => setGroceryLists,
+  );
+
   const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (data) => {
     console.log(data);
+
+    /*
+    * const submitResponse = await fetch("/api/ingredient", {
+      method: "POST",
+      body: JSON.stringify(ingredientFormData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (ingredientFormData.image) {
+      URL.revokeObjectURL(ingredientFormData.image);
+    }
+
+    if (submitResponse.status === 200 || submitResponse.status === 401) {
+      const response = await submitResponse.json();
+      const { groceryList } = response;
+      setGroceryLists(groceryList);
+      groceryListReset();
+    }
+    *
+    * */
   };
 
   // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
@@ -57,24 +84,6 @@ export const IngredientArrayForm = ({
                   type={"search"}
                   {...l
                     .focus("name")
-                    .interop(({ register }, name) => register(name))}
-                />
-              </div>
-
-              <div>
-                <Label.Root
-                  className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-                  htmlFor={"price"}
-                >
-                  Price ($)
-                </Label.Root>
-                <Input
-                  placeholder={"4.99"}
-                  step={"0.01"}
-                  id={"price"}
-                  type={"number"}
-                  {...l
-                    .focus("price")
                     .interop(({ register }, name) => register(name))}
                 />
               </div>
@@ -183,7 +192,6 @@ export const IngredientArrayForm = ({
             onClick={() =>
               append({
                 name: "",
-                price: "" as unknown as number,
                 capacity: "" as unknown as number,
                 quantity: "" as unknown as number,
                 unit: "" as UnitType,
