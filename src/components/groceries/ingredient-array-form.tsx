@@ -25,34 +25,33 @@ export const IngredientArrayForm = ({
 
   const { fields, append, remove } = useFieldArray(ingredientsLens.interop());
 
-  const setGroceryLists = useGroceryListsStore(
-    ({ setGroceryLists }) => setGroceryLists,
+  const addGroceryList = useGroceryListsStore(
+    ({ addGroceryList }) => addGroceryList,
   );
 
-  const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (data) => {
-    console.log(data);
+  const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
+    groceryListData,
+  ) => {
+    console.log(groceryListData);
 
-    /*
-    * const submitResponse = await fetch("/api/ingredient", {
+    const submitResponse = await fetch("/api/grocery-list", {
       method: "POST",
-      body: JSON.stringify(ingredientFormData),
+      body: JSON.stringify(groceryListData),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    if (ingredientFormData.image) {
-      URL.revokeObjectURL(ingredientFormData.image);
-    }
+    // if (groceryListData.image) {
+    //   URL.revokeObjectURL(groceryListData.image);
+    // }
 
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
       const { groceryList } = response;
-      setGroceryLists(groceryList);
+      addGroceryList(groceryList);
       groceryListReset();
     }
-    *
-    * */
   };
 
   // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
@@ -65,10 +64,10 @@ export const IngredientArrayForm = ({
           <div className={"flex w-full flex-row gap-4"} key={value.id}>
             <div
               className={
-                "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+                "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
               }
             >
-              <div className={"col-span-2"}>
+              <div className={"col-span-2 sm:col-span-3"}>
                 <Label.Root
                   className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
                   htmlFor={"name"}
@@ -88,7 +87,7 @@ export const IngredientArrayForm = ({
                 />
               </div>
 
-              <div>
+              <div className={"col-span-2 sm:col-span-1"}>
                 <Label.Root
                   className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
                   htmlFor={"quantity"}
@@ -105,7 +104,7 @@ export const IngredientArrayForm = ({
                 />
               </div>
 
-              <div>
+              <div className={"col-span-2 sm:col-span-1"}>
                 <Label.Root
                   className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
                   htmlFor={"capacity"}
@@ -123,7 +122,7 @@ export const IngredientArrayForm = ({
                 />
               </div>
 
-              <div>
+              <div className={"col-span-2 sm:col-span-1"}>
                 <Label.Root
                   className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
                   htmlFor={"unit"}
@@ -156,7 +155,7 @@ export const IngredientArrayForm = ({
       <div className={"flex flex-row gap-4 pt-2 text-black lg:pt-0"}>
         <div
           className={
-            "grid w-full grid-cols-2 grid-rows-1 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:grid-rows-1"
+            "grid w-full grid-cols-2 grid-rows-1 gap-4 sm:grid-cols-3 lg:grid-cols-6"
           }
         >
           <div className={"sm:col-start-2 lg:col-start-5"}>

@@ -18,7 +18,8 @@ export const GET = async () => {
 
     const { success, data, error } = await ingredientsResponse.json();
 
-    if (!success) return new Response(error, { status: 400 });
+    if (!success)
+      return new Response(error, { status: ingredientsResponse.status });
     return new Response(JSON.stringify({ ingredient: data }), {
       status: 200,
     });
@@ -58,7 +59,8 @@ export const POST = async (req: NextRequest) => {
     );
 
     const { success, data, error } = await saveIngredientResponse.json();
-    if (!success) return new Response(error, { status: 400 });
+    if (!success)
+      return new Response(error, { status: saveIngredientResponse.status });
     return new Response(JSON.stringify({ ingredient: data }), {
       status: 200,
     });

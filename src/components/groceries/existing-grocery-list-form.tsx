@@ -2,7 +2,7 @@
 import { GroceryListFormData } from "@/utils/interfaces";
 // TODO: test if can remove * as React
 import * as React from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
   AccordionContent,
   AccordionHeader,
@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
+import { groceryListReset } from "@/providers/new-grocery-list-form-provider";
+import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 
 export const ExistingGroceryListForm = ({
   groceryList,
@@ -20,22 +22,51 @@ export const ExistingGroceryListForm = ({
     defaultValues: groceryList,
   });
 
+  const removeGroceryList = useGroceryListsStore(
+    ({ removeGroceryList }) => removeGroceryList,
+  );
+
   const {
     handleSubmit,
     control,
     formState: { isDirty },
   } = methods;
 
+  const onDeleteHandler: SubmitHandler<string | undefined> = async (
+    groceryListId,
+  ) => {
+    if (!groceryListId) return;
+
+    const submitResponse = await fetch(`/api/grocery-list/${groceryListId}`, {
+      method: "DELETE",
+      body: JSON.stringify(groceryListId),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // if (groceryListData.image) {
+    //   URL.revokeObjectURL(groceryListData.image);
+    // }
+
+    if (submitResponse.status === 200 || submitResponse.status === 401) {
+      const response = await submitResponse.json();
+      const { groceryListId } = response;
+      removeGroceryList(groceryListId);
+      groceryListReset();
+    }
+  };
+
   /* TODO: get current searched grocery list
    * if grocery list name is same, hide new list form and focus/edit existing name
    */
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit((values) => console.log(values))}>
+      <form>
         <AccordionHeader>
-          <AccordionTrigger>Test title</AccordionTrigger>
+          <AccordionTrigger>{groceryList.name.toWellFormed()}</AccordionTrigger>
           <div
-            onClick={handleSubmit((values) => console.log(values))}
+            onClick={handleSubmit((values) => onDeleteHandler(values.publicId))}
             className={"flex items-center"}
           >
             <CartDeleteIcon />

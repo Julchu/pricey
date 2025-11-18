@@ -7,8 +7,10 @@ export type GroceryListsState = {
 
 export type GroceryListsActions = {
   setGroceryLists: (groceryLists: GroceryList[]) => void;
+  addGroceryList: (newGroceryList: GroceryList) => void;
   clearGroceryLists: () => void;
   fetchGroceryLists: () => void;
+  removeGroceryList: (groceryListId: string) => void;
 };
 
 export type GroceryListsStore = GroceryListsState & GroceryListsActions;
@@ -31,7 +33,17 @@ export const createGroceryListsStore = (
   return create<GroceryListsStore>((set) => ({
     ...initialState,
     setGroceryLists: (groceryLists) => set({ groceryLists }),
+    addGroceryList: (newGroceryList) =>
+      set(({ groceryLists }) => ({
+        groceryLists: [...groceryLists, newGroceryList],
+      })),
     clearGroceryLists: () => set({ groceryLists: [] }),
+    removeGroceryList: (groceryListId) =>
+      set(({ groceryLists }) => ({
+        groceryLists: groceryLists.filter(
+          (groceryList) => groceryList.publicId !== groceryListId,
+        ),
+      })),
     fetchGroceryLists: async () => {
       try {
         const { groceryLists } = await tryFetchingGroceryLists();

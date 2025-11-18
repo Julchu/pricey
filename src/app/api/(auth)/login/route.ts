@@ -43,7 +43,7 @@ export async function POST() {
     //   loginResponse.headers.get("set-cookie"),
     // );
     if (!success || error)
-      return new Response(`Error: ${error}`, { status: 400 });
+      return new Response(`Error: ${error}`, { status: loginResponse.status });
 
     return new Response(JSON.stringify({ userInfo: data }), {
       status: 200,

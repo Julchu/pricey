@@ -134,6 +134,7 @@ export type UserFormData = FormData<User>;
 export type GroceryListFormData = {
   name: string;
   ingredients: GroceryListIngredientFormData[];
+  publicId?: string;
   public?: boolean;
 };
 export type RecipeFormData = FormData<Recipe>;

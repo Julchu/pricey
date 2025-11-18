@@ -16,31 +16,33 @@ export const Providers = async ({ children }: PropsWithChildren) => {
   const headersList = await headers();
   const pathname = headersList.get("X-Current-Path") || "";
 
+  const isHome =
+    pathname === "/" || pathname === "" || pathname.startsWith("/ingredients");
+  const isIngredients = pathname.startsWith("/ingredients");
+  const isGroceries = pathname.startsWith("/groceries");
+  const isRecipes = pathname.startsWith("/recipes");
+
   const userInfo = await serverFetch<UserFormData>({ endpoint: "user" });
 
   let ingredients: Ingredient[] = [];
   let groceryLists: GroceryList[] = [];
   let recipes: Recipe[] = [];
 
-  if (
-    pathname === "/" ||
-    pathname === "" ||
-    pathname.includes("/ingredients")
-  ) {
+  if (isHome || isIngredients) {
     const fetchedIngredients = await serverFetch<Ingredient[]>({
       endpoint: "ingredient",
     });
     ingredients = fetchedIngredients ? fetchedIngredients : [];
   }
 
-  if (pathname.includes("/groceries")) {
+  if (isGroceries) {
     const fetchedGroceryLists = await serverFetch<GroceryList[]>({
       endpoint: "grocery-list",
     });
     groceryLists = fetchedGroceryLists ? fetchedGroceryLists : [];
   }
 
-  if (pathname.includes("/recipes")) {
+  if (isRecipes) {
     const fetchedRecipes = await serverFetch<Recipe[]>({ endpoint: "recipe" });
     recipes = fetchedRecipes ? fetchedRecipes : [];
   }
