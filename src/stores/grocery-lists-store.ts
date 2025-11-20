@@ -10,6 +10,7 @@ export type GroceryListsActions = {
   addGroceryList: (newGroceryList: GroceryList) => void;
   clearGroceryLists: () => void;
   fetchGroceryLists: () => void;
+  updateGroceryList: (groceryList: GroceryList) => void;
   removeGroceryList: (groceryListId: string) => void;
 };
 
@@ -38,12 +39,6 @@ export const createGroceryListsStore = (
         groceryLists: [...groceryLists, newGroceryList],
       })),
     clearGroceryLists: () => set({ groceryLists: [] }),
-    removeGroceryList: (groceryListId) =>
-      set(({ groceryLists }) => ({
-        groceryLists: groceryLists.filter(
-          (groceryList) => groceryList.publicId !== groceryListId,
-        ),
-      })),
     fetchGroceryLists: async () => {
       try {
         const { groceryLists } = await tryFetchingGroceryLists();
@@ -52,6 +47,21 @@ export const createGroceryListsStore = (
         throw new Error("Unable to retrieve grocery lists", { cause: error });
       }
     },
+    updateGroceryList: (existingGroceryList) => {
+      set(({ groceryLists }) => ({
+        groceryLists: groceryLists.map((groceryList) =>
+          groceryList.publicId === existingGroceryList.publicId
+            ? existingGroceryList
+            : groceryList,
+        ),
+      }));
+    },
+    removeGroceryList: (groceryListId) =>
+      set(({ groceryLists }) => ({
+        groceryLists: groceryLists.filter(
+          (groceryList) => groceryList.publicId !== groceryListId,
+        ),
+      })),
   }));
 };
 

@@ -1,5 +1,53 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import { GroceryListFormData } from "@/utils/interfaces";
+
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const browserCookies = await cookies();
+    const accessToken = browserCookies.get(
+      `${process.env.ACCESS_TOKEN_KEY}`,
+    )?.value;
+
+    const groceryListData: GroceryListFormData = await req.json();
+
+    if (!accessToken)
+      return new Response(JSON.stringify({ groceryList: null }), {
+        status: 401,
+      });
+
+    const groceryListId = groceryListData.publicId;
+    if (!groceryListId)
+      return new Response(JSON.stringify({ groceryList: null }), {
+        status: 404,
+      });
+
+    const updateGroceryListResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/grocery-list/${groceryListId}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          groceryList: groceryListData,
+        }),
+      },
+    );
+
+    const { success, data, error } = await updateGroceryListResponse.json();
+    if (!success)
+      return new Response(error, { status: updateGroceryListResponse.status });
+    return new Response(JSON.stringify({ groceryList: data }), {
+      status: 200,
+    });
+  } catch (error) {
+    return new Response(`Grocery list creation error: ${error}`, {
+      status: 400,
+    });
+  }
+};
 
 export const DELETE = async (req: NextRequest) => {
   try {

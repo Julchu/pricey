@@ -40,7 +40,7 @@ export const POST = async (req: NextRequest) => {
     const groceryListData: GroceryListFormData = await req.json();
 
     if (!accessToken)
-      return new Response(JSON.stringify({ groceryList: groceryListData }), {
+      return new Response(JSON.stringify({ groceryList: null }), {
         status: 401,
       });
 
@@ -70,5 +70,3 @@ export const POST = async (req: NextRequest) => {
     });
   }
 };
-
-export const PUT = async (req: NextRequest) => {};
