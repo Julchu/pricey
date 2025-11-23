@@ -1,22 +1,22 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { GroceryListFormData } from "@/utils/interfaces";
+import { GroceryListUpdateFormData } from "@/utils/interfaces";
 
 export const PATCH = async (req: NextRequest) => {
   try {
     const browserCookies = await cookies();
-    const accessToken = browserCookies.get(
-      `${process.env.ACCESS_TOKEN_KEY}`,
-    )?.value;
+    const accessToken =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
-    const groceryListData: GroceryListFormData = await req.json();
+    const groceryListData: GroceryListUpdateFormData = await req.json();
 
     if (!accessToken)
       return new Response(JSON.stringify({ groceryList: null }), {
         status: 401,
       });
 
-    const groceryListId = groceryListData.publicId;
+    const groceryListId = groceryListData.groceryList.publicId;
     if (!groceryListId)
       return new Response(JSON.stringify({ groceryList: null }), {
         status: 404,
@@ -30,9 +30,7 @@ export const PATCH = async (req: NextRequest) => {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          groceryList: groceryListData,
-        }),
+        body: JSON.stringify(groceryListData),
       },
     );
 

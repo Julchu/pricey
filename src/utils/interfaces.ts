@@ -106,7 +106,7 @@ export type GroceryList = {
 export type GroceryListIngredient = {
   userId: string;
   groceryListId: string;
-  publicId: string;
+  publicId?: string;
   name: string;
   capacity: number;
   quantity?: number;
@@ -122,7 +122,7 @@ export type Recipe = {
   public?: boolean;
 };
 
-type FormData<T> = Omit<T, "userId" | "publicId">;
+type FormData<T> = Omit<T, "userId">;
 
 // TODO: fix types; form data might differ from public returned types, but ids aren't included
 export type IngredientFormData = FormData<Ingredient>;
@@ -137,6 +137,14 @@ export type GroceryListFormData = {
   publicId?: string;
   public?: boolean;
 };
+
+export type GroceryListUpdateFormData = {
+  deletedIngredientIds: string[];
+  newIngredients: GroceryListIngredientFormData[];
+  updatedIngredients: GroceryListIngredientFormData[];
+  groceryList: Omit<GroceryListFormData, "ingredients">;
+};
+
 export type RecipeFormData = FormData<Recipe>;
 
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */

@@ -8,7 +8,7 @@ export const serverFetch = async <T>({
   body,
 }: {
   endpoint: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   body?: unknown;
 }): Promise<T | null> => {
   try {

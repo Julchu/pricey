@@ -8,51 +8,21 @@ import { CircleMinusIcon } from "@/components/icons/circle-minus-icon";
 import { CircleAddIcon } from "@/components/icons/circle-add-icon";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { SaveCartIcon } from "@/components/icons/cart/save-cart-icon";
-import { Control, SubmitHandler } from "react-hook-form";
-import {
-  groceryListReset,
-  handleGroceryListSubmit,
-} from "@/providers/new-grocery-list-form-provider";
+import { Control } from "react-hook-form";
 import { useLens } from "@hookform/lenses";
-import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 
 export const IngredientArrayForm = ({
   control,
+  submitAction,
+  resetAction,
 }: {
   control: Control<GroceryListFormData>;
+  submitAction: () => void;
+  resetAction: () => void;
 }) => {
   const ingredientsLens = useLens({ control }).focus("ingredients");
 
   const { fields, append, remove } = useFieldArray(ingredientsLens.interop());
-
-  const addGroceryList = useGroceryListsStore(
-    ({ addGroceryList }) => addGroceryList,
-  );
-
-  const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
-    groceryListData,
-  ) => {
-    console.log(groceryListData);
-
-    const submitResponse = await fetch("/api/grocery-list", {
-      method: "POST",
-      body: JSON.stringify(groceryListData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    // if (groceryListData.image) {
-    //   URL.revokeObjectURL(groceryListData.image);
-    // }
-
-    if (submitResponse.status === 200 || submitResponse.status === 401) {
-      const response = await submitResponse.json();
-      const { groceryList } = response;
-      addGroceryList(groceryList);
-      groceryListReset();
-    }
-  };
 
   // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
   //   console.log(errors);
@@ -163,7 +133,7 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={groceryListReset}
+              onClick={resetAction}
               type={"reset"}
             >
               <CircleResetIcon />
@@ -176,7 +146,7 @@ export const IngredientArrayForm = ({
               className={
                 "text-md flex h-10 w-full cursor-pointer items-center justify-center gap-[5px] rounded-md bg-blue-100 leading-none font-medium tracking-widest outline-none"
               }
-              onClick={handleGroceryListSubmit(onSubmitHandler)}
+              onClick={submitAction}
               type={"button"}
             >
               <SaveCartIcon />

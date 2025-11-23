@@ -23,7 +23,9 @@ export async function GET() {
 export async function POST() {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     if (!token) return new Response(JSON.stringify({ userInfo: null }));
 

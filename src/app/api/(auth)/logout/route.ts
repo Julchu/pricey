@@ -3,7 +3,9 @@ import { cookies } from "next/headers";
 export async function POST() {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const logoutResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/user/logout`,

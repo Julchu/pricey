@@ -5,7 +5,9 @@ import { cookies } from "next/headers";
 export const GET = async () => {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const ingredientsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,
