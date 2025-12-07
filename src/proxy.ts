@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const accessTokenKey = process.env.ACCESS_TOKEN_KEY!;
   const refreshTokenKey = process.env.REFRESH_TOKEN_KEY!;
 
