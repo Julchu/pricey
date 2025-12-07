@@ -1,16 +1,8 @@
 "use client";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
-} from "@/utils/interfaces"; // TODO: test if can remove * as React
+import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces"; // TODO: test if can remove * as React
 import * as React from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionTrigger, } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
@@ -72,7 +64,7 @@ export const ExistingGroceryListForm = ({
   const filterChangedData = (
     groceryListChanges: GroceryListFormData,
   ): GroceryListUpdateFormData => {
-    const { ingredients: ingredientChanges, ...changedGroceryListValues } =
+    const { ingredients: dirtyIngredients, ...changedGroceryListValues } =
       groceryListChanges;
 
     if (
@@ -90,59 +82,43 @@ export const ExistingGroceryListForm = ({
     const originalIngredients =
       methods.formState.defaultValues?.ingredients ?? [];
 
-    const originalIngredientsByIds = originalIngredients.reduce<
-      Record<string, Partial<GroceryListIngredientFormData>>
-    >((ingredients, ingredient) => {
-      if (!ingredient || !ingredient.publicId) return ingredients;
-      ingredients[ingredient.publicId] = ingredient;
-      return ingredients;
-    }, {});
+    const newIngredients: GroceryListIngredientFormData[] = [];
+    const updatedIngredients: GroceryListIngredientFormData[] = [];
+    const deletedIngredientIds: string[] = [];
 
-    console.log(originalIngredientsByIds);
-
-    const updatedIngredientByIds = ingredientChanges.reduce<
-      Record<string, GroceryListIngredientFormData>
-    >((ingredients, ingredient) => {
-      if (!ingredient.publicId) return ingredients;
-      ingredients[ingredient.publicId] = ingredient;
-      return ingredients;
-    }, {});
-
-    console.log(updatedIngredientByIds);
-
-    const deletedIngredientIds = groceryList.ingredients.reduce<string[]>(
-      (deletedIds, { publicId }) => {
-        if (!publicId) return deletedIds;
-
-        if (deletedIds && !updatedIngredientByIds[publicId])
-          deletedIds.push(publicId);
-        return deletedIds;
-      },
-      [],
-    );
-
-    const newIngredients = ingredientChanges.reduce<
-      GroceryListIngredientFormData[]
-    >((newIngredients, ingredient) => {
-      if (!ingredient.publicId) return newIngredients;
-      if (!originalIngredientsByIds[ingredient.publicId])
-        newIngredients.push(ingredient);
-      return newIngredients;
-    }, []);
-
-    const updatedIngredients = ingredientChanges.reduce<
-      GroceryListIngredientFormData[]
-    >((updates, ingredient) => {
-      if (!ingredient.publicId) return updates;
-
+    //   If ingredient.publicId exists in originalIngredients but not in ingredientChanges: deleted ingredient
+    for (const originalIngredient of originalIngredients) {
       if (
-        originalIngredientsByIds[ingredient.publicId] &&
-        JSON.stringify(originalIngredientsByIds[ingredient.publicId]) !==
-          JSON.stringify(ingredient)
-      )
-        updatedIngredients.push(ingredient);
-      return updates;
-    }, []);
+        originalIngredient &&
+        originalIngredient.publicId &&
+        !dirtyIngredients.some(
+          ({ publicId }) => publicId === originalIngredient?.publicId,
+        )
+      ) {
+        deletedIngredientIds.push(originalIngredient.publicId);
+      }
+    }
+
+    for (const dirtyIngredient of dirtyIngredients) {
+      //   If no ingredient.publicId: new ingredient
+      if (!dirtyIngredient.publicId) newIngredients.push(dirtyIngredient);
+      else {
+        //   If ingredient.publicId exists in originalIngredients: do difference check to see if updated
+        const existingIngredient = originalIngredients.find(
+          (originalIngredient) =>
+            originalIngredient?.publicId === dirtyIngredient.publicId,
+        );
+
+        if (existingIngredient) {
+          if (
+            JSON.stringify(dirtyIngredient) !==
+            JSON.stringify(existingIngredient)
+          ) {
+            updatedIngredients.push(dirtyIngredient);
+          }
+        }
+      }
+    }
 
     return {
       deletedIngredientIds,
