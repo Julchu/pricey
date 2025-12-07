@@ -1,18 +1,18 @@
 "use client";
 import { Label } from "radix-ui";
-import { UnitSelect } from "@/components/ingredients/calculator/unit-select";
-import { Input } from "@/components/ingredients/calculator/inputs";
+import { IngredientUnitSelect } from "@/components/ui/unit-select";
+import { Input } from "@/components/ui/input";
 import {
   handleIngredientSubmit,
-  ingredientControl,
   ingredientRegister,
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler } from "react-hook-form";
 import { IngredientFormData } from "@/utils/interfaces";
-import { CheckCircledIcon, ResetIcon } from "@radix-ui/react-icons";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { LabelProps } from "@radix-ui/react-label";
+import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
+import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
 
 export const Calculator = () => {
   const updateIngredients = useIngredientsStore(
@@ -52,13 +52,13 @@ export const Calculator = () => {
         "flex h-2/3 grid-cols-1 flex-col gap-4 rounded-md bg-blue-500 p-4 text-sm"
       }
     >
-      <div className={"grid grid-cols-1"}>
+      <div>
         <CalculatorLabel htmlFor={"name"}>Name</CalculatorLabel>
         <Input
           autoComplete={"name"}
           placeholder={"Pepsi"}
           id={"name"}
-          type={"text"}
+          type={"search"}
           {...ingredientRegister("name")}
         />
       </div>
@@ -103,11 +103,11 @@ export const Calculator = () => {
 
         <div>
           <CalculatorLabel htmlFor={"unit"}>Unit</CalculatorLabel>
-          <UnitSelect control={ingredientControl} />
+          <IngredientUnitSelect />
         </div>
       </div>
 
-      <div className={"grid grid-cols-2 gap-4"}>
+      <div className={"grid grid-cols-2 gap-4 pt-5"}>
         <div>
           <button
             className={
@@ -116,7 +116,7 @@ export const Calculator = () => {
             onClick={resetHandler}
             type={"reset"}
           >
-            <ResetIcon />
+            <CircleResetIcon />
             Reset
           </button>
         </div>
@@ -128,7 +128,7 @@ export const Calculator = () => {
             }
             onClick={handleIngredientSubmit(onSubmitHandler)}
           >
-            <CheckCircledIcon />
+            <AnimatedCheckIcon />
             Save
           </button>
         </div>

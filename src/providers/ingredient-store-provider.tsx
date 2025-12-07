@@ -23,7 +23,7 @@ export const IngredientStoreProvider = ({
   children,
   ingredients,
 }: IngredientsStoreProviderProps) => {
-  const storeRef = useRef<IngredientsStoreApi | null>(null);
+  const storeRef = useRef<IngredientsStoreApi>(null);
   if (storeRef.current === null) {
     const initialState = ingredients
       ? initIngredientsStore(ingredients)

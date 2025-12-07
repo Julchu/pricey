@@ -7,8 +7,11 @@ export type GroceryListsState = {
 
 export type GroceryListsActions = {
   setGroceryLists: (groceryLists: GroceryList[]) => void;
+  addGroceryList: (newGroceryList: GroceryList) => void;
   clearGroceryLists: () => void;
   fetchGroceryLists: () => void;
+  updateGroceryList: (groceryList: GroceryList) => void;
+  removeGroceryList: (groceryListId: string) => void;
 };
 
 export type GroceryListsStore = GroceryListsState & GroceryListsActions;
@@ -31,6 +34,10 @@ export const createGroceryListsStore = (
   return create<GroceryListsStore>((set) => ({
     ...initialState,
     setGroceryLists: (groceryLists) => set({ groceryLists }),
+    addGroceryList: (newGroceryList) =>
+      set(({ groceryLists }) => ({
+        groceryLists: [...groceryLists, newGroceryList],
+      })),
     clearGroceryLists: () => set({ groceryLists: [] }),
     fetchGroceryLists: async () => {
       try {
@@ -40,12 +47,27 @@ export const createGroceryListsStore = (
         throw new Error("Unable to retrieve grocery lists", { cause: error });
       }
     },
+    updateGroceryList: (existingGroceryList) => {
+      set(({ groceryLists }) => ({
+        groceryLists: groceryLists.map((groceryList) =>
+          groceryList.publicId === existingGroceryList.publicId
+            ? existingGroceryList
+            : groceryList,
+        ),
+      }));
+    },
+    removeGroceryList: (groceryListId) =>
+      set(({ groceryLists }) => ({
+        groceryLists: groceryLists.filter(
+          (groceryList) => groceryList.publicId !== groceryListId,
+        ),
+      })),
   }));
 };
 
 const tryFetchingGroceryLists = async () => {
   try {
-    const fetchGroceryLists = await fetch("/api/groceries");
+    const fetchGroceryLists = await fetch("/api/grocery-list");
     return await fetchGroceryLists.json();
   } catch (error) {
     throw new Error("Unable to fetch grocery lists", { cause: error });

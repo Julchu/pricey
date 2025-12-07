@@ -23,7 +23,9 @@ export async function GET() {
 export async function POST() {
   try {
     const browserCookies = await cookies();
-    const token = browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     if (!token) return new Response(JSON.stringify({ userInfo: null }));
 
@@ -43,7 +45,7 @@ export async function POST() {
     //   loginResponse.headers.get("set-cookie"),
     // );
     if (!success || error)
-      return new Response(`Error: ${error}`, { status: 400 });
+      return new Response(`Error: ${error}`, { status: loginResponse.status });
 
     return new Response(JSON.stringify({ userInfo: data }), {
       status: 200,

@@ -10,11 +10,16 @@ import {
   Recipe,
   UserFormData,
 } from "@/utils/interfaces";
-import { headers } from "next/headers";
 
 export const Providers = async ({ children }: PropsWithChildren) => {
-  const headersList = await headers();
-  const pathname = headersList.get("X-Current-Path") || "";
+  // const headersList = await headers();
+  // const pathname = headersList.get("X-Current-Path") || "";
+
+  // const isHome =
+  //   pathname === "/" || pathname === "" || pathname.startsWith("/ingredients");
+  // const isIngredients = pathname.startsWith("/ingredients");
+  // const isGroceries = pathname.startsWith("/groceries");
+  // const isRecipes = pathname.startsWith("/recipes");
 
   const userInfo = await serverFetch<UserFormData>({ endpoint: "user" });
 
@@ -22,28 +27,25 @@ export const Providers = async ({ children }: PropsWithChildren) => {
   let groceryLists: GroceryList[] = [];
   let recipes: Recipe[] = [];
 
-  if (
-    pathname === "/" ||
-    pathname.includes("/ingredients") ||
-    pathname === ""
-  ) {
-    const fetchedIngredients = await serverFetch<Ingredient[]>({
-      endpoint: "ingredient",
-    });
-    ingredients = fetchedIngredients ? fetchedIngredients : [];
-  }
+  // if (isHome || isIngredients) {
+  const fetchedIngredients = await serverFetch<Ingredient[]>({
+    endpoint: "ingredient",
+  });
+  // TODO: set all to const
+  ingredients = fetchedIngredients ? fetchedIngredients : [];
+  // }
 
-  if (pathname.includes("/groceries")) {
-    const fetchedGroceryLists = await serverFetch<GroceryList[]>({
-      endpoint: "grocery-list",
-    });
-    groceryLists = fetchedGroceryLists ? fetchedGroceryLists : [];
-  }
+  // if (isGroceries) {
+  const fetchedGroceryLists = await serverFetch<GroceryList[]>({
+    endpoint: "grocery-list",
+  });
+  groceryLists = fetchedGroceryLists ? fetchedGroceryLists : [];
+  // }
 
-  if (pathname.includes("/recipes")) {
-    const fetchedRecipes = await serverFetch<Recipe[]>({ endpoint: "recipe" });
-    recipes = fetchedRecipes ? fetchedRecipes : [];
-  }
+  // if (isRecipes) {
+  const fetchedRecipes = await serverFetch<Recipe[]>({ endpoint: "recipe" });
+  recipes = fetchedRecipes ? fetchedRecipes : [];
+  // }
 
   return (
     <UserStoreProvider userInfo={userInfo}>

@@ -2,14 +2,15 @@
 
 import { createContext, PropsWithChildren, useContext, useRef } from "react";
 import { useStore } from "zustand";
+
+import { GroceryList } from "@/utils/interfaces";
 import {
   createGroceryListsStore,
   defaultInitState,
   GroceryListsStore,
   GroceryListsStoreApi,
   initGroceryListsStore,
-} from "@/stores/grocery-list-store";
-import { GroceryList } from "@/utils/interfaces";
+} from "@/stores/grocery-lists-store";
 
 export const GroceryListsStoreContext = createContext<
   GroceryListsStoreApi | undefined
@@ -23,7 +24,7 @@ export const GroceryListStoreProvider = ({
   children,
   groceryLists,
 }: GroceryListsStoreProviderProps) => {
-  const storeRef = useRef<GroceryListsStoreApi | null>(null);
+  const storeRef = useRef<GroceryListsStoreApi>(null);
   if (storeRef.current === null) {
     const initialState = groceryLists
       ? initGroceryListsStore(groceryLists)

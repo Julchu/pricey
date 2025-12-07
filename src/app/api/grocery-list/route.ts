@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { IngredientFormData } from "@/utils/interfaces";
+import { GroceryListFormData } from "@/utils/interfaces";
 import { cookies } from "next/headers";
 
 export const GET = async () => {
@@ -9,8 +9,8 @@ export const GET = async () => {
       process.env.MASTER_KEY ||
       browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
-    const ingredientsResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/ingredient`,
+    const groceryListsResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/grocery-list`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -18,11 +18,11 @@ export const GET = async () => {
       },
     );
 
-    const { success, data, error } = await ingredientsResponse.json();
+    const { success, data, error } = await groceryListsResponse.json();
 
     if (!success)
-      return new Response(error, { status: ingredientsResponse.status });
-    return new Response(JSON.stringify({ ingredient: data }), {
+      return new Response(error, { status: groceryListsResponse.status });
+    return new Response(JSON.stringify({ groceryLists: data }), {
       status: 200,
     });
   } catch (error) {
@@ -39,15 +39,15 @@ export const POST = async (req: NextRequest) => {
       `${process.env.ACCESS_TOKEN_KEY}`,
     )?.value;
 
-    const ingredientData: IngredientFormData = await req.json();
+    const groceryListData: GroceryListFormData = await req.json();
 
     if (!accessToken)
-      return new Response(JSON.stringify({ ingredient: ingredientData }), {
+      return new Response(JSON.stringify({ groceryList: null }), {
         status: 401,
       });
 
-    const saveIngredientResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/ingredient`,
+    const saveGroceryListResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/grocery-list`,
       {
         method: "POST",
         headers: {
@@ -55,19 +55,19 @@ export const POST = async (req: NextRequest) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ingredient: ingredientData,
+          groceryList: groceryListData,
         }),
       },
     );
 
-    const { success, data, error } = await saveIngredientResponse.json();
+    const { success, data, error } = await saveGroceryListResponse.json();
     if (!success)
-      return new Response(error, { status: saveIngredientResponse.status });
-    return new Response(JSON.stringify({ ingredient: data }), {
+      return new Response(error, { status: saveGroceryListResponse.status });
+    return new Response(JSON.stringify({ groceryList: data }), {
       status: 200,
     });
   } catch (error) {
-    return new Response(`Ingredient creation error: ${error}`, {
+    return new Response(`Grocery list creation error: ${error}`, {
       status: 400,
     });
   }
