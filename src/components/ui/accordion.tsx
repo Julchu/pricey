@@ -1,5 +1,3 @@
-// TODO: test if can remove * as React
-import * as React from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Accordion } from "radix-ui";
 import {

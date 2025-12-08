@@ -1,7 +1,5 @@
 "use client";
 import { Accordion } from "radix-ui";
-// TODO: test if can remove * as React
-import * as React from "react";
 import { AccordionItem } from "@/components/ui/accordion";
 import { ExistingGroceryListForm } from "./existing-grocery-list-form";
 import { NewGroceryListForm } from "./new-grocery-list-form";

@@ -1,8 +1,15 @@
 "use client";
-import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces"; // TODO: test if can remove * as React
-import * as React from "react";
+import {
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+  GroceryListUpdateFormData,
+} from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { AccordionContent, AccordionHeader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";

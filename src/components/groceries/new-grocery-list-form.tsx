@@ -1,11 +1,6 @@
 "use client";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionTrigger, } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import * as React from "react";
 import { useEffect } from "react";
 import {
   groceryListControl,
