@@ -18,8 +18,10 @@ import { Input } from "@/components/ui/input";
 
 export const ExistingGroceryListForm = ({
   groceryList,
+  closeEditingAction,
 }: {
   groceryList: GroceryListFormData;
+  closeEditingAction: () => void;
 }) => {
   const methods = useForm<GroceryListFormData>({
     defaultValues: groceryList,
@@ -45,6 +47,7 @@ export const ExistingGroceryListForm = ({
   ) => {
     // "use server";
     if (!groceryListData.publicId) return;
+    console.log("test");
 
     const submitResponse = await fetch(
       `/api/grocery-list/${groceryListData.publicId}`,
@@ -66,6 +69,7 @@ export const ExistingGroceryListForm = ({
       const { groceryListId } = response;
       removeGroceryList(groceryListId);
     }
+    return closeEditingAction();
   };
 
   const filterChangedData = (
@@ -164,16 +168,22 @@ export const ExistingGroceryListForm = ({
       const { groceryList } = response;
       updateGroceryList(groceryList);
     }
-    return;
+    return closeEditingAction();
   };
 
   const onResetHandler = () => {
     reset();
   };
 
-  /* TODO: get current searched grocery list
-   * if grocery list name is same, hide new list form and focus/edit existing name
-   */
+  /* TODO:
+   ** 1. Get current searched grocery list
+   **  - If grocery list name is same, hide new list form and focus/edit existing name
+   ** 2. Local checkbox to cross out ingredient
+   ** 3. Edit button and show/hide Reset/Save button
+   ** 4. Title bar created/updated timestamp
+   ** 5. Styling for add/remove ingredient buttons
+   **/
+
   return (
     <FormProvider {...methods}>
       <form>
@@ -188,12 +198,14 @@ export const ExistingGroceryListForm = ({
             type={"search"}
             {...register("name")}
           />
+
           <div
             onClick={handleSubmit(onDeleteHandler)}
-            className={"flex items-center"}
+            className={"3cursor-pointer flex items-center"}
           >
             <CartDeleteIcon />
           </div>
+
           <AccordionTrigger />
         </AccordionHeader>
         <AccordionContent className={"h-full w-full"}>

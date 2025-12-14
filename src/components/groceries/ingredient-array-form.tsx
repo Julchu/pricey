@@ -28,7 +28,7 @@ export const IngredientArrayForm = ({
   //   console.log(errors);
 
   return (
-    <div className={"flex flex-col gap-4"}>
+    <div className={"flex flex-col gap-4 font-medium"}>
       {ingredientsLens.map(fields, (value, l, index) => {
         return (
           <div className={"flex w-full flex-row gap-4"} key={value.id}>
@@ -106,13 +106,15 @@ export const IngredientArrayForm = ({
               </div>
             </div>
 
-            <div className={"flex flex-col items-center justify-center"}>
+            <div className={"flex flex-col justify-center"}>
               {index === 0 ? (
                 <Label.Root htmlFor={"remove-ingredient"}>&nbsp;</Label.Root>
               ) : null}
               <button
                 name={"remove-ingredient"}
-                className={"flex cursor-pointer flex-row text-black"}
+                className={
+                  "flex min-h-10 w-full cursor-pointer flex-row items-center rounded-md bg-blue-100 px-[15px] text-black"
+                }
                 onClick={() => remove(index)}
               >
                 <CircleMinusIcon />
@@ -137,7 +139,7 @@ export const IngredientArrayForm = ({
               type={"reset"}
             >
               <CircleResetIcon />
-              Reset
+              Cancel
             </button>
           </div>
 
@@ -154,9 +156,11 @@ export const IngredientArrayForm = ({
             </button>
           </div>
         </div>
-        <div className={"flex flex-col items-center justify-center"}>
+        <div className={"flex flex-col justify-center"}>
           <button
-            className={"flex cursor-pointer flex-row text-black"}
+            className={
+              "flex min-h-10 w-full cursor-pointer flex-row items-center rounded-md bg-blue-100 px-[15px] text-black"
+            }
             type="button"
             onClick={() =>
               append({
