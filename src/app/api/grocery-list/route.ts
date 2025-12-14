@@ -35,13 +35,13 @@ export const GET = async () => {
 export const POST = async (req: NextRequest) => {
   try {
     const browserCookies = await cookies();
-    const accessToken = browserCookies.get(
-      `${process.env.ACCESS_TOKEN_KEY}`,
-    )?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const groceryListData: GroceryListFormData = await req.json();
 
-    if (!accessToken)
+    if (!token)
       return new Response(JSON.stringify({ groceryList: null }), {
         status: 401,
       });
@@ -51,7 +51,7 @@ export const POST = async (req: NextRequest) => {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

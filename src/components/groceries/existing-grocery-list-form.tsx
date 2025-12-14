@@ -18,10 +18,12 @@ import { Input } from "@/components/ui/input";
 
 export const ExistingGroceryListForm = ({
   groceryList,
-  closeEditingAction,
+  closeEditingCallbackAction,
+  deleteListCallbackAction,
 }: {
   groceryList: GroceryListFormData;
-  closeEditingAction: () => void;
+  closeEditingCallbackAction: () => void;
+  deleteListCallbackAction: () => void;
 }) => {
   const methods = useForm<GroceryListFormData>({
     defaultValues: groceryList,
@@ -69,7 +71,7 @@ export const ExistingGroceryListForm = ({
       const { groceryListId } = response;
       removeGroceryList(groceryListId);
     }
-    return closeEditingAction();
+    return deleteListCallbackAction();
   };
 
   const filterChangedData = (
@@ -168,11 +170,12 @@ export const ExistingGroceryListForm = ({
       const { groceryList } = response;
       updateGroceryList(groceryList);
     }
-    return closeEditingAction();
+    return closeEditingCallbackAction();
   };
 
   const onResetHandler = () => {
     reset();
+    closeEditingCallbackAction();
   };
 
   /* TODO:

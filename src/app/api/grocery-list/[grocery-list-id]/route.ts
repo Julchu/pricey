@@ -5,13 +5,13 @@ import { GroceryListUpdateFormData } from "@/utils/interfaces";
 export const PATCH = async (req: NextRequest) => {
   try {
     const browserCookies = await cookies();
-    const accessToken =
+    const token =
       process.env.MASTER_KEY ||
       browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const groceryListData: GroceryListUpdateFormData = await req.json();
 
-    if (!accessToken)
+    if (!token)
       return new Response(JSON.stringify({ groceryList: null }), {
         status: 401,
       });
@@ -27,7 +27,7 @@ export const PATCH = async (req: NextRequest) => {
       {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(groceryListData),
@@ -50,14 +50,14 @@ export const PATCH = async (req: NextRequest) => {
 export const DELETE = async (req: NextRequest) => {
   try {
     const browserCookies = await cookies();
-    const accessToken = browserCookies.get(
-      `${process.env.ACCESS_TOKEN_KEY}`,
-    )?.value;
+    const token =
+      process.env.MASTER_KEY ||
+      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     const groceryListId: string = await req.json();
 
     // TODO: not sure what this will result in
-    if (!accessToken)
+    if (!token)
       return new Response(JSON.stringify({ groceryList: groceryListId }), {
         status: 401,
       });
@@ -67,7 +67,7 @@ export const DELETE = async (req: NextRequest) => {
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       },

@@ -49,7 +49,7 @@ const ExistingGroceryList = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const closeEditingHandler = () => {
+  const deleteListCallback = () => {
     setIsEditing(false);
     setOpenList((currentlyOpenList) => {
       if (currentlyOpenList === groceryList.publicId) return "new-list";
@@ -57,7 +57,11 @@ const ExistingGroceryList = ({
     });
   };
 
-  const startEditingHandler = () => {
+  const closeEditingCallback = () => {
+    setIsEditing(false);
+  };
+
+  const startEditingCallback = () => {
     setIsEditing(true);
     if (groceryList.publicId) setOpenList(groceryList.publicId);
   };
@@ -66,7 +70,8 @@ const ExistingGroceryList = ({
     return (
       <ExistingGroceryListForm
         groceryList={groceryList}
-        closeEditingAction={closeEditingHandler}
+        closeEditingCallbackAction={closeEditingCallback}
+        deleteListCallbackAction={deleteListCallback}
       />
     );
   }
@@ -74,7 +79,7 @@ const ExistingGroceryList = ({
   return (
     <ExistingGroceryListChecklist
       groceryList={groceryList}
-      startEditingAction={startEditingHandler}
+      startEditingAction={startEditingCallback}
     />
   );
 };
