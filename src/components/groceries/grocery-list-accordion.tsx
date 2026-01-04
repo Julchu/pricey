@@ -22,7 +22,7 @@ export const GroceryListAccordion = () => {
       onValueChange={setOpenList}
     >
       <AccordionItem value={"new-list"}>
-        <NewGroceryListForm />
+        <NewGroceryListForm setOpenListAction={setOpenList} />
       </AccordionItem>
 
       {groceryLists.map((groceryList, index) => (

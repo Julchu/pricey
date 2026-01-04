@@ -1,7 +1,7 @@
 "use client";
-import { AccordionContent, AccordionHeader, AccordionTrigger, } from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   groceryListControl,
   groceryListRegister,
@@ -9,12 +9,18 @@ import {
   groceryListSetFocus,
   handleGroceryListSubmit,
 } from "@/providers/new-grocery-list-form-provider";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useWatch } from "react-hook-form";
 import { GroceryListFormData } from "@/utils/interfaces";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
+import { CircleAddIcon } from "@/components/icons/circle-add-icon";
 
-export const NewGroceryListForm = () => {
+export const NewGroceryListForm = ({
+  setOpenListAction,
+}: {
+  setOpenListAction: Dispatch<SetStateAction<string>>;
+}) => {
+  const [dateString, setDateString] = useState("");
   useEffect(() => {
     groceryListSetFocus("name");
   }, []);
@@ -28,7 +34,6 @@ export const NewGroceryListForm = () => {
   ) => {
     // TODO: check if use server works
     // "use server";
-    console.log(groceryListData);
 
     const submitResponse = await fetch("/api/grocery-list", {
       method: "POST",
@@ -50,17 +55,51 @@ export const NewGroceryListForm = () => {
     }
   };
 
+  const toggleHeader = () => {
+    setOpenListAction((newListOpen) => {
+      if (newListOpen === "new-list") return "";
+      return "new-list";
+    });
+  };
+
+  const [ingredients] = useWatch({
+    control: groceryListControl,
+    name: ["ingredients"],
+  });
+
+  useEffect(() => {
+    setDateString(
+      new Intl.DateTimeFormat(navigator.language, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date()),
+    );
+  }, []);
+
   return (
     <form>
-      <AccordionHeader className={"flex h-full flex-row gap-4 px-0 text-white"}>
-        <Input
-          className={"bg-blue-500 font-medium focus:outline-none"}
-          autoComplete={"name"}
-          placeholder={"Enter new grocery list name "}
-          id={"name"}
-          type={"search"}
-          {...groceryListRegister("name")}
-        />
+      <AccordionHeader
+        className={"flex h-full flex-col items-center px-0 text-white"}
+      >
+        <div onClick={toggleHeader} className={"pl-4"}>
+          <CircleAddIcon />
+        </div>
+
+        <div className={"flex w-full flex-col"}>
+          <Input
+            className={"`font-medium bg-blue-500 focus:outline-none sm:text-xl"}
+            autoComplete={"name"}
+            placeholder={"Enter new grocery list name "}
+            id={"name"}
+            type={"search"}
+            {...groceryListRegister("name")}
+          />
+          <AccordionSubheader
+            ingredientsLength={ingredients.length}
+            dateString={dateString}
+          />
+        </div>
         <AccordionTrigger tabIndex={-1} />
       </AccordionHeader>
 

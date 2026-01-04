@@ -139,7 +139,10 @@ export const Calculator = () => {
 
 const CalculatorLabel = ({ children, className, ...props }: LabelProps) => {
   return (
-    <Label.Root className={`font-medium text-white ${className}`} {...props}>
+    <Label.Root
+      className={`font-medium text-white opacity-50 ${className}`}
+      {...props}
+    >
       {children}
     </Label.Root>
   );

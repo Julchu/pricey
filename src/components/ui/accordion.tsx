@@ -14,7 +14,7 @@ export const AccordionItem = ({
 }: AccordionItemProps) => {
   return (
     <Accordion.Item
-      className={`mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 ${className} `}
+      className={`mt-px overflow-hidden first:mt-0 first:rounded-t-md last:rounded-b-md focus-within:relative focus-within:z-10 ${className} `}
       {...props}
     >
       {children}
@@ -64,3 +64,27 @@ export const AccordionContent = ({
     <div className="p-4">{children}</div>
   </Accordion.Content>
 );
+
+export const AccordionSubheader = ({
+  ingredientsLength,
+  dateString,
+}: {
+  ingredientsLength: number;
+  dateString: string;
+}) => {
+  return (
+    <div className={"flex flex-row px-4 text-sm font-medium"}>
+      {ingredientsLength > 0 ? (
+        <>
+          <p>
+            {ingredientsLength > 1
+              ? `${ingredientsLength} ingredients`
+              : "1 ingredient"}
+          </p>
+          <p className={"px-2 pb-2"}>&mdash;</p>
+        </>
+      ) : null}
+      <p>Created {dateString}</p>
+    </div>
+  );
+};

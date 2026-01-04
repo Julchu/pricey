@@ -2,6 +2,7 @@
 import {
   AccordionContent,
   AccordionHeader,
+  AccordionSubheader,
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
@@ -9,12 +10,13 @@ import {
   GroceryListIngredientFormData,
 } from "@/utils/interfaces";
 import { Label } from "radix-ui";
-import { useState } from "react";
+import { ComponentPropsWithoutRef, useEffect, useState } from "react";
 import {
   AnimatedCheckIcon,
   EmptyCheckbox,
 } from "@/components/icons/animated-check-icon";
 import { CartEditIcon } from "@/components/icons/cart/cart-edit-icon";
+import { LabelProps } from "@radix-ui/react-label";
 
 export const ExistingGroceryListChecklist = ({
   groceryList,
@@ -23,27 +25,51 @@ export const ExistingGroceryListChecklist = ({
   groceryList: GroceryListFormData;
   startEditingAction: () => void;
 }) => {
+  const [dateString, setDateString] = useState("");
+
   const ingredients = groceryList.ingredients;
+
+  useEffect(() => {
+    setDateString(
+      new Intl.DateTimeFormat(navigator.language, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date()),
+    );
+  }, []);
   return (
     <>
-      <AccordionHeader className={"flex h-full flex-row gap-4 px-0 text-white"}>
-        <div
-          className={
-            "text-md flex w-full items-center rounded-md bg-blue-500 px-[15px] font-medium"
-          }
-        >
-          {groceryList.name}
+      <AccordionHeader
+        className={"flex h-full flex-col items-center px-0 text-white"}
+      >
+        <div onClick={startEditingAction} className={"pl-4"}>
+          <CartEditIcon />
         </div>
 
+        <div className={"flex w-full flex-col"}>
+          <div
+            className={
+              "text-md flex min-h-10 w-full items-center bg-blue-500 px-[15px] font-medium sm:text-xl"
+            }
+          >
+            {groceryList.name}
+          </div>
+
+          <AccordionSubheader
+            ingredientsLength={ingredients.length}
+            dateString={dateString}
+          />
+        </div>
         <div
           onClick={startEditingAction}
           className={"flex cursor-pointer items-center"}
         >
           <CartEditIcon />
         </div>
-
         <AccordionTrigger />
       </AccordionHeader>
+
       <AccordionContent className={"h-full w-full"}>
         <IngredientsChecklist ingredients={ingredients} />
       </AccordionContent>
@@ -80,98 +106,94 @@ const ChecklistIngredient = ({
 }) => {
   const [checked, setChecked] = useState(false);
   return (
-    <div
-      className={`flex w-full flex-row gap-4 ${checked ? "opacity-50" : ""}`}
-    >
+    <div className={`flex w-full flex-row gap-4`}>
       <div
         className={
           "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
         <div className={"col-span-2 sm:col-span-3"}>
-          <Label.Root
-            className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-            htmlFor={"name"}
-          >
+          <ExistingGroceryListLabel htmlFor={"name"} index={index}>
             Name
-          </Label.Root>
-
-          <div
-            id={"name"}
-            className={
-              "text-md flex min-h-10 w-full items-center rounded-md bg-blue-100 px-[15px] leading-none outline-none"
-            }
-          >
+          </ExistingGroceryListLabel>
+          <ExistingGroceryListField id={"name"} checked={checked}>
             {name}
-          </div>
+          </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <Label.Root
-            className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-            htmlFor={"quantity"}
-          >
+          <ExistingGroceryListLabel htmlFor={"quantity"} index={index}>
             (Quantity)
-          </Label.Root>
-          <div
-            id={"quantity"}
-            className={
-              "text-md flex min-h-10 w-full items-center rounded-md bg-blue-100 px-[15px] leading-none outline-none"
-            }
-          >
+          </ExistingGroceryListLabel>
+          <ExistingGroceryListField id={"quantity"} checked={checked}>
             {quantity}
-          </div>
+          </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <Label.Root
-            className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-            htmlFor={"capacity"}
-          >
+          <ExistingGroceryListLabel htmlFor={"capacity"} index={index}>
             Capacity
-          </Label.Root>
-          <div
-            id={"capacity"}
-            className={
-              "text-md flex min-h-10 w-full items-center rounded-md bg-blue-100 px-[15px] leading-none outline-none"
-            }
-          >
+          </ExistingGroceryListLabel>
+          <ExistingGroceryListField id={"capacity"} checked={checked}>
             {capacity}
-          </div>
+          </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <Label.Root
-            className={`text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-            htmlFor={"unit"}
-          >
+          <ExistingGroceryListLabel htmlFor={"unit"} index={index}>
             Unit
-          </Label.Root>
-          <div
-            id={"unit"}
-            className={
-              "text-md flex min-h-10 w-full items-center rounded-md bg-blue-100 px-[15px] leading-none outline-none"
-            }
-          >
+          </ExistingGroceryListLabel>
+          <ExistingGroceryListField id={"unit"} checked={checked}>
             {unit}
-          </div>
+          </ExistingGroceryListField>
         </div>
       </div>
 
-      <div className={"flex flex-col justify-center opacity-100"}>
-        {index === 0 ? (
-          <Label.Root htmlFor={"checked-ingredient"}>&nbsp;</Label.Root>
-        ) : null}
+      <div>
+        <ExistingGroceryListLabel htmlFor={"checked-ingredient"} index={index}>
+          Bought
+        </ExistingGroceryListLabel>
         <div
           id={"checked-ingredient"}
-          className={
-            "flex min-h-10 w-full cursor-pointer flex-row items-center rounded-md bg-blue-100 px-[15px] text-black"
-          }
+          className={`flex min-h-10 w-full cursor-pointer flex-row items-center rounded-md bg-blue-100 px-[15px] text-black ${checked ? "opacity-10" : ""}`}
           onClick={() => setChecked((currentlyChecked) => !currentlyChecked)}
         >
           {checked ? <AnimatedCheckIcon /> : <EmptyCheckbox />}
         </div>
       </div>
+    </div>
+  );
+};
+
+const ExistingGroceryListLabel = ({
+  children,
+  className,
+  index,
+  ...props
+}: LabelProps & { index: number }) => {
+  return (
+    <Label.Root
+      className={`text-sm text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""} ${className}`}
+      {...props}
+    >
+      {children}
+    </Label.Root>
+  );
+};
+
+const ExistingGroceryListField = ({
+  children,
+  className,
+  checked,
+  ...props
+}: ComponentPropsWithoutRef<"div"> & { checked: boolean }) => {
+  return (
+    <div
+      id={"unit"}
+      className={`text-md flex min-h-10 w-full items-center rounded-md bg-blue-100 px-[15px] leading-none outline-none ${checked ? "opacity-10" : ""} ${className}`}
+      {...props}
+    >
+      {children}
     </div>
   );
 };
