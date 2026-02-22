@@ -9,24 +9,24 @@ import {
   GroceryListFormData,
   GroceryListIngredientFormData,
 } from "@/utils/interfaces";
-import { Label } from "radix-ui";
 import { ComponentPropsWithoutRef, useEffect, useState } from "react";
 import {
   AnimatedCheckIcon,
   EmptyCheckbox,
 } from "@/components/icons/animated-check-icon";
 import { CartEditIcon } from "@/components/icons/cart/cart-edit-icon";
-import { LabelProps } from "@radix-ui/react-label";
+import { IngredientLabel } from "@/components/ui/input";
 
 export const ExistingGroceryListChecklist = ({
   groceryList,
   startEditingAction,
+  last,
 }: {
   groceryList: GroceryListFormData;
   startEditingAction: () => void;
+  last: boolean;
 }) => {
   const [dateString, setDateString] = useState("");
-
   const ingredients = groceryList.ingredients;
 
   useEffect(() => {
@@ -38,10 +38,11 @@ export const ExistingGroceryListChecklist = ({
       }).format(new Date()),
     );
   }, []);
+
   return (
-    <>
+    <div className={"sticky top-0 flex flex-col"}>
       <AccordionHeader
-        className={"flex h-full flex-col items-center px-0 text-white"}
+        className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
       >
         <div onClick={startEditingAction} className={"pl-4"}>
           <CartEditIcon />
@@ -70,10 +71,10 @@ export const ExistingGroceryListChecklist = ({
         <AccordionTrigger />
       </AccordionHeader>
 
-      <AccordionContent className={"h-full w-full"}>
+      <AccordionContent className={`${last ? "rounded-b-md" : ""} p-4`}>
         <IngredientsChecklist ingredients={ingredients} />
       </AccordionContent>
-    </>
+    </div>
   );
 };
 
@@ -82,8 +83,9 @@ const IngredientsChecklist = ({
 }: {
   ingredients: GroceryListIngredientFormData[];
 }) => {
+  // gap-4
   return (
-    <div className={"flex flex-col gap-4 font-medium"}>
+    <div className={"flex flex-col gap-y-4 font-medium"}>
       {ingredients.map((ingredient, index) => {
         return (
           <ChecklistIngredient
@@ -113,36 +115,36 @@ const ChecklistIngredient = ({
         }
       >
         <div className={"col-span-2 sm:col-span-3"}>
-          <ExistingGroceryListLabel htmlFor={"name"} index={index}>
+          <IngredientLabel htmlFor={"name"} index={index}>
             Name
-          </ExistingGroceryListLabel>
+          </IngredientLabel>
           <ExistingGroceryListField id={"name"} checked={checked}>
             {name}
           </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <ExistingGroceryListLabel htmlFor={"quantity"} index={index}>
+          <IngredientLabel htmlFor={"quantity"} index={index}>
             (Quantity)
-          </ExistingGroceryListLabel>
+          </IngredientLabel>
           <ExistingGroceryListField id={"quantity"} checked={checked}>
             {quantity}
           </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <ExistingGroceryListLabel htmlFor={"capacity"} index={index}>
+          <IngredientLabel htmlFor={"capacity"} index={index}>
             Capacity
-          </ExistingGroceryListLabel>
+          </IngredientLabel>
           <ExistingGroceryListField id={"capacity"} checked={checked}>
             {capacity}
           </ExistingGroceryListField>
         </div>
 
         <div className={"col-span-2 sm:col-span-1"}>
-          <ExistingGroceryListLabel htmlFor={"unit"} index={index}>
+          <IngredientLabel htmlFor={"unit"} index={index}>
             Unit
-          </ExistingGroceryListLabel>
+          </IngredientLabel>
           <ExistingGroceryListField id={"unit"} checked={checked}>
             {unit}
           </ExistingGroceryListField>
@@ -150,9 +152,9 @@ const ChecklistIngredient = ({
       </div>
 
       <div>
-        <ExistingGroceryListLabel htmlFor={"checked-ingredient"} index={index}>
-          Bought
-        </ExistingGroceryListLabel>
+        <IngredientLabel htmlFor={"checked-ingredient"} index={index}>
+          Added
+        </IngredientLabel>
         <div
           id={"checked-ingredient"}
           className={`flex min-h-10 w-full cursor-pointer flex-row items-center rounded-md bg-blue-100 px-[15px] text-black ${checked ? "opacity-10" : ""}`}
@@ -162,22 +164,6 @@ const ChecklistIngredient = ({
         </div>
       </div>
     </div>
-  );
-};
-
-const ExistingGroceryListLabel = ({
-  children,
-  className,
-  index,
-  ...props
-}: LabelProps & { index: number }) => {
-  return (
-    <Label.Root
-      className={`text-sm text-black opacity-50 ${index !== 0 ? "lg:hidden" : ""} ${className}`}
-      {...props}
-    >
-      {children}
-    </Label.Root>
   );
 };
 

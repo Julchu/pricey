@@ -1,5 +1,10 @@
 "use client";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
@@ -13,7 +18,7 @@ import { SubmitHandler, useWatch } from "react-hook-form";
 import { GroceryListFormData } from "@/utils/interfaces";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
-import { CircleAddIcon } from "@/components/icons/circle-add-icon";
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 
 export const NewGroceryListForm = ({
   setOpenListAction,
@@ -80,15 +85,17 @@ export const NewGroceryListForm = ({
   return (
     <form>
       <AccordionHeader
-        className={"flex h-full flex-col items-center px-0 text-white"}
+        className={
+          "flex h-auto flex-col items-center rounded-t-md px-0 text-white"
+        }
       >
         <div onClick={toggleHeader} className={"pl-4"}>
-          <CircleAddIcon />
+          <ImageUploadIcon />
         </div>
 
         <div className={"flex w-full flex-col"}>
           <Input
-            className={"`font-medium bg-blue-500 focus:outline-none sm:text-xl"}
+            className={"bg-blue-500 font-medium focus:outline-none sm:text-xl"}
             autoComplete={"name"}
             placeholder={"Enter new grocery list name "}
             id={"name"}
@@ -103,7 +110,7 @@ export const NewGroceryListForm = ({
         <AccordionTrigger tabIndex={-1} />
       </AccordionHeader>
 
-      <AccordionContent>
+      <AccordionContent className={"p-4"}>
         <IngredientArrayForm
           control={groceryListControl}
           submitAction={handleGroceryListSubmit(onSubmitHandler)}

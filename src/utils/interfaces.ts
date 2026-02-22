@@ -101,6 +101,8 @@ export type GroceryList = {
   name: string;
   ingredients: GroceryListIngredient[];
   public?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type GroceryListIngredient = {
@@ -136,6 +138,8 @@ export type GroceryListFormData = {
   ingredients: GroceryListIngredientFormData[];
   publicId?: string;
   public?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type GroceryListUpdateFormData = {

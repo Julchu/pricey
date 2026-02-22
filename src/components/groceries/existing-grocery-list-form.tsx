@@ -8,6 +8,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
   AccordionContent,
   AccordionHeader,
+  AccordionSubheader,
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
@@ -15,15 +16,19 @@ import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon"; // Grocery list editing form
 
+// Grocery list editing form
 export const ExistingGroceryListForm = ({
   groceryList,
   closeEditingCallbackAction,
   deleteListCallbackAction,
+  last,
 }: {
   groceryList: GroceryListFormData;
   closeEditingCallbackAction: () => void;
   deleteListCallbackAction: () => void;
+  last: boolean;
 }) => {
   const methods = useForm<GroceryListFormData>({
     defaultValues: groceryList,
@@ -150,6 +155,7 @@ export const ExistingGroceryListForm = ({
 
     const changedFields = filterChangedData(groceryListData);
 
+    console.log(changedFields);
     const submitResponse = await fetch(
       `/api/grocery-list/${groceryListData.publicId}`,
       {
@@ -178,10 +184,24 @@ export const ExistingGroceryListForm = ({
     closeEditingCallbackAction();
   };
 
+  const dateString = new Intl.DateTimeFormat(navigator.language, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  // groceryList.updatedAt
+  //   ? groceryList.updatedAt
+  //   : groceryList.createdAt
+  //     ? groceryList.createdAt
+  //     : new Date(),
+
+  console.log("edit groceryList.updatedAt", groceryList.updatedAt);
+  console.log("edit groceryList.createdAt", groceryList.createdAt);
   /* TODO:
    ** 1. Get current searched grocery list
    **  - If grocery list name is same, hide new list form and focus/edit existing name
    ** 2. Local checkbox to cross out ingredient
+   ** Button to reset checkboxes
    ** 3. Edit button and show/hide Reset/Save button
    ** 4. Title bar created/updated timestamp
    ** 5. Styling for add/remove ingredient buttons
@@ -191,27 +211,39 @@ export const ExistingGroceryListForm = ({
     <FormProvider {...methods}>
       <form>
         <AccordionHeader
-          className={"flex h-full flex-row gap-4 px-0 text-white"}
+          className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
         >
-          <Input
-            className={"bg-blue-500 font-medium focus:outline-none"}
-            autoComplete={"name"}
-            placeholder={"Enter new grocery list name "}
-            id={"name"}
-            type={"search"}
-            {...register("name")}
-          />
+          <div onClick={() => 0} className={"pl-4"}>
+            <ImageUploadIcon />
+          </div>
 
+          <div className={"flex w-full flex-col"}>
+            <Input
+              className={
+                "bg-blue-500 font-medium focus:outline-none sm:text-xl"
+              }
+              autoComplete={"name"}
+              placeholder={"Enter new grocery list name "}
+              id={"name"}
+              type={"search"}
+              {...register("name")}
+            />
+
+            {/* Change to created/updated date */}
+            <AccordionSubheader
+              ingredientsLength={groceryList.ingredients.length ?? 0}
+              dateString={dateString}
+            />
+          </div>
           <div
             onClick={handleSubmit(onDeleteHandler)}
-            className={"3cursor-pointer flex items-center"}
+            className={"flex cursor-pointer items-center"}
           >
             <CartDeleteIcon />
           </div>
-
           <AccordionTrigger />
         </AccordionHeader>
-        <AccordionContent className={"h-full w-full"}>
+        <AccordionContent className={`${last ? "rounded-b-md" : ""} p-4`}>
           <IngredientArrayForm
             control={control}
             submitAction={handleSubmit(onUpdateHandler)}

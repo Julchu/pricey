@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/header/header";
 import { PropsWithChildren } from "react";
 import { Providers } from "@/providers/providers";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "The Pricey App",
@@ -14,9 +15,10 @@ export default async function Layout({ children }: PropsWithChildren) {
   return (
     <html lang={"en"}>
       <head>
-        <script
+        <Script
+          src="https://unpkg.com/react-scan@0.4.3/dist/auto.global.js"
           crossOrigin="anonymous"
-          src="//unpkg.com/react-scan/dist/auto.global.js"
+          strategy="beforeInteractive"
         />
       </head>
       <body

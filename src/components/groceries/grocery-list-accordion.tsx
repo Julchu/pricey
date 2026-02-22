@@ -1,12 +1,10 @@
 "use client";
 import { Accordion } from "radix-ui";
 import { AccordionItem } from "@/components/ui/accordion";
-import { ExistingGroceryListForm } from "./existing-grocery-list-form";
 import { NewGroceryListForm } from "./new-grocery-list-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
-import { GroceryListFormData } from "@/utils/interfaces";
-import { Dispatch, SetStateAction, useState } from "react";
-import { ExistingGroceryListChecklist } from "@/components/groceries/existing-grocery-list-checklist";
+import { useState } from "react";
+import { ExistingGroceryList } from "@/components/groceries/existing-grocery-list-wrapper";
 
 export const GroceryListAccordion = () => {
   const groceryLists = useGroceryListsStore(({ groceryLists }) => groceryLists);
@@ -14,7 +12,7 @@ export const GroceryListAccordion = () => {
 
   return (
     <Accordion.Root
-      className={"h-full w-full rounded-md"}
+      className={"flex w-full flex-col gap-px"}
       type={"single"}
       collapsible
       defaultValue={"new-list"}
@@ -33,53 +31,10 @@ export const GroceryListAccordion = () => {
           <ExistingGroceryList
             groceryList={groceryList}
             setOpenList={setOpenList}
+            last={index === groceryLists.length - 1}
           />
         </AccordionItem>
       ))}
     </Accordion.Root>
-  );
-};
-
-const ExistingGroceryList = ({
-  groceryList,
-  setOpenList,
-}: {
-  groceryList: GroceryListFormData;
-  setOpenList: Dispatch<SetStateAction<string>>;
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const deleteListCallback = () => {
-    setIsEditing(false);
-    setOpenList((currentlyOpenList) => {
-      if (currentlyOpenList === groceryList.publicId) return "new-list";
-      return currentlyOpenList;
-    });
-  };
-
-  const closeEditingCallback = () => {
-    setIsEditing(false);
-  };
-
-  const startEditingCallback = () => {
-    setIsEditing(true);
-    if (groceryList.publicId) setOpenList(groceryList.publicId);
-  };
-
-  if (isEditing) {
-    return (
-      <ExistingGroceryListForm
-        groceryList={groceryList}
-        closeEditingCallbackAction={closeEditingCallback}
-        deleteListCallbackAction={deleteListCallback}
-      />
-    );
-  }
-
-  return (
-    <ExistingGroceryListChecklist
-      groceryList={groceryList}
-      startEditingAction={startEditingCallback}
-    />
   );
 };
