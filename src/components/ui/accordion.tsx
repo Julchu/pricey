@@ -25,7 +25,7 @@ export const AccordionHeader = ({
   ...props
 }: AccordionHeaderProps) => (
   <Accordion.Header
-    className={`flex w-full flex-row bg-blue-500 ${className}`}
+    className={`sticky top-0 z-1 flex w-full flex-row bg-blue-500 ${className} `}
     {...props}
   >
     {children}
@@ -55,7 +55,7 @@ export const AccordionContent = ({
   ...props
 }: AccordionContentProps) => (
   <Accordion.Content
-    className={`bg-mauve2 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown max-h-[60vh] overflow-y-auto ${className}`}
+    className={`bg-mauve2 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown ${className}`}
     {...props}
   >
     {children}

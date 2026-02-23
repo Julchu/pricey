@@ -40,7 +40,7 @@ export const ExistingGroceryListChecklist = ({
   }, []);
 
   return (
-    <div className={"sticky top-0 flex flex-col"}>
+    <div className={"flex flex-col"}>
       <AccordionHeader
         className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
       >

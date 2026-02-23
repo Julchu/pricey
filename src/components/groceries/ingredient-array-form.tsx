@@ -129,7 +129,7 @@ export const IngredientArrayForm = ({
                 type={"reset"}
               >
                 <CircleResetIcon />
-                Cancel
+                Reset
               </button>
             </div>
 
