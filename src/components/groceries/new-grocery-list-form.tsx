@@ -110,7 +110,7 @@ export const NewGroceryListForm = ({
         <AccordionTrigger tabIndex={-1} />
       </AccordionHeader>
 
-      <AccordionContent className={"p-4"}>
+      <AccordionContent>
         <IngredientArrayForm
           control={groceryListControl}
           submitAction={handleGroceryListSubmit(onSubmitHandler)}

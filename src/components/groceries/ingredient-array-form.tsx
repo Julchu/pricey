@@ -27,7 +27,7 @@ export const IngredientArrayForm = ({
   //   console.log(errors);
 
   return (
-    <div className={"relative flex h-full flex-col gap-4 font-medium"}>
+    <div className={"relative flex h-full flex-col gap-4 p-4 font-medium"}>
       <span className={"flex h-full flex-col gap-4"}>
         {ingredientsLens.map(fields, (value, l, index) => {
           return (

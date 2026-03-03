@@ -243,7 +243,7 @@ export const ExistingGroceryListForm = ({
           </div>
           <AccordionTrigger />
         </AccordionHeader>
-        <AccordionContent className={`${last ? "rounded-b-md" : ""} p-4`}>
+        <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
             control={control}
             submitAction={handleSubmit(onUpdateHandler)}

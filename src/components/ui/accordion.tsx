@@ -13,7 +13,7 @@ export const AccordionItem = ({
   ...props
 }: AccordionItemProps) => {
   return (
-    <Accordion.Item className={`focus-within:z-10 ${className} `} {...props}>
+    <Accordion.Item className={`focus-within:z-1 ${className}`} {...props}>
       {children}
     </Accordion.Item>
   );
@@ -25,7 +25,7 @@ export const AccordionHeader = ({
   ...props
 }: AccordionHeaderProps) => (
   <Accordion.Header
-    className={`sticky top-0 z-1 flex w-full flex-row bg-blue-500 ${className} `}
+    className={`sticky top-0 z-1 flex w-full flex-row bg-blue-500 ${className}`}
     {...props}
   >
     {children}
@@ -55,7 +55,7 @@ export const AccordionContent = ({
   ...props
 }: AccordionContentProps) => (
   <Accordion.Content
-    className={`bg-mauve2 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown ${className}`}
+    className={`bg-mauve2 data-[state=closed]:animate-accordion-slide-up data-[state=open]:animate-accordion-slide-down overflow-hidden ${className}`}
     {...props}
   >
     {children}

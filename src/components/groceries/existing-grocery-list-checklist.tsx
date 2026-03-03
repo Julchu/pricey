@@ -71,7 +71,7 @@ export const ExistingGroceryListChecklist = ({
         <AccordionTrigger />
       </AccordionHeader>
 
-      <AccordionContent className={`${last ? "rounded-b-md" : ""} p-4`}>
+      <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
         <IngredientsChecklist ingredients={ingredients} />
       </AccordionContent>
     </div>
@@ -83,9 +83,8 @@ const IngredientsChecklist = ({
 }: {
   ingredients: GroceryListIngredientFormData[];
 }) => {
-  // gap-4
   return (
-    <div className={"flex flex-col gap-y-4 font-medium"}>
+    <div className={"flex flex-col gap-y-4 p-4 font-medium"}>
       {ingredients.map((ingredient, index) => {
         return (
           <ChecklistIngredient
