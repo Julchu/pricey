@@ -12,6 +12,7 @@ export const GroceryListAccordion = () => {
 
   return (
     <Accordion.Root
+      // className={"flex w-full flex-col gap-4"} // here
       className={"flex w-full flex-col gap-px"}
       type={"single"}
       collapsible

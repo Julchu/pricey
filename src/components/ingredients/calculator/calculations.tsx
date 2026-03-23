@@ -104,7 +104,7 @@ export const Calculations = () => {
   return (
     <div
       className={
-        "relative flex h-1/3 flex-col items-center justify-center gap-y-4 rounded-md bg-blue-500 p-4 text-center text-xl font-medium text-white"
+        "relative flex h-1/3 flex-col items-center justify-center gap-y-4 p-4 text-center text-xl font-medium text-blue-500"
       }
     >
       <div className={`${isInProgress ? "h-1/4`" : ""}`}>

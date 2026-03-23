@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import {
   groceryListControl,
   groceryListRegister,
@@ -25,7 +25,6 @@ export const NewGroceryListForm = ({
 }: {
   setOpenListAction: Dispatch<SetStateAction<string>>;
 }) => {
-  const [dateString, setDateString] = useState("");
   useEffect(() => {
     groceryListSetFocus("name");
   }, []);
@@ -72,20 +71,11 @@ export const NewGroceryListForm = ({
     name: ["ingredients"],
   });
 
-  useEffect(() => {
-    setDateString(
-      new Intl.DateTimeFormat(navigator.language, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).format(new Date()),
-    );
-  }, []);
-
   return (
     <form>
       <AccordionHeader
         className={
+          // "flex h-auto flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md" // here
           "flex h-auto flex-col items-center rounded-t-md px-0 text-white"
         }
       >
@@ -95,17 +85,16 @@ export const NewGroceryListForm = ({
 
         <div className={"flex w-full flex-col"}>
           <Input
-            className={"bg-blue-500 font-medium focus:outline-none sm:text-xl"}
+            className={
+              "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
+            }
             autoComplete={"name"}
             placeholder={"Enter new grocery list name "}
             id={"name"}
             type={"search"}
             {...groceryListRegister("name")}
           />
-          <AccordionSubheader
-            ingredientsLength={ingredients.length}
-            dateString={dateString}
-          />
+          <AccordionSubheader ingredientsLength={ingredients.length} />
         </div>
         <AccordionTrigger tabIndex={-1} />
       </AccordionHeader>

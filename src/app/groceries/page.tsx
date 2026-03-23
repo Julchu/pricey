@@ -2,7 +2,7 @@ import { GroceryListAccordion } from "@/components/groceries/grocery-list-accord
 
 const Groceries = async () => {
   return (
-    <div className="flex w-full flex-col overflow-scroll rounded-md pb-4">
+    <div className="flex w-full flex-col overflow-scroll rounded-md pb-4 drop-shadow-lg">
       <GroceryListAccordion />
     </div>
   );

@@ -59,10 +59,10 @@ const UnitController = ({
       <Select.Trigger
         key={"select-trigger"}
         className={
-          "text-md flex h-10 w-full min-w-[130px] shrink-0 items-center justify-start gap-[5px] rounded-md bg-blue-100 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
+          "text-md flex h-10 w-full shrink-0 items-center justify-start gap-[5px] rounded-md border border-gray-200 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
         }
       >
-        <Select.Value placeholder={"Kilogram"} id={"unit"} />
+        <Select.Value placeholder={"kg"} id={"unit"} />
         <Select.Icon>
           <ChevronDownIcon />
         </Select.Icon>

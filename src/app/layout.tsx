@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Layout({ children }: PropsWithChildren) {
   return (
-    <html lang={"en"}>
+    <html lang={"en"} className={"bg-background-grey"}>
       <head>
         <Script
           src="https://unpkg.com/react-scan@0.4.3/dist/auto.global.js"

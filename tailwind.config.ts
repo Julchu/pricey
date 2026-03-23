@@ -15,6 +15,10 @@ const config: Config = {
         ...blackA,
         ...mauve,
         ...violet,
+        "background-grey": "#F5F7FA",
+        "card-white": "#FFFFFF",
+        "dark-background-navy": "#0F172A",
+        "dark-background-card": "#111827",
       },
       shadow: {
         normal: `rgba(99, 99, 99, 0.2) 0px 2px 8px 0px`,

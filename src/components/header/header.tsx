@@ -3,7 +3,11 @@ import { Hamburger } from "@/components/header/hamburger";
 
 export const Header = () => {
   return (
-    <header className={"flex h-[3rem] flex-row items-center justify-between"}>
+    <header
+      className={
+        "flex h-[3rem] flex-row items-center justify-between drop-shadow-lg"
+      }
+    >
       <Link
         href={"/"}
         className={

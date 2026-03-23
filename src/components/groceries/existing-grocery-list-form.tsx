@@ -12,11 +12,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
-import { CartDeleteIcon } from "@/components/icons/cart/cart-delete-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
-import { ImageUploadIcon } from "@/components/icons/image-upload-icon"; // Grocery list editing form
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
@@ -54,7 +54,6 @@ export const ExistingGroceryListForm = ({
   ) => {
     // "use server";
     if (!groceryListData.publicId) return;
-    console.log("test");
 
     const submitResponse = await fetch(
       `/api/grocery-list/${groceryListData.publicId}`,
@@ -184,11 +183,6 @@ export const ExistingGroceryListForm = ({
     closeEditingCallbackAction();
   };
 
-  const dateString = new Intl.DateTimeFormat(navigator.language, {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
   // groceryList.updatedAt
   //   ? groceryList.updatedAt
   //   : groceryList.createdAt
@@ -211,6 +205,7 @@ export const ExistingGroceryListForm = ({
     <FormProvider {...methods}>
       <form>
         <AccordionHeader
+          // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
           className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
         >
           <div onClick={() => 0} className={"pl-4"}>
@@ -220,7 +215,7 @@ export const ExistingGroceryListForm = ({
           <div className={"flex w-full flex-col"}>
             <Input
               className={
-                "bg-blue-500 font-medium focus:outline-none sm:text-xl"
+                "border-none bg-blue-500 font-bold focus:outline-none sm:text-xl"
               }
               autoComplete={"name"}
               placeholder={"Enter new grocery list name "}
@@ -229,17 +224,16 @@ export const ExistingGroceryListForm = ({
               {...register("name")}
             />
 
-            {/* Change to created/updated date */}
+            {/* TODO: Change to created/updated date */}
             <AccordionSubheader
               ingredientsLength={groceryList.ingredients.length ?? 0}
-              dateString={dateString}
             />
           </div>
           <div
             onClick={handleSubmit(onDeleteHandler)}
             className={"flex cursor-pointer items-center"}
           >
-            <CartDeleteIcon />
+            <BagDeleteIcon className={"h-6 fill-none stroke-white"} />
           </div>
           <AccordionTrigger />
         </AccordionHeader>

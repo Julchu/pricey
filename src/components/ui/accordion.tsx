@@ -6,6 +6,7 @@ import {
   AccordionItemProps,
   AccordionTriggerProps,
 } from "@radix-ui/react-accordion";
+import { useEffect, useState } from "react";
 
 export const AccordionItem = ({
   children,
@@ -55,6 +56,7 @@ export const AccordionContent = ({
   ...props
 }: AccordionContentProps) => (
   <Accordion.Content
+    // className={`bg-mauve2 data-[state=closed]:animate-accordion-slide-up data-[state=open]:animate-accordion-slide-down overflow-hidden ${className} rounded-b-md`} // here
     className={`bg-mauve2 data-[state=closed]:animate-accordion-slide-up data-[state=open]:animate-accordion-slide-down overflow-hidden ${className}`}
     {...props}
   >
@@ -64,18 +66,45 @@ export const AccordionContent = ({
 
 export const AccordionSubheader = ({
   ingredientsLength,
-  dateString,
+  createdAt,
+  updatedAt,
 }: {
   ingredientsLength: number;
-  dateString: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }) => {
+  const [dateString, setDateString] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setDateString(
+      new Intl.DateTimeFormat(navigator.language, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(
+        updatedAt !== createdAt
+          ? updatedAt
+          : createdAt
+            ? createdAt
+            : new Date(),
+      ),
+    );
+  }, [createdAt, updatedAt]);
+
   return (
-    <div className={"flex flex-row items-center px-4 pb-2 text-sm font-medium"}>
+    <div
+      className={
+        "flex flex-col gap-2 px-4 pb-2 text-sm font-medium text-gray-300 sm:flex-row"
+      }
+    >
       <p>
         {ingredientsLength > 1 || ingredientsLength === 0
           ? `${ingredientsLength} ingredients`
           : "1 ingredient"}
-        &nbsp;&mdash; {dateString}
+      </p>
+      <p className={"hidden sm:flex"}>&mdash;</p>
+      <p className={""}>
+        {updatedAt !== createdAt ? "Updated" : "Created"} {dateString}
       </p>
     </div>
   );

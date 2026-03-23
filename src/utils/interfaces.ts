@@ -87,7 +87,7 @@ export type UserPreferences = {
 export type Ingredient = {
   publicId: string;
   name: string;
-  price: number;
+  price?: number;
   capacity: number;
   quantity?: number;
   unit: UnitType;
@@ -109,6 +109,7 @@ export type GroceryListIngredient = {
   userId: string;
   groceryListId: string;
   publicId?: string;
+  price?: number;
   name: string;
   capacity: number;
   quantity?: number;
