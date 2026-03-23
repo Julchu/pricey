@@ -59,7 +59,7 @@ const UnitController = ({
       <Select.Trigger
         key={"select-trigger"}
         className={
-          "text-md flex h-10 w-full shrink-0 items-center justify-start gap-[5px] rounded-md border border-gray-200 px-[15px] leading-none outline-none data-[placeholder]:text-gray-400"
+          "text-md flex h-10 w-full shrink-0 items-center justify-start gap-[5px] rounded-md border border-gray-200 px-[15px] leading-none font-medium tracking-widest outline-none data-[placeholder]:font-normal data-[placeholder]:text-gray-400"
         }
       >
         <Select.Value placeholder={"kg"} id={"unit"} />

@@ -20,7 +20,7 @@ export const Ingredients = () => {
         </form>
       </div>
 
-      <div className="w-full flex-none snap-x snap-center overflow-auto md:h-full md:w-1/2 md:flex-initial md:snap-none md:snap-align-none md:flex-col">
+      <div className="w-full flex-none snap-x snap-center overflow-auto tracking-widest md:h-full md:w-1/2 md:flex-initial md:snap-none md:snap-align-none md:flex-col">
         <IngredientsList />
       </div>
     </>

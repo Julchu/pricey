@@ -120,7 +120,7 @@ const ChecklistIngredient = ({
             Price
           </IngredientLabel>
           <div className="flex items-center rounded-md bg-blue-100 pl-3">
-            <span className={"text-gray-500"}>$</span>
+            <span className={"text-gray-400"}>$</span>
             <ExistingGroceryListField id={"price"}>
               {price ? `${price}` : "0"}
             </ExistingGroceryListField>

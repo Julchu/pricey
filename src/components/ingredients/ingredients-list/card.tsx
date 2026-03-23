@@ -125,7 +125,7 @@ export const CardComponent = ({
           ) : delta < 0 ? (
             <TriangleDownIcon className={"size-8 text-red-700"} />
           ) : (
-            <TextAlignJustifyIcon className={"size-8 text-gray-500"} />
+            <TextAlignJustifyIcon className={"size-8 text-gray-400"} />
           )}
           <h3>{PercentageFormatter.format(delta)}%</h3>
         </div>

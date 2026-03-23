@@ -51,14 +51,14 @@ export const UserMenu = () => {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className={
-            "data-[side=bottom]:animate-slide-down-and-fade data-[side=left]:animate-slide-left-and-fade data-[side=right]:animate-slide-up-and-fade data-[side=top]:animate-slide-right-and-fade z-2 min-w-[220px] rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] select-none"
+            "data-[side=bottom]:animate-slide-down-and-fade data-[side=left]:animate-slide-left-and-fade data-[side=right]:animate-slide-up-and-fade data-[side=top]:animate-slide-right-and-fade z-2 min-w-40 rounded-md bg-white p-1 tracking-widest shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] select-none"
           }
           sideOffset={5}
           align={"end"}
         >
           <section>
             <DropdownMenu.Label
-              className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
+              className={"pl-4 text-xs leading-6 font-medium opacity-50"}
             >
               Mass
             </DropdownMenu.Label>
@@ -67,16 +67,16 @@ export const UserMenu = () => {
               onValueChange={toggleMass}
               className={"cursor-pointer"}
             >
-              <MenuRadioItem value={Unit.KILOGRAM} name={"Kilograms (kg)"} />
-              <MenuRadioItem value={Unit.POUND} name={"Pounds (lb)"} />
+              <MenuRadioItem value={Unit.KILOGRAM} name={"kg"} />
+              <MenuRadioItem value={Unit.POUND} name={"lb"} />
             </DropdownMenu.RadioGroup>
 
             <DropdownMenu.Separator
-              className={"relative m-[5px] flex h-px bg-black opacity-20"}
+              className={"relative m-1 flex h-px bg-black opacity-20"}
             />
 
             <DropdownMenu.Label
-              className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
+              className={"pl-4 text-xs leading-6 font-medium opacity-50"}
             >
               Liquids
             </DropdownMenu.Label>
@@ -85,8 +85,8 @@ export const UserMenu = () => {
               onValueChange={toggleLiquidVolume}
               className={"cursor-pointer"}
             >
-              <MenuRadioItem value={Unit.LITRE} name={"Litres (L)"} />
-              <MenuRadioItem value={Unit.QUART} name={"Quarts (qt)"} />
+              <MenuRadioItem value={Unit.LITRE} name={"L"} />
+              <MenuRadioItem value={Unit.QUART} name={"qt"} />
             </DropdownMenu.RadioGroup>
           </section>
 
@@ -94,21 +94,21 @@ export const UserMenu = () => {
 
           <section>
             <DropdownMenu.Separator
-              className={"m-[5px] h-px bg-black opacity-20"}
+              className={"m-1 h-px bg-black opacity-20"}
             />
-            <DropdownMenu.Label className="pl-4 text-xs leading-[25px] font-medium opacity-50">
+            <DropdownMenu.Label className="pl-4 text-xs leading-6 font-medium opacity-50">
               Profile
             </DropdownMenu.Label>
 
             <DropdownMenu.Item
               className={
-                "text-md relative flex h-[25px] content-center items-center rounded-md py-4 leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+                "text-md relative flex h-6 content-center items-center rounded-md py-4 leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
               }
             >
               {userInfo ? (
                 <p
                   onClick={logoutHandler}
-                  className={"ml-[25px] w-full cursor-pointer"}
+                  className={"ml-6 w-full cursor-pointer"}
                 >
                   Logout
                 </p>

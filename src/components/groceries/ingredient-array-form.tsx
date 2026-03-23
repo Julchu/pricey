@@ -39,27 +39,27 @@ export const IngredientArrayForm = ({
               }
               key={value.id}
             >
-              {fields.length > 1 ? (
-                <div
+              <div
+                className={
+                  "group flex flex-row items-center justify-between lg:hidden"
+                }
+              >
+                {<p>Ingredient {index + 1}</p>}
+                <button
                   className={
-                    "flex flex-row items-center justify-between lg:hidden"
+                    "flex h-10 w-auto cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 p-4 group-hover:bg-red-500 group-hover:text-white"
                   }
+                  name={"remove-ingredient"}
+                  onClick={() => remove(index)}
                 >
-                  {/* TODO: replace with name of ingredient */}
-                  {<p>Ingredient {index + 1}</p>}
-                  <button
-                    // flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white
+                  <BagDeleteIcon
                     className={
-                      "cursor-pointer rounded-md border border-gray-200"
+                      "h-6 fill-none stroke-red-500 group-hover:stroke-white"
                     }
-                    name={"remove-ingredient"}
-                    onClick={() => remove(index)}
-                  >
-                    <BagDeleteIcon className={"h-6 fill-none stroke-red-500"} />
-                    Item
-                  </button>
-                </div>
-              ) : null}
+                  />
+                  Delete
+                </button>
+              </div>
               <div
                 className={
                   "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14"
@@ -86,7 +86,7 @@ export const IngredientArrayForm = ({
                     Price
                   </IngredientLabel>
                   <div className="flex h-10 items-center rounded-md border border-gray-200 pl-3">
-                    <span className={"text-gray-500"}>$</span>
+                    <span className={"text-gray-400"}>$</span>
 
                     {/* TODO: not a price input, but just a display for existing price */}
                     <Input
@@ -156,7 +156,7 @@ export const IngredientArrayForm = ({
                         "h-6 fill-none stroke-red-500 group-hover:stroke-white"
                       }
                     />
-                    Item
+                    Delete
                   </button>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export const IngredientArrayForm = ({
         >
           <button
             className={
-              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
             }
             onClick={resetAction}
             type={"reset"}
@@ -222,7 +222,7 @@ export const IngredientArrayForm = ({
         <div className={"group sm:col-start-3 lg:col-span-2 lg:col-start-11"}>
           <button
             className={
-              "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-blue-500/50"
+              "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-green-500"
             }
             onClick={submitAction}
             type={"button"}
