@@ -41,13 +41,13 @@ export const IngredientArrayForm = ({
             >
               <div
                 className={
-                  "group flex flex-row items-center justify-between lg:hidden"
+                  "flex flex-row items-center justify-between lg:hidden"
                 }
               >
                 {<p>Ingredient {index + 1}</p>}
                 <button
                   className={
-                    "flex h-10 w-auto cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 p-4 group-hover:bg-red-500 group-hover:text-white"
+                    "group flex h-10 w-auto cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 p-4 hover:bg-red-500 hover:text-white"
                   }
                   name={"remove-ingredient"}
                   onClick={() => remove(index)}
@@ -66,14 +66,14 @@ export const IngredientArrayForm = ({
                 }
               >
                 <div className={"col-span-4 sm:col-span-2 lg:col-span-4"}>
-                  <IngredientLabel htmlFor={"name"} index={index}>
+                  <IngredientLabel htmlFor={"ingredient-name"} index={index}>
                     Name
                   </IngredientLabel>
 
                   <Input
-                    autoComplete={"name"}
+                    autoComplete={"ingredient-name"}
                     placeholder={"Pepsi"}
-                    id={"name"}
+                    id={"ingredient-name"}
                     type={"search"}
                     {...l
                       .focus("name")

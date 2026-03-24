@@ -12,8 +12,9 @@ import {
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
-import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon"; // TODO: re-add checking off ingredients
 
+// TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
   groceryList,
   startEditingAction,

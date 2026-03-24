@@ -33,6 +33,7 @@ export const AccordionHeader = ({
   </Accordion.Header>
 );
 
+// TODO: fix accordion trigger to wrap entire header
 export const AccordionTrigger = ({
   children,
   className,
@@ -73,6 +74,7 @@ export const AccordionSubheader = ({
   createdAt?: Date;
   updatedAt?: Date;
 }) => {
+  // Need to use a useEffect to address hydration issues if only using string
   const [dateString, setDateString] = useState<string | undefined>(undefined);
 
   useEffect(() => {

@@ -1,16 +1,7 @@
 "use client";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
-} from "@/utils/interfaces";
+import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
@@ -233,7 +224,9 @@ export const ExistingGroceryListForm = ({
             onClick={handleSubmit(onDeleteHandler)}
             className={"flex cursor-pointer items-center"}
           >
-            <BagDeleteIcon className={"h-6 fill-none stroke-white"} />
+            <BagDeleteIcon
+              className={"h-6 fill-none stroke-white hover:stroke-red-500"}
+            />
           </div>
           <AccordionTrigger />
         </AccordionHeader>
