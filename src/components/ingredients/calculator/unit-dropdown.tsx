@@ -20,7 +20,7 @@ export const UnitSelectDropdown = () => {
       { name: "tbsp", value: Unit.TABLESPOON },
       { name: "tsp", value: Unit.TEASPOON },
     ],
-    other: [{ name: "Items", value: Unit.ITEM }],
+    other: [{ name: "pcs", value: Unit.PIECES }],
   };
 
   return (

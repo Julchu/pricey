@@ -73,7 +73,7 @@ export const unitConverter = (
 ): UnitType => {
   if (isMass(fromUnit)) return toUnits.mass;
   else if (isVolume(fromUnit)) return toUnits.volume;
-  return Unit.ITEM;
+  return Unit.PIECES;
 };
 
 // TODO: verify amount cents
