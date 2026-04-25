@@ -11,11 +11,7 @@ import {
 } from "@/utils/text-formatters";
 import { useShallow } from "zustand/react/shallow";
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
-import {
-  TextAlignJustifyIcon,
-  TriangleDownIcon,
-  TriangleUpIcon,
-} from "@radix-ui/react-icons";
+import { TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, } from "@radix-ui/react-icons";
 import Image from "next/image";
 import FoodPlaceholder from "@/images/food-placeholder.png";
 import { Separator } from "radix-ui";
@@ -49,7 +45,7 @@ export const CardComponent = ({
 
   const cardClickHandler = () => {
     ingredientSetValue("name", name);
-    ingredientSetValue("price", price / 100);
+    if (price) ingredientSetValue("price", price / 100);
     ingredientSetValue("quantity", quantity);
     ingredientSetValue("unit", unit);
     ingredientSetValue("capacity", capacity);
