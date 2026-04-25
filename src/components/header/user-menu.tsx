@@ -8,11 +8,20 @@ import Link from "next/link";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { GoogleIcon } from "@/components/icons/google-icon";
+import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
+import { useRecipesStore } from "@/providers/recipe-store-provider";
 
 export const UserMenu = () => {
   const clearIngredients = useIngredientsStore(
     ({ clearIngredients }) => clearIngredients,
   );
+
+  const clearGroceryLists = useGroceryListsStore(
+    ({ clearGroceryLists }) => clearGroceryLists,
+  );
+
+  const clearRecipes = useRecipesStore(({ clearRecipes }) => clearRecipes);
+
   const [mass, setMass, liquidVolume, setLiquidVolume, userInfo, logout] =
     useUserStore(
       useShallow(
@@ -30,6 +39,8 @@ export const UserMenu = () => {
   const logoutHandler = () => {
     logout();
     clearIngredients();
+    clearGroceryLists();
+    clearRecipes();
   };
 
   const toggleMass = useCallback(
@@ -115,7 +126,9 @@ export const UserMenu = () => {
               ) : (
                 <Link
                   href={"/api/login"}
-                  className={"flex w-full items-center justify-center gap-x-2"}
+                  className={
+                    "flex w-full items-center justify-center gap-x-2 p-2"
+                  }
                 >
                   <GoogleIcon />
                   <p>Sign in with Google</p>
