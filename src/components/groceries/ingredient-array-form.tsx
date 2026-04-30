@@ -1,43 +1,42 @@
 "use client";
-import { GroceryListFormData, UnitType } from "@/utils/interfaces";
+import { UnitType } from "@/utils/interfaces";
 import { useFieldArray } from "@hookform/lenses/rhf";
 import { IngredientLabel, Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
-import { Control } from "react-hook-form";
-import { useLens } from "@hookform/lenses";
+import { useFormContext } from "react-hook-form";
 import { BagCheckIcon } from "@/components/icons/grocery-bag/check";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
+import { PriceDisplay } from "@/components/ui/price-display";
+import { IngredientCombobox } from "@/components/ui/ingredient-combobox"; /* ------------------------------------------------------------------ */
 
 export const IngredientArrayForm = ({
-  control,
   submitAction,
   resetAction,
 }: {
-  control: Control<GroceryListFormData>;
   submitAction: () => void;
   resetAction: () => void;
 }) => {
-  const ingredientsLens = useLens({ control }).focus("ingredients");
+  const { control, register } = useFormContext();
 
-  const { fields, append, remove } = useFieldArray(ingredientsLens.interop());
-
-  // const onError: SubmitErrorHandler<GroceryListFormData> = async (errors) =>
-  //   console.log(errors);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
 
   return (
     <div
       className={"bg-card-white relative flex flex-col gap-4 p-4 font-medium"}
     >
       <div className={"flex flex-col gap-4"}>
-        {ingredientsLens.map(fields, (value, l, index) => {
+        {fields.map((field, index) => {
           return (
             <div
               className={
                 "flex w-full flex-col rounded-md border border-gray-200 p-4 lg:border-none lg:p-0"
               }
-              key={value.id}
+              key={field.id}
             >
               <div
                 className={
@@ -65,40 +64,21 @@ export const IngredientArrayForm = ({
                   "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14"
                 }
               >
-                <div className={"col-span-4 sm:col-span-2 lg:col-span-4"}>
+                <div
+                  className={"relative col-span-4 sm:col-span-2 lg:col-span-4"}
+                >
                   <IngredientLabel htmlFor={"ingredient-name"} index={index}>
                     Name
                   </IngredientLabel>
 
-                  <Input
-                    autoComplete={"ingredient-name"}
-                    placeholder={"Pepsi"}
-                    id={"ingredient-name"}
-                    type={"search"}
-                    {...l
-                      .focus("name")
-                      .interop(({ register }, name) => register(name))}
-                  />
+                  <IngredientCombobox index={index} />
                 </div>
 
                 <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <IngredientLabel htmlFor={"quantity"} index={index}>
+                  <IngredientLabel htmlFor={"price"} index={index}>
                     Price
                   </IngredientLabel>
-                  <div className="flex h-10 items-center rounded-md border border-gray-200 pl-3">
-                    <span className={"text-gray-400"}>$</span>
-
-                    {/* TODO: not a price input, but just a display for existing price */}
-                    <Input
-                      className={"border-none"}
-                      placeholder={"4.99"}
-                      id={"price"}
-                      type={"number"}
-                      {...l
-                        .focus("price")
-                        .interop(({ register }, name) => register(name))}
-                    />
-                  </div>
+                  <PriceDisplay index={index} />
                 </div>
 
                 <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
@@ -109,9 +89,7 @@ export const IngredientArrayForm = ({
                     placeholder={"6"}
                     id={"quantity"}
                     type={"number"}
-                    {...l
-                      .focus("quantity")
-                      .interop(({ register }, name) => register(name))}
+                    {...register(`ingredients.${index}.quantity`)}
                   />
                 </div>
 
@@ -124,9 +102,7 @@ export const IngredientArrayForm = ({
                     step={"0.001"}
                     id={"capacity"}
                     type={"number"}
-                    {...l
-                      .focus("capacity")
-                      .interop(({ register }, name) => register(name))}
+                    {...register(`ingredients.${index}.capacity`)}
                   />
                 </div>
 
@@ -134,10 +110,7 @@ export const IngredientArrayForm = ({
                   <IngredientLabel htmlFor={"unit"} index={index}>
                     Unit
                   </IngredientLabel>
-                  <GroceryFormIngredientUnitSelect
-                    control={control}
-                    index={index}
-                  />
+                  <GroceryFormIngredientUnitSelect index={index} />
                 </div>
 
                 <div className={"group col-span-2 hidden flex-col lg:block"}>
@@ -168,7 +141,6 @@ export const IngredientArrayForm = ({
       {/* Save buttons bar */}
       <div
         className={
-          // grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14
           "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
         }
       >
@@ -184,10 +156,11 @@ export const IngredientArrayForm = ({
             type="button"
             onClick={() =>
               append({
-                name: "",
-                capacity: "" as unknown as number,
-                quantity: "" as unknown as number,
-                unit: "" as UnitType,
+                name: undefined as unknown as string,
+                capacity: undefined as unknown as number,
+                quantity: undefined as unknown as number,
+                unit: undefined as UnitType,
+                ingredientPublicId: undefined,
               })
             }
           >

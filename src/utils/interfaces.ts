@@ -22,6 +22,7 @@ export const UnitValues = [
   Unit.TABLESPOON,
   Unit.TEASPOON,
   Unit.PIECES,
+  undefined,
 ] as const;
 export const MassValues = [Unit.KILOGRAM, Unit.POUND] as const;
 export const VolumeValues = [Unit.LITRE, Unit.QUART] as const;
@@ -88,7 +89,7 @@ export type Ingredient = {
   publicId: string;
   name: string;
   price?: number;
-  capacity: number;
+  capacity?: number;
   quantity?: number;
   unit: UnitType;
   image?: string;
@@ -115,6 +116,7 @@ export type GroceryListIngredient = {
   quantity?: number;
   unit: UnitType;
   image?: string;
+  ingredientPublicId?: string;
 };
 
 export type Recipe = {

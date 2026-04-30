@@ -1,4 +1,5 @@
 import {
+  Ingredient,
   LiquidType,
   MassType,
   MassValues,
@@ -132,4 +133,39 @@ export const PercentageFormatter = new Intl.NumberFormat("en-US", {
 
 export const validateIsNumber = (value?: number): boolean => {
   return !!value;
+};
+
+/**
+ * Computes the derived total price for a grocery-list ingredient
+ * based on its linked master ingredient, user-preferred units,
+ * and the grocery item's own capacity / quantity.
+ *
+ * Steps:
+ * 1. price per unit of capacity for the master ingredient
+ * 2. convert to user's preferred measurement unit
+ * 3. multiply by grocery item's capacity and quantity
+ */
+export const calcGroceryIngredientPrice = (
+  masterIngredient: Ingredient | undefined,
+  groceryCapacity: number,
+  groceryQuantity: number,
+  userUnits: UnitCategory,
+): number | undefined => {
+  if (!masterIngredient?.price) return undefined;
+
+  const pricePerCapacity = calcIndividualPrice(
+    masterIngredient.price,
+    masterIngredient.capacity,
+    masterIngredient.quantity,
+  );
+
+  if (pricePerCapacity === undefined) return undefined;
+
+  const convertedPrice = priceConverter(
+    pricePerCapacity,
+    masterIngredient.unit,
+    userUnits,
+  );
+
+  return calcTotalPrice(convertedPrice, groceryCapacity, groceryQuantity);
 };

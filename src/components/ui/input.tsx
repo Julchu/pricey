@@ -7,6 +7,7 @@ export const Input = ({
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) => {
   return (
+    // TODO: test px-4
     <input
       min={0}
       className={`text-md flex min-h-10 w-full rounded-md border border-gray-200 px-[15px] font-medium outline-none placeholder:font-normal placeholder:text-gray-400 ${className}`}

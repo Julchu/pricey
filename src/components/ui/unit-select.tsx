@@ -6,7 +6,11 @@ import { useShallow } from "zustand/react/shallow";
 import { isMass, isVolume } from "@/utils/text-formatters";
 import { useUserStore } from "@/providers/user-store-provider";
 import { ReactNode } from "react";
-import { Control, Controller, ControllerRenderProps } from "react-hook-form";
+import {
+  Controller,
+  ControllerRenderProps,
+  useFormContext,
+} from "react-hook-form";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { GroceryListFormData, IngredientFormData } from "@/utils/interfaces";
 
@@ -55,7 +59,6 @@ const UnitController = ({
       defaultValue={undefined}
       value={field.value || ""}
     >
-      {/* Optional key? */}
       <Select.Trigger
         key={"select-trigger"}
         className={
@@ -68,7 +71,6 @@ const UnitController = ({
         </Select.Icon>
       </Select.Trigger>
 
-      {/* Optional key? */}
       <Select.Portal key={"select-portal"}>
         <UnitSelectDropdown />
       </Select.Portal>
@@ -90,12 +92,11 @@ export const IngredientUnitSelect = () => {
 };
 
 export const GroceryFormIngredientUnitSelect = ({
-  control,
   index,
 }: {
-  control: Control<GroceryListFormData>;
   index: number;
 }) => {
+  const { control } = useFormContext();
   return (
     <Controller
       control={control}

@@ -21,6 +21,9 @@ export const {
 });
 
 export const ingredientReset = () => {
+  ingredientSetValue("name", undefined as unknown as string);
+  ingredientSetValue("price", undefined as unknown as number);
+  ingredientSetValue("quantity", undefined as unknown as number);
+  ingredientSetValue("capacity", undefined as unknown as number);
   ingredientSetValue("unit", undefined as unknown as UnitType);
-  reset();
 };

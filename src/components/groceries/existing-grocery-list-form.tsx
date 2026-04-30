@@ -1,7 +1,16 @@
 "use client";
-import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
+import {
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+  GroceryListUpdateFormData,
+} from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/groceries/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
@@ -35,7 +44,6 @@ export const ExistingGroceryListForm = ({
   const {
     register,
     handleSubmit,
-    control,
     reset,
     formState: { dirtyFields, defaultValues },
   } = methods;
@@ -193,8 +201,8 @@ export const ExistingGroceryListForm = ({
    **/
 
   return (
-    <FormProvider {...methods}>
-      <form>
+    <form>
+      <FormProvider {...methods}>
         <AccordionHeader
           // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
           className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
@@ -232,12 +240,11 @@ export const ExistingGroceryListForm = ({
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
-            control={control}
             submitAction={handleSubmit(onUpdateHandler)}
             resetAction={handleSubmit(onResetHandler)}
           />
         </AccordionContent>
-      </form>
-    </FormProvider>
+      </FormProvider>
+    </form>
   );
 };
