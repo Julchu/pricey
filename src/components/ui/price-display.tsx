@@ -4,7 +4,7 @@ import * as React from "react";
 import { useMemo } from "react";
 import {
   calcGroceryIngredientPrice,
-  formatCurrency,
+  formatPrice,
 } from "@/utils/text-formatters";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { useUserStore } from "@/providers/user-store-provider";
@@ -49,7 +49,7 @@ export const PriceDisplay = ({ index }: { index: number }) => {
     <div className="flex h-10 items-center rounded-md border border-gray-200 pl-3">
       <span className="text-gray-400">$</span>
       <span className="flex-1 px-[15px] text-sm font-medium">
-        {formatCurrency(derivedPrice) || "0.00"}
+        {formatPrice(derivedPrice) || "0.00"}
       </span>
     </div>
   );

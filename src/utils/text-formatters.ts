@@ -118,6 +118,16 @@ export const formatCurrency = (price?: number) => {
   return CurrencyFormatter.format(price);
 };
 
+export const PriceFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export const formatPrice = (price?: number) => {
+  if (!price) return "";
+  return PriceFormatter.format(price);
+};
+
 export const getPercentChange = (
   earlierPrice?: number,
   laterPrice?: number,
