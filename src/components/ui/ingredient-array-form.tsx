@@ -9,7 +9,7 @@ import { BagCheckIcon } from "@/components/icons/grocery-bag/check";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { PriceDisplay } from "@/components/ui/price-display";
-import { IngredientCombobox } from "@/components/ui/ingredient-combobox"; /* ------------------------------------------------------------------ */
+import { IngredientCombobox } from "@/components/ui/ingredient-combobox";
 
 export const IngredientArrayForm = ({
   submitAction,
@@ -89,7 +89,9 @@ export const IngredientArrayForm = ({
                     placeholder={"6"}
                     id={"quantity"}
                     type={"number"}
-                    {...register(`ingredients.${index}.quantity`)}
+                    {...register(`ingredients.${index}.quantity`, {
+                      setValueAs: (val) => (val ? Number(val) : undefined),
+                    })}
                   />
                 </div>
 
@@ -102,7 +104,9 @@ export const IngredientArrayForm = ({
                     step={"0.001"}
                     id={"capacity"}
                     type={"number"}
-                    {...register(`ingredients.${index}.capacity`)}
+                    {...register(`ingredients.${index}.capacity`, {
+                      setValueAs: (val) => (val ? Number(val) : undefined),
+                    })}
                   />
                 </div>
 

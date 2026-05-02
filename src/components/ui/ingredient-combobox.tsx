@@ -29,6 +29,7 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
   const ingredients = useIngredientsStore(
     useShallow(({ ingredients }) => ingredients),
   );
+
   const [name, ingredientPublicId] = useWatch({
     control,
     name: [
@@ -42,9 +43,32 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
   );
 
   const filtered = useMemo(() => {
-    const q = name.toLowerCase();
+    const q = name.toLowerCase().trim();
     if (!q) return ingredients;
-    return ingredients.filter((i) => i.name.toLowerCase().includes(q));
+
+    // Filter ingredients that contain the search term
+    const matchingIngredients = ingredients.filter((i) =>
+      i.name.toLowerCase().includes(q),
+    );
+
+    // Sort by relevance: exact match first, then starts with, then includes
+    return matchingIngredients.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      // Exact match gets highest priority
+      if (nameA === q && nameB !== q) return -1;
+      if (nameB === q && nameA !== q) return 1;
+
+      // Starts with search term gets second priority
+      const aStartsWith = nameA.startsWith(q);
+      const bStartsWith = nameB.startsWith(q);
+      if (aStartsWith && !bStartsWith) return -1;
+      if (bStartsWith && !aStartsWith) return 1;
+
+      // Alphabetical order for same-priority items
+      return nameA.localeCompare(nameB);
+    });
   }, [ingredients, name]);
 
   const {
@@ -135,7 +159,7 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
                   key={ingredient.publicId}
                   role="option"
                   aria-selected={ingredient.publicId === ingredientPublicId}
-                  className="cursor-pointer rounded-md px-3 py-2 text-sm font-medium hover:bg-blue-500 hover:text-white"
+                  className="cursor-pointer rounded-md px-3 py-2 text-sm font-medium capitalize hover:bg-blue-500 hover:text-white"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleSelect(ingredient)}
                 >

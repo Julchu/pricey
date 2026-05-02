@@ -4,15 +4,16 @@ import { Unit } from "@/utils/interfaces";
 import { SelectItem } from "@/components/ui/unit-select";
 
 export const UnitSelectDropdown = () => {
-  // TODO: add 1/1000th versions (grams, milliliters)
-  // TODO: add oz
   const units = {
     mass: [
       { name: "kg", value: Unit.KILOGRAM },
+      { name: "g", value: Unit.GRAM },
       { name: "lb", value: Unit.POUND },
+      { name: "oz", value: Unit.OUNCE },
     ],
     liquidVolume: [
       { name: "L", value: Unit.LITRE },
+      { name: "ml", value: Unit.MILLILITER },
       { name: "qt", value: Unit.QUART },
     ],
     volume: [

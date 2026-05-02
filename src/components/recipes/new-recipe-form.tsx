@@ -13,27 +13,26 @@ import {
   useForm,
   useWatch,
 } from "react-hook-form";
-import { GroceryListFormData, UnitType } from "@/utils/interfaces";
-import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
-import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
+import { RecipeFormData, UnitType } from "@/utils/interfaces";
+import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 
-export const NewGroceryListForm = ({
-  setOpenListAction,
+export const NewRecipeForm = ({
+  setOpenRecipeAction,
 }: {
-  setOpenListAction: Dispatch<SetStateAction<string>>;
+  setOpenRecipeAction: Dispatch<SetStateAction<string>>;
 }) => {
-  const methods = useForm<GroceryListFormData>({
+  const methods = useForm<RecipeFormData>({
     defaultValues: {
       name: undefined,
       ingredients: [
         {
           name: "",
-          quantity: "" as unknown as number,
-          capacity: "" as unknown as number,
+          quantity: undefined as unknown as number,
+          capacity: undefined as unknown as number,
           unit: "" as UnitType,
           ingredientPublicId: undefined,
-          //   image
         },
       ],
       public: false,
@@ -47,40 +46,29 @@ export const NewGroceryListForm = ({
     setFocus("name");
   }, [setFocus]);
 
-  const addGroceryList = useGroceryListsStore(
-    ({ addGroceryList }) => addGroceryList,
-  );
+  const addRecipe = useRecipesStore(({ addRecipe }) => addRecipe);
 
-  const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
-    groceryListData,
-  ) => {
-    // TODO: check if use server works
-    // "use server";
-
-    const submitResponse = await fetch("/api/grocery-list", {
+  const onSubmitHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
+    const submitResponse = await fetch("/api/recipe", {
       method: "POST",
-      body: JSON.stringify(groceryListData),
+      body: JSON.stringify(recipeData),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    // if (groceryListData.image) {
-    //   URL.revokeObjectURL(groceryListData.image);
-    // }
-
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
-      const { groceryList } = response;
-      addGroceryList(groceryList);
-      groceryListReset();
+      const { recipe } = response;
+      addRecipe(recipe);
+      recipeReset();
     }
   };
 
   const toggleHeader = () => {
-    setOpenListAction((newListOpen) => {
-      if (newListOpen === "new-list") return "";
-      return "new-list";
+    setOpenRecipeAction((newRecipeOpen) => {
+      if (newRecipeOpen === "new-recipe") return "";
+      return "new-recipe";
     });
   };
 
@@ -89,7 +77,7 @@ export const NewGroceryListForm = ({
     name: ["ingredients"],
   });
 
-  const groceryListReset = () => {
+  const recipeReset = () => {
     setValue("ingredients", [
       {
         name: undefined as unknown as string,
@@ -105,12 +93,7 @@ export const NewGroceryListForm = ({
   return (
     <form>
       <FormProvider {...methods}>
-        <AccordionHeader
-          className={
-            // "flex h-auto flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md" // here
-            "flex h-auto flex-col items-center rounded-t-md px-0 text-white"
-          }
-        >
+        <AccordionHeader className="flex h-auto flex-col items-center rounded-t-md px-0 text-white">
           <div onClick={toggleHeader} className={"pl-4"}>
             <ImageUploadIcon />
           </div>
@@ -121,12 +104,12 @@ export const NewGroceryListForm = ({
                 "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
               }
               autoComplete={"name"}
-              placeholder={"Enter new grocery list name "}
+              placeholder={"Enter new recipe name"}
               id={"name"}
               type={"search"}
               {...register("name")}
             />
-            <AccordionSubheader ingredientsLength={ingredients.length} />
+            <AccordionSubheader ingredientsLength={ingredients?.length ?? 0} />
           </div>
           <AccordionTrigger tabIndex={-1} />
         </AccordionHeader>
@@ -134,7 +117,7 @@ export const NewGroceryListForm = ({
         <AccordionContent>
           <IngredientArrayForm
             submitAction={handleSubmit(onSubmitHandler)}
-            resetAction={groceryListReset}
+            resetAction={recipeReset}
           />
         </AccordionContent>
       </FormProvider>

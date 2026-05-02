@@ -1,6 +1,10 @@
+import { RecipeAccordion } from "@/components/recipes/recipe-accordion";
+
 const Recipes = async () => {
   return (
-    <div className="flex h-full flex-col bg-gray-200 md:flex-row">Recipes</div>
+    <div className="flex w-full flex-col overflow-scroll rounded-md pb-4 drop-shadow-lg">
+      <RecipeAccordion />
+    </div>
   );
 };
 

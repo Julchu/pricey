@@ -18,7 +18,7 @@ export const initIngredientsStore = (
   ingredients: Ingredient[],
 ): IngredientsState => {
   return {
-    ingredients: ingredients && ingredients.length > 0 ? ingredients : [],
+    ingredients: ingredients?.filter((i): i is Ingredient => !!i) ?? [],
   };
 };
 
@@ -33,18 +33,24 @@ export const createIngredientsStore = (
     ...initialState,
     setIngredients: (ingredients) => set({ ingredients }),
     updateIngredients: (newIngredient) => {
+      if (!newIngredient) return;
       const ingredients = get().ingredients;
-      const filteredIngredients = ingredients.filter(
-        (currentIngredient) =>
-          currentIngredient.publicId !== newIngredient.publicId,
-      );
+      const filteredIngredients = ingredients.filter((currentIngredient) => {
+        if (!currentIngredient?.publicId || !newIngredient?.publicId)
+          return true;
+        return currentIngredient.publicId !== newIngredient.publicId;
+      });
       set({ ingredients: [...filteredIngredients, newIngredient] });
     },
     clearIngredients: () => set({ ingredients: [] }),
     fetchIngredients: async () => {
       try {
-        const { ingredients } = await tryFetchingIngredients();
-        set(() => ({ ingredients }));
+        const { ingredient } = await tryFetchingIngredients();
+        set(() => ({
+          ingredients: Array.isArray(ingredient)
+            ? ingredient.filter((i): i is Ingredient => !!i)
+            : [],
+        }));
       } catch (error) {
         throw new Error("Unable to retrieve ingredients", { cause: error });
       }

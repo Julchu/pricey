@@ -1,10 +1,13 @@
 export const Unit = {
   // Mass
   KILOGRAM: "kg",
+  GRAM: "g",
   POUND: "lb",
+  OUNCE: "oz",
 
   // Volume
   LITRE: "L",
+  MILLILITER: "ml",
   QUART: "qt",
   CUP: "cup",
   TABLESPOON: "tbsp",
@@ -15,8 +18,11 @@ export const Unit = {
 
 export const UnitValues = [
   Unit.KILOGRAM,
+  Unit.GRAM,
   Unit.POUND,
+  Unit.OUNCE,
   Unit.LITRE,
+  Unit.MILLILITER,
   Unit.QUART,
   Unit.CUP,
   Unit.TABLESPOON,
@@ -24,12 +30,17 @@ export const UnitValues = [
   Unit.PIECES,
   undefined,
 ] as const;
-export const MassValues = [Unit.KILOGRAM, Unit.POUND] as const;
-export const VolumeValues = [Unit.LITRE, Unit.QUART] as const;
+export const MassValues = [
+  Unit.KILOGRAM,
+  Unit.GRAM,
+  Unit.POUND,
+  Unit.OUNCE,
+] as const;
+export const VolumeValues = [Unit.LITRE, Unit.MILLILITER, Unit.QUART] as const;
 
-export type UnitType = (typeof UnitValues)[number]; // "kg" | "lb" | "L" | "qt" | "cup" | "tbsp" | "tsp" | "item";
-export type MassType = (typeof MassValues)[number]; // "kg" | "lb"
-export type LiquidType = (typeof VolumeValues)[number]; // "L" | "qt"
+export type UnitType = (typeof UnitValues)[number];
+export type MassType = (typeof MassValues)[number];
+export type LiquidType = (typeof VolumeValues)[number];
 
 export type UnitCategory = {
   mass: MassType;
@@ -112,7 +123,7 @@ export type GroceryListIngredient = {
   publicId?: string;
   price?: number;
   name: string;
-  capacity: number;
+  capacity?: number;
   quantity?: number;
   unit: UnitType;
   image?: string;
@@ -127,14 +138,14 @@ export type Recipe = {
   public?: boolean;
 };
 
-type FormData<T> = Omit<T, "userId">;
+type FormData<T> = Omit<T, "userId" | "publicId">;
 
 // TODO: fix types; form data might differ from public returned types, but ids aren't included
 export type IngredientFormData = FormData<Ingredient>;
 export type GroceryListIngredientFormData = Omit<
   FormData<GroceryListIngredient>,
   "groceryListId"
->;
+> & { publicId?: string };
 export type UserFormData = FormData<User>;
 export type GroceryListFormData = {
   name: string;
@@ -152,7 +163,32 @@ export type GroceryListUpdateFormData = {
   groceryList: Omit<GroceryListFormData, "ingredients">;
 };
 
-export type RecipeFormData = FormData<Recipe>;
+export type RecipeIngredientFormData = {
+  publicId?: string;
+  name: string;
+  price?: number;
+  capacity?: number;
+  quantity?: number;
+  unit: UnitType;
+  image?: string;
+  ingredientPublicId?: string;
+};
+
+export type RecipeFormData = {
+  name: string;
+  ingredients: RecipeIngredientFormData[];
+  publicId?: string;
+  public?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type RecipeUpdateFormData = {
+  deletedIngredientIds: string[];
+  newIngredients: RecipeIngredientFormData[];
+  updatedIngredients: RecipeIngredientFormData[];
+  recipe: Omit<RecipeFormData, "ingredients">;
+};
 
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
 

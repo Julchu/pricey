@@ -1,8 +1,8 @@
 "use client";
 import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
+  RecipeFormData,
+  RecipeIngredientFormData,
+  RecipeUpdateFormData,
 } from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -11,33 +11,32 @@ import {
   AccordionSubheader,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
-import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
+import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
-import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete"; // Grocery list editing form
+import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
+import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 
-// Grocery list editing form
-export const ExistingGroceryListForm = ({
-  groceryList,
+export const ExistingRecipeForm = ({
+  recipe,
   closeEditingCallbackAction,
-  deleteListCallbackAction,
+  deleteRecipeCallbackAction,
   last,
 }: {
-  groceryList: GroceryListFormData;
+  recipe: RecipeFormData;
   closeEditingCallbackAction: () => void;
-  deleteListCallbackAction: () => void;
+  deleteRecipeCallbackAction: () => void;
   last: boolean;
 }) => {
-  const methods = useForm<GroceryListFormData>({
-    defaultValues: groceryList,
+  const methods = useForm<RecipeFormData>({
+    defaultValues: recipe,
   });
 
-  const [removeGroceryList, updateGroceryList] = useGroceryListsStore(
-    useShallow(({ removeGroceryList, updateGroceryList }) => [
-      removeGroceryList,
-      updateGroceryList,
+  const [removeRecipe, updateRecipe] = useRecipesStore(
+    useShallow(({ removeRecipe, updateRecipe }) => [
+      removeRecipe,
+      updateRecipe,
     ]),
   );
 
@@ -48,40 +47,30 @@ export const ExistingGroceryListForm = ({
     formState: { dirtyFields, defaultValues },
   } = methods;
 
-  const onDeleteHandler: SubmitHandler<GroceryListFormData> = async (
-    groceryListData,
-  ) => {
-    // "use server";
-    if (!groceryListData.publicId) return;
+  const onDeleteHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
+    if (!recipeData.publicId) return;
 
-    const submitResponse = await fetch(
-      `/api/grocery-list/${groceryListData.publicId}`,
-      {
-        method: "DELETE",
-        body: JSON.stringify(groceryListData.publicId),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const submitResponse = await fetch(`/api/recipe/${recipeData.publicId}`, {
+      method: "DELETE",
+      body: JSON.stringify(recipeData.publicId),
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
-
-    // if (groceryListData.image) {
-    //   URL.revokeObjectURL(groceryListData.image);
-    // }
+    });
 
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
-      const { groceryListId } = response;
-      removeGroceryList(groceryListId);
+      const { recipeId } = response;
+      removeRecipe(recipeId);
     }
-    return deleteListCallbackAction();
+    return deleteRecipeCallbackAction();
   };
 
   const filterChangedData = (
-    groceryListChanges: GroceryListFormData,
-  ): GroceryListUpdateFormData => {
-    const { ingredients: dirtyIngredients, ...changedGroceryListValues } =
-      groceryListChanges;
+    recipeChanges: RecipeFormData,
+  ): RecipeUpdateFormData => {
+    const { ingredients: dirtyIngredients, ...changedRecipeValues } =
+      recipeChanges;
 
     if (
       !dirtyFields.ingredients ||
@@ -92,17 +81,16 @@ export const ExistingGroceryListForm = ({
         updatedIngredients: [],
         deletedIngredientIds: [],
         newIngredients: [],
-        groceryList: changedGroceryListValues,
+        recipe: changedRecipeValues,
       };
 
     const originalIngredients =
       methods.formState.defaultValues?.ingredients ?? [];
 
-    const newIngredients: GroceryListIngredientFormData[] = [];
-    const updatedIngredients: GroceryListIngredientFormData[] = [];
+    const newIngredients: RecipeIngredientFormData[] = [];
+    const updatedIngredients: RecipeIngredientFormData[] = [];
     const deletedIngredientIds: string[] = [];
 
-    //   If ingredient.publicId exists in originalIngredients but not in ingredientChanges: deleted ingredient
     for (const originalIngredient of originalIngredients) {
       if (
         originalIngredient &&
@@ -116,10 +104,8 @@ export const ExistingGroceryListForm = ({
     }
 
     for (const dirtyIngredient of dirtyIngredients) {
-      //   If no ingredient.publicId: new ingredient
       if (!dirtyIngredient.publicId) newIngredients.push(dirtyIngredient);
       else {
-        //   If ingredient.publicId exists in originalIngredients: do difference check to see if updated
         const existingIngredient = originalIngredients.find(
           (originalIngredient) =>
             originalIngredient?.publicId === dirtyIngredient.publicId,
@@ -140,39 +126,28 @@ export const ExistingGroceryListForm = ({
       deletedIngredientIds,
       newIngredients,
       updatedIngredients,
-      groceryList: changedGroceryListValues,
+      recipe: changedRecipeValues,
     };
   };
 
-  const onUpdateHandler: SubmitHandler<GroceryListFormData> = async (
-    groceryListData,
-  ) => {
-    // "use server";
-    if (!groceryListData.publicId) return;
+  const onUpdateHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
+    if (!recipeData.publicId) return;
     if (!dirtyFields) return;
 
-    const changedFields = filterChangedData(groceryListData);
+    const changedFields = filterChangedData(recipeData);
 
-    console.log(changedFields);
-    const submitResponse = await fetch(
-      `/api/grocery-list/${groceryListData.publicId}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(changedFields),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const submitResponse = await fetch(`/api/recipe/${recipeData.publicId}`, {
+      method: "PATCH",
+      body: JSON.stringify(changedFields),
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
-
-    // if (groceryListData.image) {
-    //   URL.revokeObjectURL(groceryListData.image);
-    // }
+    });
 
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
-      const { groceryList } = response;
-      updateGroceryList(groceryList);
+      const { recipe } = response;
+      updateRecipe(recipe);
     }
     return closeEditingCallbackAction();
   };
@@ -182,29 +157,10 @@ export const ExistingGroceryListForm = ({
     closeEditingCallbackAction();
   };
 
-  // groceryList.updatedAt
-  //   ? groceryList.updatedAt
-  //   : groceryList.createdAt
-  //     ? groceryList.createdAt
-  //     : new Date(),
-
-  console.log("edit groceryList.updatedAt", groceryList.updatedAt);
-  console.log("edit groceryList.createdAt", groceryList.createdAt);
-  /* TODO:
-   ** 1. Get current searched grocery list
-   **  - If grocery list name is same, hide new list form and focus/edit existing name
-   ** 2. Local checkbox to cross out ingredient
-   ** Button to reset checkboxes
-   ** 3. Edit button and show/hide Reset/Save button
-   ** 4. Title bar created/updated timestamp
-   ** 5. Styling for add/remove ingredient buttons
-   **/
-
   return (
     <form>
       <FormProvider {...methods}>
         <AccordionHeader
-          // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
           className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
         >
           <div onClick={() => 0} className={"pl-4"}>
@@ -217,15 +173,13 @@ export const ExistingGroceryListForm = ({
                 "border-none bg-blue-500 font-bold focus:outline-none sm:text-xl"
               }
               autoComplete={"name"}
-              placeholder={"Enter new grocery list name "}
+              placeholder={"Enter recipe name"}
               id={"name"}
               type={"search"}
               {...register("name")}
             />
-
-            {/* TODO: Change to created/updated date */}
             <AccordionSubheader
-              ingredientsLength={groceryList.ingredients.length ?? 0}
+              ingredientsLength={recipe.ingredients.length ?? 0}
             />
           </div>
           <div

@@ -27,39 +27,33 @@ export const isMass = (unit?: string): unit is MassType =>
 export const isVolume = (unit?: string): unit is LiquidType =>
   VolumeValues.includes(unit as LiquidType);
 
+// Conversion factors to base units (kg for mass, L for liquid volume)
+const massToKg: Record<MassType, number> = {
+  [Unit.KILOGRAM]: 1,
+  [Unit.GRAM]: 0.001,
+  [Unit.POUND]: 0.453592,
+  [Unit.OUNCE]: 0.0283495,
+};
+
+const liquidToLitre: Record<LiquidType, number> = {
+  [Unit.LITRE]: 1,
+  [Unit.MILLILITER]: 0.001,
+  [Unit.QUART]: 0.946353,
+};
+
 export const priceConverter = (
   price?: number,
   fromUnit?: UnitType,
   toUnits?: UnitCategory,
 ): number | undefined => {
   if (!price) return;
-  /* Prices are /lb by default; switch to kg if needed
-   ** Example: $X per 1 lb, $X per 0.4536 kg, $X / 0.4536 per 1 kg = $X * 2.2046 per 1 kg
-   *** $1 for 1 lb
-   *** $1 for 0.4536 kg
-   *** $2.2045 for 1 kg
-   ** Example: $X per 1 kg, $X per 2.2046 lb, $X / 2.2046 per 1 lb
-   *** $1 for 1 kg
-   *** $1 for 2.2046 lb
-   *** $0.4536 for 1 lb
-   * if (beforeUnit === Unit.pound && afterUnit?.mass === Unit.kilogram) return price * 2.2046;
-   * else if (beforeUnit === Unit.kilogram && afterUnit?.mass === Unit.pound) return price / 2.2046;
-   * else if (beforeUnit === Unit.litre && afterUnit?.liquid === Unit.quart) return price * 1.05669;
-   * else if (beforeUnit === Unit.quart && afterUnit?.liquid === Unit.litre) return price / 1.05669;
-   * else return price;
-   */
-  if (fromUnit === Unit.POUND && toUnits?.mass === Unit.KILOGRAM)
-    return price * 2.2046;
-  else if (fromUnit === Unit.KILOGRAM && toUnits?.mass === Unit.POUND)
-    return price / 2.2046;
-  else if (fromUnit === Unit.LITRE && toUnits?.volume === Unit.QUART)
-    return price * 1.05669;
-  else if (fromUnit === Unit.QUART && toUnits?.volume === Unit.LITRE)
-    return price / 1.05669;
-  // else if (fromUnit === Unit.TABLESPOON && toUnits?.volume === Unit.CUP)
-  //   return price * 16;
-  // else if (fromUnit === Unit.CUP && toUnits?.volume === Unit.TABLESPOON)
-  //   return price / 16;
+
+  if (isMass(fromUnit) && toUnits?.mass) {
+    return price * (massToKg[toUnits.mass] / massToKg[fromUnit]);
+  }
+  if (isVolume(fromUnit) && toUnits?.volume) {
+    return price * (liquidToLitre[toUnits.volume] / liquidToLitre[fromUnit]);
+  }
 
   return price;
 };

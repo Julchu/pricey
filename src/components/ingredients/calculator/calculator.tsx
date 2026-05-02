@@ -22,6 +22,7 @@ export const Calculator = () => {
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
   ) => {
+    console.log("ingredientFormData", ingredientFormData);
     const submitResponse = await fetch("/api/ingredient", {
       method: "POST",
       body: JSON.stringify(ingredientFormData),
@@ -89,7 +90,10 @@ export const Calculator = () => {
             placeholder={"1"}
             id={"quantity"}
             type={"number"}
-            {...ingredientRegister("quantity")}
+            {...ingredientRegister("quantity", {
+              min: 0,
+              setValueAs: (val) => (val ? Number(val) : undefined),
+            })}
           />
         </div>
       </div>
@@ -104,7 +108,10 @@ export const Calculator = () => {
             min={0}
             id={"capacity"}
             type={"number"}
-            {...ingredientRegister("capacity")}
+            {...ingredientRegister("capacity", {
+              min: 0,
+              setValueAs: (val) => (val ? Number(val) : undefined),
+            })}
           />
         </div>
 

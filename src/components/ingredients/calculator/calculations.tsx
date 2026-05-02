@@ -61,8 +61,8 @@ export const Calculations = () => {
 
   const newPricePerItem = calcIndividualPrice(newPrice, newQuantity);
 
-  const existingIngredient = ingredients.find((ingredient) => {
-    if (ingredient.name && newName)
+  const existingIngredient = ingredients?.find((ingredient) => {
+    if (ingredient?.name && newName)
       return ingredient.name.toLowerCase() === newName.toLowerCase();
   });
 
