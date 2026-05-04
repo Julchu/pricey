@@ -4,7 +4,6 @@ import { createContext, PropsWithChildren, useContext, useRef } from "react";
 import { useStore } from "zustand";
 import {
   createRecipesStore,
-  defaultInitState,
   initRecipesStore,
   RecipesStore,
   RecipesStoreApi,
@@ -25,8 +24,7 @@ export const RecipeStoreProvider = ({
 }: RecipesStoreProviderProps) => {
   const storeRef = useRef<RecipesStoreApi>(null);
   if (storeRef.current === null) {
-    const initialState = recipes ? initRecipesStore(recipes) : defaultInitState;
-    storeRef.current = createRecipesStore(initialState);
+    storeRef.current = createRecipesStore(initRecipesStore(recipes));
   }
 
   return (

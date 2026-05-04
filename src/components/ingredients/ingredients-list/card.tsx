@@ -11,7 +11,11 @@ import {
 } from "@/utils/text-formatters";
 import { useShallow } from "zustand/react/shallow";
 import { Ingredient, IngredientFormData } from "@/utils/interfaces";
-import { TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, } from "@radix-ui/react-icons";
+import {
+  TextAlignJustifyIcon,
+  TriangleDownIcon,
+  TriangleUpIcon,
+} from "@radix-ui/react-icons";
 import Image from "next/image";
 import FoodPlaceholder from "@/images/food-placeholder.png";
 import { Separator } from "radix-ui";
@@ -34,8 +38,8 @@ export const CardComponent = ({
     capacity: searchCapacity,
   } = searchedIngredient;
 
-  const [mass, liquidVolume] = useUserStore(
-    useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
+  const { mass, liquidVolume } = useUserStore(
+    useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
   );
 
   const userUnits = {

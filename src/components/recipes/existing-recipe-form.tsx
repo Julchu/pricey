@@ -33,11 +33,11 @@ export const ExistingRecipeForm = ({
     defaultValues: recipe,
   });
 
-  const [removeRecipe, updateRecipe] = useRecipesStore(
-    useShallow(({ removeRecipe, updateRecipe }) => [
+  const { removeRecipe, updateRecipe } = useRecipesStore(
+    useShallow(({ removeRecipe, updateRecipe }) => ({
       removeRecipe,
       updateRecipe,
-    ]),
+    })),
   );
 
   const {

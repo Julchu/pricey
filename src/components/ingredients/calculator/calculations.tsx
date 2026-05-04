@@ -26,8 +26,8 @@ import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 
 export const Calculations = () => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
-  const [mass, liquidVolume] = useUserStore(
-    useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
+  const { mass, liquidVolume } = useUserStore(
+    useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
   );
 
   const uploadFileHandler = (fileElement: ChangeEvent<HTMLInputElement>) => {

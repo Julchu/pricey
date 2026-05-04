@@ -90,7 +90,7 @@ export const IngredientArrayForm = ({
                     id={"quantity"}
                     type={"number"}
                     {...register(`ingredients.${index}.quantity`, {
-                      setValueAs: (val) => (val ? Number(val) : undefined),
+                      setValueAs: (val) => (val ? Number(val) : ""),
                     })}
                   />
                 </div>
@@ -105,7 +105,7 @@ export const IngredientArrayForm = ({
                     id={"capacity"}
                     type={"number"}
                     {...register(`ingredients.${index}.capacity`, {
-                      setValueAs: (val) => (val ? Number(val) : undefined),
+                      setValueAs: (val) => (val ? Number(val) : ""),
                     })}
                   />
                 </div>
@@ -160,10 +160,10 @@ export const IngredientArrayForm = ({
             type="button"
             onClick={() =>
               append({
-                name: undefined as unknown as string,
-                capacity: undefined as unknown as number,
-                quantity: undefined as unknown as number,
-                unit: undefined as UnitType,
+                name: "",
+                capacity: "" as unknown as number,
+                quantity: "" as unknown as number,
+                unit: "" as UnitType,
                 ingredientPublicId: undefined,
               })
             }

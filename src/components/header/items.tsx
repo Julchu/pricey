@@ -36,7 +36,7 @@ export const MenuLinks = () => {
   ];
 
   const privateLinks = [
-    { href: "/ingredients", title: "Ingredients" },
+    // { href: "/ingredients", title: "Ingredients" },
     { href: "/groceries", title: "Groceries" },
     { href: "/recipes", title: "Recipes" },
   ];

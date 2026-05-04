@@ -6,7 +6,6 @@ import { useStore } from "zustand";
 import { GroceryList } from "@/utils/interfaces";
 import {
   createGroceryListsStore,
-  defaultInitState,
   GroceryListsStore,
   GroceryListsStoreApi,
   initGroceryListsStore,
@@ -26,10 +25,9 @@ export const GroceryListStoreProvider = ({
 }: GroceryListsStoreProviderProps) => {
   const storeRef = useRef<GroceryListsStoreApi>(null);
   if (storeRef.current === null) {
-    const initialState = groceryLists
-      ? initGroceryListsStore(groceryLists)
-      : defaultInitState;
-    storeRef.current = createGroceryListsStore(initialState);
+    storeRef.current = createGroceryListsStore(
+      initGroceryListsStore(groceryLists),
+    );
   }
 
   return (

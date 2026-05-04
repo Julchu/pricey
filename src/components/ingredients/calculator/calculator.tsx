@@ -77,7 +77,7 @@ export const Calculator = () => {
               id={"price"}
               type={"number"}
               {...ingredientRegister("price", {
-                setValueAs: (val) => (val ? val * 100 : undefined),
+                setValueAs: (val) => (val ? val * 100 : ""),
               })}
             />
           </div>
@@ -92,7 +92,7 @@ export const Calculator = () => {
             type={"number"}
             {...ingredientRegister("quantity", {
               min: 0,
-              setValueAs: (val) => (val ? Number(val) : undefined),
+              setValueAs: (val) => (val ? Number(val) : ""),
             })}
           />
         </div>
@@ -110,7 +110,7 @@ export const Calculator = () => {
             type={"number"}
             {...ingredientRegister("capacity", {
               min: 0,
-              setValueAs: (val) => (val ? Number(val) : undefined),
+              setValueAs: (val) => (val ? Number(val) : ""),
             })}
           />
         </div>

@@ -22,7 +22,7 @@ export const UserMenu = () => {
 
   const clearRecipes = useRecipesStore(({ clearRecipes }) => clearRecipes);
 
-  const [mass, setMass, liquidVolume, setLiquidVolume, userInfo, logout] =
+  const { mass, setMass, liquidVolume, setLiquidVolume, userInfo, logout } =
     useUserStore(
       useShallow(
         ({
@@ -32,7 +32,14 @@ export const UserMenu = () => {
           setLiquidVolume,
           userInfo,
           logout,
-        }) => [mass, setMass, liquidVolume, setLiquidVolume, userInfo, logout],
+        }) => ({
+          mass,
+          setMass,
+          liquidVolume,
+          setLiquidVolume,
+          userInfo,
+          logout,
+        }),
       ),
     );
 

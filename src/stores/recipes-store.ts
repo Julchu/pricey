@@ -1,8 +1,10 @@
 import { create } from "zustand";
-import { Recipe } from "@/utils/interfaces";
+import { persist } from "zustand/middleware";
+import { Recipe, RecipeFormData } from "@/utils/interfaces";
 
 export type RecipesState = {
   recipes: Recipe[];
+  currentRecipe: RecipeFormData | null;
 };
 
 export type RecipesActions = {
@@ -12,53 +14,66 @@ export type RecipesActions = {
   fetchRecipes: () => void;
   updateRecipe: (recipe: Recipe) => void;
   removeRecipe: (recipeId: string) => void;
+  setCurrentRecipe: (recipe: RecipeFormData | null) => void;
+  clearCurrentRecipe: () => void;
 };
 
 export type RecipesStore = RecipesState & RecipesActions;
 
-export const initRecipesStore = (recipes?: Recipe[]): RecipesState => {
+export const initRecipesStore = (recipes?: Recipe[] | null): RecipesState => {
   return {
-    recipes: recipes?.filter((i: unknown): i is Recipe => !!i) ?? [],
+    // TODO: Zod validation on recipes
+    recipes: recipes && recipes.length > 0 ? recipes : [],
+    currentRecipe: null,
   };
 };
 
-export const defaultInitState: RecipesState = {
-  recipes: [],
-};
-
-export const createRecipesStore = (
-  initialState: RecipesState = defaultInitState,
-) => {
-  return create<RecipesStore>((set) => ({
-    ...initialState,
-    setRecipes: (recipes) => set({ recipes }),
-    addRecipe: (newRecipe) =>
-      set(({ recipes }) => ({
-        recipes: [...recipes, newRecipe],
-      })),
-    clearRecipes: () => set({ recipes: [] }),
-    fetchRecipes: async () => {
-      try {
-        const { recipes } = await tryFetchingRecipes();
-        set(() => ({
-          recipes: recipes?.filter((i: unknown): i is Recipe => !!i) ?? [],
-        }));
-      } catch (error) {
-        throw new Error("Unable to retrieve recipes", { cause: error });
-      }
-    },
-    updateRecipe: (existingRecipe) => {
-      set(({ recipes }) => ({
-        recipes: recipes.map((recipe) =>
-          recipe.publicId === existingRecipe.publicId ? existingRecipe : recipe,
-        ),
-      }));
-    },
-    removeRecipe: (recipeId) =>
-      set(({ recipes }) => ({
-        recipes: recipes.filter((recipe) => recipe.publicId !== recipeId),
-      })),
-  }));
+export const createRecipesStore = (initialState: RecipesState) => {
+  return create<RecipesStore>()(
+    persist(
+      (set) => ({
+        ...initialState,
+        setRecipes: (recipes) => set({ recipes }),
+        addRecipe: (newRecipe) =>
+          set(({ recipes }) => ({
+            recipes: [...recipes, newRecipe],
+          })),
+        clearRecipes: () => set({ recipes: [] }),
+        fetchRecipes: async () => {
+          try {
+            const { recipes } = await tryFetchingRecipes();
+            set(() => ({
+              recipes: recipes?.filter((i: unknown): i is Recipe => !!i) ?? [],
+            }));
+          } catch (error) {
+            throw new Error("Unable to retrieve recipes", { cause: error });
+          }
+        },
+        updateRecipe: (existingRecipe) => {
+          set(({ recipes }) => ({
+            recipes: recipes.map((recipe) =>
+              recipe.publicId === existingRecipe.publicId
+                ? existingRecipe
+                : recipe,
+            ),
+          }));
+        },
+        removeRecipe: (recipeId) =>
+          set(({ recipes }) => ({
+            recipes: recipes.filter((recipe) => recipe.publicId !== recipeId),
+          })),
+        setCurrentRecipe: (recipe: RecipeFormData | null) =>
+          set({ currentRecipe: recipe }),
+        clearCurrentRecipe: () => set({ currentRecipe: null }),
+      }),
+      {
+        name: "current-recipe",
+        partialize: ({ currentRecipe }) => ({
+          currentRecipe,
+        }),
+      },
+    ),
+  );
 };
 
 const tryFetchingRecipes = async () => {

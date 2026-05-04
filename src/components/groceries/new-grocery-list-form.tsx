@@ -17,39 +17,66 @@ import { GroceryListFormData, UnitType } from "@/utils/interfaces";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import { useShallow } from "zustand/react/shallow";
 
 export const NewGroceryListForm = ({
   setOpenListAction,
 }: {
   setOpenListAction: Dispatch<SetStateAction<string>>;
 }) => {
+  const defaultEmptyValues = {
+    name: "",
+    ingredients: [
+      {
+        name: "",
+        quantity: "" as unknown as number,
+        capacity: "" as unknown as number,
+        unit: "" as UnitType,
+        ingredientPublicId: undefined,
+      },
+    ],
+    public: false,
+  };
+
+  const {
+    setCurrentGroceryList,
+    clearCurrentGroceryList,
+    addGroceryList,
+    currentGroceryList,
+  } = useGroceryListsStore(
+    useShallow(
+      ({
+        setCurrentGroceryList,
+        clearCurrentGroceryList,
+        addGroceryList,
+        currentGroceryList,
+      }) => ({
+        setCurrentGroceryList,
+        clearCurrentGroceryList,
+        addGroceryList,
+        currentGroceryList,
+      }),
+    ),
+  );
+
   const methods = useForm<GroceryListFormData>({
-    defaultValues: {
-      name: undefined,
-      ingredients: [
-        {
-          name: "",
-          quantity: "" as unknown as number,
-          capacity: "" as unknown as number,
-          unit: "" as UnitType,
-          ingredientPublicId: undefined,
-          //   image
-        },
-      ],
-      public: false,
-    },
+    defaultValues: currentGroceryList ?? defaultEmptyValues,
   });
 
-  const { register, handleSubmit, setFocus, setValue, control, reset } =
-    methods;
+  const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
-  const addGroceryList = useGroceryListsStore(
-    ({ addGroceryList }) => addGroceryList,
-  );
+  // Sync form changes to the store so draft state persists while typing
+  // TODO: try using getValues() instead
+  useEffect(() => {
+    const subscription = watch((value) => {
+      setCurrentGroceryList(value as GroceryListFormData);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setCurrentGroceryList]);
 
   const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
     groceryListData,
@@ -90,16 +117,8 @@ export const NewGroceryListForm = ({
   });
 
   const groceryListReset = () => {
-    setValue("ingredients", [
-      {
-        name: undefined as unknown as string,
-        quantity: undefined as unknown as number,
-        capacity: undefined as unknown as number,
-        unit: undefined as unknown as UnitType,
-        ingredientPublicId: undefined,
-      },
-    ]);
-    reset();
+    reset(defaultEmptyValues);
+    clearCurrentGroceryList();
   };
 
   return (

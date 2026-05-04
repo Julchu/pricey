@@ -43,8 +43,11 @@ const UnitController = ({
     | ControllerRenderProps<IngredientFormData, "unit">
     | ControllerRenderProps<GroceryListFormData, `ingredients.${number}.unit`>;
 }) => {
-  const [setMass, setLiquidVolume] = useUserStore(
-    useShallow(({ setMass, setLiquidVolume }) => [setMass, setLiquidVolume]),
+  const { setMass, setLiquidVolume } = useUserStore(
+    useShallow(({ setMass, setLiquidVolume }) => ({
+      setMass,
+      setLiquidVolume,
+    })),
   );
 
   const onChangeHandler = (value: string) => {

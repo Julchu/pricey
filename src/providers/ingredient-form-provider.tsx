@@ -12,18 +12,19 @@ export const {
 } = createFormControl<IngredientFormData>({
   mode: "onChange", // when to trigger validating fields
   defaultValues: {
-    name: undefined,
-    price: undefined,
-    quantity: undefined,
-    capacity: undefined,
-    unit: undefined,
+    name: "",
+    price: "" as unknown as number,
+    quantity: "" as unknown as number,
+    capacity: "" as unknown as number,
+    unit: "" as UnitType,
   },
 });
 
+// TODO: check if switching to regular useForm works
 export const ingredientReset = () => {
-  ingredientSetValue("name", undefined as unknown as string);
-  ingredientSetValue("price", undefined as unknown as number);
-  ingredientSetValue("quantity", undefined as unknown as number);
-  ingredientSetValue("capacity", undefined as unknown as number);
-  ingredientSetValue("unit", undefined as unknown as UnitType);
+  ingredientSetValue("name", "");
+  ingredientSetValue("price", "" as unknown as number);
+  ingredientSetValue("quantity", "" as unknown as number);
+  ingredientSetValue("capacity", "" as unknown as number);
+  ingredientSetValue("unit", "" as UnitType);
 };

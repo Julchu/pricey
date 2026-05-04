@@ -17,34 +17,54 @@ import { RecipeFormData, UnitType } from "@/utils/interfaces";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
+import { useShallow } from "zustand/react/shallow";
 
 export const NewRecipeForm = ({
   setOpenRecipeAction,
 }: {
   setOpenRecipeAction: Dispatch<SetStateAction<string>>;
 }) => {
+  const defaultEmptyValues = {
+    name: "",
+    ingredients: [
+      {
+        name: "",
+        quantity: "" as unknown as number,
+        capacity: "" as unknown as number,
+        unit: "" as UnitType,
+        ingredientPublicId: undefined,
+      },
+    ],
+    public: false,
+  };
+
+  const { currentRecipe, setCurrentRecipe, clearCurrentRecipe } =
+    useRecipesStore(
+      useShallow(({ currentRecipe, setCurrentRecipe, clearCurrentRecipe }) => ({
+        currentRecipe,
+        setCurrentRecipe,
+        clearCurrentRecipe,
+      })),
+    );
+
   const methods = useForm<RecipeFormData>({
-    defaultValues: {
-      name: undefined,
-      ingredients: [
-        {
-          name: "",
-          quantity: undefined as unknown as number,
-          capacity: undefined as unknown as number,
-          unit: "" as UnitType,
-          ingredientPublicId: undefined,
-        },
-      ],
-      public: false,
-    },
+    defaultValues: currentRecipe ?? defaultEmptyValues,
   });
 
-  const { register, handleSubmit, setFocus, setValue, control, reset } =
-    methods;
+  const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
+
+  // Sync form changes to the store so draft state persists while typing
+  // TODO: try using getValues() instead
+  useEffect(() => {
+    const subscription = watch((value) => {
+      setCurrentRecipe(value as RecipeFormData);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setCurrentRecipe]);
 
   const addRecipe = useRecipesStore(({ addRecipe }) => addRecipe);
 
@@ -78,16 +98,8 @@ export const NewRecipeForm = ({
   });
 
   const recipeReset = () => {
-    setValue("ingredients", [
-      {
-        name: undefined as unknown as string,
-        quantity: undefined as unknown as number,
-        capacity: undefined as unknown as number,
-        unit: undefined as unknown as UnitType,
-        ingredientPublicId: undefined,
-      },
-    ]);
-    reset();
+    reset(defaultEmptyValues);
+    clearCurrentRecipe();
   };
 
   return (

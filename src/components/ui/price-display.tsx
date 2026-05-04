@@ -24,8 +24,8 @@ export const PriceDisplay = ({ index }: { index: number }) => {
   });
 
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
-  const [mass, liquidVolume] = useUserStore(
-    useShallow(({ mass, liquidVolume }) => [mass, liquidVolume]),
+  const { mass, liquidVolume } = useUserStore(
+    useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
   );
 
   const masterIngredient = ingredients.find(

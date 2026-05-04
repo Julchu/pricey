@@ -43,6 +43,7 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
   );
 
   const filtered = useMemo(() => {
+    if (!name) return ingredients;
     const q = name.toLowerCase().trim();
     if (!q) return ingredients;
 

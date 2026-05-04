@@ -34,11 +34,11 @@ export const ExistingGroceryListForm = ({
     defaultValues: groceryList,
   });
 
-  const [removeGroceryList, updateGroceryList] = useGroceryListsStore(
-    useShallow(({ removeGroceryList, updateGroceryList }) => [
+  const { removeGroceryList, updateGroceryList } = useGroceryListsStore(
+    useShallow(({ removeGroceryList, updateGroceryList }) => ({
       removeGroceryList,
       updateGroceryList,
-    ]),
+    })),
   );
 
   const {
