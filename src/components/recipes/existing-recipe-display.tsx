@@ -1,10 +1,5 @@
 "use client";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { RecipeFormData, RecipeIngredientFormData } from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
@@ -86,7 +81,7 @@ const IngredientsDisplay = ({
 };
 
 const DisplayIngredient = ({
-  ingredient: { name, quantity, unit, capacity },
+  ingredient: { name, quantity, unit, capacity, price },
   index,
 }: {
   ingredient: RecipeIngredientFormData;
@@ -96,14 +91,24 @@ const DisplayIngredient = ({
     <div className={`flex w-full flex-row gap-4`}>
       <div
         className={
-          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-5 lg:grid-rows-1"
+          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
-        <div className={"col-span-2 sm:col-span-3 lg:col-span-2"}>
+        <div className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
           <IngredientLabel htmlFor={"name"} index={index}>
             Name
           </IngredientLabel>
           <DisplayField id={"name"}>{name}</DisplayField>
+        </div>
+
+        <div className={"col-span-1 sm:col-span-1"}>
+          <IngredientLabel htmlFor={"price"} index={index}>
+            Price
+          </IngredientLabel>
+          <div className="flex items-center rounded-md bg-blue-100 pl-3">
+            <span className={"text-gray-400"}>$</span>
+            <DisplayField id={"price"}>{price ? `${price}` : "0"}</DisplayField>
+          </div>
         </div>
 
         <div className={"col-span-1 sm:col-span-1"}>
