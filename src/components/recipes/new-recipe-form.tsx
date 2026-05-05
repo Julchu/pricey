@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import {
   FormProvider,
   SubmitHandler,
@@ -38,40 +38,57 @@ export const NewRecipeForm = ({
     public: false,
   };
 
-  const { addRecipe, currentRecipe, setCurrentRecipe, clearCurrentRecipe } =
-    useRecipesStore(
-      useShallow(
-        ({
-          addRecipe,
-          currentRecipe,
-          setCurrentRecipe,
-          clearCurrentRecipe,
-        }) => ({
-          addRecipe,
-          currentRecipe,
-          setCurrentRecipe,
-          clearCurrentRecipe,
-        }),
-      ),
-    );
+  const {
+    addRecipe,
+    currentRecipe,
+    setCurrentRecipe,
+    clearCurrentRecipe,
+    hasHydrated,
+  } = useRecipesStore(
+    useShallow(
+      ({
+        addRecipe,
+        currentRecipe,
+        setCurrentRecipe,
+        clearCurrentRecipe,
+        hasHydrated,
+      }) => ({
+        addRecipe,
+        currentRecipe,
+        setCurrentRecipe,
+        clearCurrentRecipe,
+        hasHydrated,
+      }),
+    ),
+  );
 
   const methods = useForm<RecipeFormData>({
     defaultValues: currentRecipe ?? defaultEmptyValues,
   });
 
-  const { register, control, handleSubmit, setFocus, reset, getValues } =
+  const { register, control, handleSubmit, setFocus, reset, watch, getValues } =
     methods;
+
+  const hasRestoredDraft = useRef(false);
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
   useEffect(() => {
-    const syncChanges = () => {
-      setCurrentRecipe(getValues());
-    };
-    return () => syncChanges();
-  }, [getValues, setCurrentRecipe]);
+    if (hasHydrated && currentRecipe && !hasRestoredDraft.current) {
+      reset(currentRecipe);
+      hasRestoredDraft.current = true;
+    }
+  }, [hasHydrated, currentRecipe, reset]);
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      if (!hasHydrated) return;
+      setCurrentRecipe(value as RecipeFormData);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setCurrentRecipe, hasHydrated]);
 
   const onSubmitHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
     const submitResponse = await fetch("/api/recipe", {

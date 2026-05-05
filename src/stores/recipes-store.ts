@@ -5,6 +5,7 @@ import { Recipe, RecipeFormData } from "@/utils/interfaces";
 export type RecipesState = {
   recipes: Recipe[];
   currentRecipe: RecipeFormData | null;
+  hasHydrated: boolean;
 };
 
 export type RecipesActions = {
@@ -16,6 +17,7 @@ export type RecipesActions = {
   removeRecipe: (recipeId: string) => void;
   setCurrentRecipe: (recipe: RecipeFormData | null) => void;
   clearCurrentRecipe: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 };
 
 export type RecipesStore = RecipesState & RecipesActions;
@@ -25,6 +27,7 @@ export const initRecipesStore = (recipes?: Recipe[] | null): RecipesState => {
     // TODO: Zod validation on recipes
     recipes: recipes && recipes.length > 0 ? recipes : [],
     currentRecipe: null,
+    hasHydrated: false,
   };
 };
 
@@ -63,12 +66,20 @@ export const createRecipesStore = (initialState: RecipesState) => {
         setCurrentRecipe: (recipe: RecipeFormData | null) =>
           set({ currentRecipe: recipe }),
         clearCurrentRecipe: () => set({ currentRecipe: null }),
+        setHasHydrated: (hasHydrated: boolean) => {
+          set({ hasHydrated });
+        },
       }),
       {
         name: "current-recipe",
         partialize: ({ currentRecipe }) => ({
           currentRecipe,
         }),
+        onRehydrateStorage: () => {
+          return (state, error) => {
+            if (!error) state?.setHasHydrated(true);
+          };
+        },
       },
     ),
   );

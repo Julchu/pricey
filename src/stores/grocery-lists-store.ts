@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 export type GroceryListsState = {
   groceryLists: GroceryList[];
   currentGroceryList: GroceryListFormData | null;
+  hasHydrated: boolean;
 };
 
 export type GroceryListsActions = {
@@ -16,6 +17,7 @@ export type GroceryListsActions = {
   removeGroceryList: (groceryListId: string) => void;
   setCurrentGroceryList: (groceryList: GroceryListFormData | null) => void;
   clearCurrentGroceryList: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 };
 
 export type GroceryListsStore = GroceryListsState & GroceryListsActions;
@@ -27,6 +29,7 @@ export const initGroceryListsStore = (
     // TODO: Zod validation on grocery lists
     groceryLists: groceryLists && groceryLists.length > 0 ? groceryLists : [],
     currentGroceryList: null,
+    hasHydrated: false,
   };
 };
 
@@ -69,12 +72,20 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
         setCurrentGroceryList: (groceryList: GroceryListFormData | null) =>
           set({ currentGroceryList: groceryList }),
         clearCurrentGroceryList: () => set({ currentGroceryList: null }),
+        setHasHydrated: (hasHydrated: boolean) => {
+          set({ hasHydrated });
+        },
       }),
       {
         name: "current-grocery-list",
         partialize: ({ currentGroceryList }) => ({
           currentGroceryList,
         }),
+        onRehydrateStorage: () => {
+          return (state, error) => {
+            if (!error) state?.setHasHydrated(true);
+          };
+        },
       },
     ),
   );

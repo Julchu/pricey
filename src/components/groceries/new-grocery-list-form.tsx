@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import {
   FormProvider,
   SubmitHandler,
@@ -43,6 +43,7 @@ export const NewGroceryListForm = ({
     clearCurrentGroceryList,
     addGroceryList,
     currentGroceryList,
+    hasHydrated,
   } = useGroceryListsStore(
     useShallow(
       ({
@@ -50,11 +51,13 @@ export const NewGroceryListForm = ({
         clearCurrentGroceryList,
         addGroceryList,
         currentGroceryList,
+        hasHydrated,
       }) => ({
         setCurrentGroceryList,
         clearCurrentGroceryList,
         addGroceryList,
         currentGroceryList,
+        hasHydrated,
       }),
     ),
   );
@@ -65,18 +68,26 @@ export const NewGroceryListForm = ({
 
   const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
+  const hasRestoredDraft = useRef(false);
+
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
-  // Sync form changes to the store so draft state persists while typing
-  // TODO: try using getValues() instead
+  useEffect(() => {
+    if (hasHydrated && currentGroceryList && !hasRestoredDraft.current) {
+      reset(currentGroceryList);
+      hasRestoredDraft.current = true;
+    }
+  }, [hasHydrated, currentGroceryList, reset]);
+
   useEffect(() => {
     const subscription = watch((value) => {
+      if (!hasHydrated) return;
       setCurrentGroceryList(value as GroceryListFormData);
     });
     return () => subscription.unsubscribe();
-  }, [watch, setCurrentGroceryList]);
+  }, [watch, setCurrentGroceryList, hasHydrated]);
 
   const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
     groceryListData,
