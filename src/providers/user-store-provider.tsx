@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 
 import {
   createUserStore,
@@ -24,14 +24,12 @@ export const UserStoreProvider = ({
   children,
   userInfo,
 }: UserStoreProviderProps) => {
-  const storeRef = useRef<UserStoreApi | null>(null);
-  if (storeRef.current === null) {
-    const initialState = userInfo ? initUserStore(userInfo) : defaultInitState;
-    storeRef.current = createUserStore(initialState);
-  }
+  const initialState = userInfo ? initUserStore(userInfo) : defaultInitState;
+
+  const [userStoreState] = useState(() => createUserStore(initialState));
 
   return (
-    <UserStoreContext.Provider value={storeRef.current}>
+    <UserStoreContext.Provider value={userStoreState}>
       {children}
     </UserStoreContext.Provider>
   );

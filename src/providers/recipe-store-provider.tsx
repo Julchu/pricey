@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useStore } from "zustand";
 import {
   createRecipesStore,
@@ -22,13 +22,12 @@ export const RecipeStoreProvider = ({
   children,
   recipes,
 }: RecipesStoreProviderProps) => {
-  const storeRef = useRef<RecipesStoreApi>(null);
-  if (storeRef.current === null) {
-    storeRef.current = createRecipesStore(initRecipesStore(recipes));
-  }
+  const [recipeStoreState] = useState(() =>
+    createRecipesStore(initRecipesStore(recipes)),
+  );
 
   return (
-    <RecipesStoreContext.Provider value={storeRef.current}>
+    <RecipesStoreContext.Provider value={recipeStoreState}>
       {children}
     </RecipesStoreContext.Provider>
   );

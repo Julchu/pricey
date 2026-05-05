@@ -172,7 +172,6 @@ export const ExistingRecipeForm = ({
               className={
                 "border-none bg-blue-500 font-bold focus:outline-none sm:text-xl"
               }
-              autoComplete={"name"}
               placeholder={"Enter recipe name"}
               id={"name"}
               type={"search"}

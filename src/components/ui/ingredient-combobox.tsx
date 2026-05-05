@@ -134,7 +134,6 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
           id={"ingredient-name"}
           type={"search"}
           value={name}
-          autoComplete={"off"}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           onChange={onClickHandler}

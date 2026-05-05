@@ -139,7 +139,6 @@ export const NewGroceryListForm = ({
               className={
                 "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
               }
-              autoComplete={"name"}
               placeholder={"Enter new grocery list name "}
               id={"name"}
               type={"search"}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useStore } from "zustand";
 import {
   createIngredientsStore,
@@ -23,16 +23,16 @@ export const IngredientStoreProvider = ({
   children,
   ingredients,
 }: IngredientsStoreProviderProps) => {
-  const storeRef = useRef<IngredientsStoreApi>(null);
-  if (storeRef.current === null) {
-    const initialState = ingredients
-      ? initIngredientsStore(ingredients)
-      : defaultInitState;
-    storeRef.current = createIngredientsStore(initialState);
-  }
+  const initialState = ingredients
+    ? initIngredientsStore(ingredients)
+    : defaultInitState;
+
+  const [ingredientStoreState] = useState(() =>
+    createIngredientsStore(initialState),
+  );
 
   return (
-    <IngredientsStoreContext.Provider value={storeRef.current}>
+    <IngredientsStoreContext.Provider value={ingredientStoreState}>
       {children}
     </IngredientsStoreContext.Provider>
   );

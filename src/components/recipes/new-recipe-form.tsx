@@ -38,35 +38,40 @@ export const NewRecipeForm = ({
     public: false,
   };
 
-  const { currentRecipe, setCurrentRecipe, clearCurrentRecipe } =
+  const { addRecipe, currentRecipe, setCurrentRecipe, clearCurrentRecipe } =
     useRecipesStore(
-      useShallow(({ currentRecipe, setCurrentRecipe, clearCurrentRecipe }) => ({
-        currentRecipe,
-        setCurrentRecipe,
-        clearCurrentRecipe,
-      })),
+      useShallow(
+        ({
+          addRecipe,
+          currentRecipe,
+          setCurrentRecipe,
+          clearCurrentRecipe,
+        }) => ({
+          addRecipe,
+          currentRecipe,
+          setCurrentRecipe,
+          clearCurrentRecipe,
+        }),
+      ),
     );
 
   const methods = useForm<RecipeFormData>({
     defaultValues: currentRecipe ?? defaultEmptyValues,
   });
 
-  const { register, handleSubmit, setFocus, control, reset, watch } = methods;
+  const { register, control, handleSubmit, setFocus, reset, getValues } =
+    methods;
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
-  // Sync form changes to the store so draft state persists while typing
-  // TODO: try using getValues() instead
   useEffect(() => {
-    const subscription = watch((value) => {
-      setCurrentRecipe(value as RecipeFormData);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, setCurrentRecipe]);
-
-  const addRecipe = useRecipesStore(({ addRecipe }) => addRecipe);
+    const syncChanges = () => {
+      setCurrentRecipe(getValues());
+    };
+    return () => syncChanges();
+  }, [getValues, setCurrentRecipe]);
 
   const onSubmitHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
     const submitResponse = await fetch("/api/recipe", {
@@ -115,7 +120,6 @@ export const NewRecipeForm = ({
               className={
                 "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
               }
-              autoComplete={"name"}
               placeholder={"Enter new recipe name"}
               id={"name"}
               type={"search"}

@@ -56,7 +56,6 @@ export const Calculator = () => {
       <div>
         <CalculatorLabel htmlFor={"name"}>Name</CalculatorLabel>
         <Input
-          autoComplete={"name"}
           placeholder={"Pepsi"}
           id={"name"}
           type={"search"}

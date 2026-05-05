@@ -42,9 +42,7 @@ export const createRecipesStore = (initialState: RecipesState) => {
         fetchRecipes: async () => {
           try {
             const { recipes } = await tryFetchingRecipes();
-            set(() => ({
-              recipes: recipes?.filter((i: unknown): i is Recipe => !!i) ?? [],
-            }));
+            set(() => ({ recipes }));
           } catch (error) {
             throw new Error("Unable to retrieve recipes", { cause: error });
           }

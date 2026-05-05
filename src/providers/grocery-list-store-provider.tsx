@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useStore } from "zustand";
 
 import { GroceryList } from "@/utils/interfaces";
@@ -23,15 +23,12 @@ export const GroceryListStoreProvider = ({
   children,
   groceryLists,
 }: GroceryListsStoreProviderProps) => {
-  const storeRef = useRef<GroceryListsStoreApi>(null);
-  if (storeRef.current === null) {
-    storeRef.current = createGroceryListsStore(
-      initGroceryListsStore(groceryLists),
-    );
-  }
+  const [groceryStoreState] = useState(() =>
+    createGroceryListsStore(initGroceryListsStore(groceryLists)),
+  );
 
   return (
-    <GroceryListsStoreContext.Provider value={storeRef.current}>
+    <GroceryListsStoreContext.Provider value={groceryStoreState}>
       {children}
     </GroceryListsStoreContext.Provider>
   );
