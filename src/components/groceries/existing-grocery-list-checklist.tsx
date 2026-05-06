@@ -1,18 +1,11 @@
 "use client";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-} from "@/utils/interfaces";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import { GroceryListFormData, GroceryListIngredientFormData, } from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
-import { ImageUploadIcon } from "@/components/icons/image-upload-icon"; // TODO: re-add checking off ingredients
+import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import { BagAddIcon } from "@/components/icons/grocery-bag/add"; // TODO: re-add checking off ingredients
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
@@ -77,6 +70,25 @@ const IngredientsChecklist = ({
 }) => {
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
+      <div
+        className={
+          "group col-span-2 sm:col-span-1 lg:col-span-2 lg:col-start-13"
+        }
+      >
+        <button
+          className={
+            "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+          }
+          type="button"
+          onClick={() => console.log("add")}
+        >
+          <BagAddIcon
+            className={"h-6 fill-none stroke-blue-500 group-hover:stroke-white"}
+          />
+          Add to current list
+        </button>
+      </div>
+
       {ingredients.map((ingredient, index) => {
         return (
           <div
