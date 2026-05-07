@@ -66,8 +66,7 @@ export const NewRecipeForm = ({
     defaultValues: currentRecipe ?? defaultEmptyValues,
   });
 
-  const { register, control, handleSubmit, setFocus, reset, watch, getValues } =
-    methods;
+  const { register, control, handleSubmit, setFocus, reset, watch } = methods;
 
   const hasRestoredDraft = useRef(false);
 

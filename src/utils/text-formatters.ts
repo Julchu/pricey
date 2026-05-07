@@ -28,14 +28,14 @@ export const isVolume = (unit?: string): unit is LiquidType =>
   VolumeValues.includes(unit as LiquidType);
 
 // Conversion factors to base units (kg for mass, L for liquid volume)
-const massToKg: Record<MassType, number> = {
+export const massToKg: Record<MassType, number> = {
   [Unit.KILOGRAM]: 1,
   [Unit.GRAM]: 0.001,
   [Unit.POUND]: 0.453592,
   [Unit.OUNCE]: 0.0283495,
 };
 
-const liquidToLitre: Record<LiquidType, number> = {
+export const liquidToLitre: Record<LiquidType, number> = {
   [Unit.LITRE]: 1,
   [Unit.MILLILITER]: 0.001,
   [Unit.QUART]: 0.946353,

@@ -1,10 +1,16 @@
 import { create } from "zustand";
-import { GroceryList, GroceryListFormData } from "@/utils/interfaces";
+import {
+  GroceryList,
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+} from "@/utils/interfaces";
 import { persist } from "zustand/middleware";
+import { mergeIngredients } from "@/utils/merge-ingredients";
 
 export type GroceryListsState = {
   groceryLists: GroceryList[];
   currentGroceryList: GroceryListFormData | null;
+  currentGroceryListVersion: number;
   hasHydrated: boolean;
 };
 
@@ -17,6 +23,9 @@ export type GroceryListsActions = {
   removeGroceryList: (groceryListId: string) => void;
   setCurrentGroceryList: (groceryList: GroceryListFormData | null) => void;
   clearCurrentGroceryList: () => void;
+  addIngredientsToCurrentList: (
+    ingredients: GroceryListIngredientFormData[],
+  ) => void;
   setHasHydrated: (hasHydrated: boolean) => void;
 };
 
@@ -29,6 +38,7 @@ export const initGroceryListsStore = (
     // TODO: Zod validation on grocery lists
     groceryLists: groceryLists && groceryLists.length > 0 ? groceryLists : [],
     currentGroceryList: null,
+    currentGroceryListVersion: 1,
     hasHydrated: false,
   };
 };
@@ -72,6 +82,29 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
         setCurrentGroceryList: (groceryList: GroceryListFormData | null) =>
           set({ currentGroceryList: groceryList }),
         clearCurrentGroceryList: () => set({ currentGroceryList: null }),
+        addIngredientsToCurrentList: (ingredients) =>
+          set(({ currentGroceryList, currentGroceryListVersion }) => {
+            if (!currentGroceryList) {
+              return {
+                currentGroceryList: {
+                  name: "",
+                  ingredients,
+                  public: false,
+                },
+                currentGroceryListVersion: currentGroceryListVersion + 1,
+              };
+            }
+            return {
+              currentGroceryList: {
+                ...currentGroceryList,
+                ingredients: mergeIngredients(
+                  currentGroceryList.ingredients,
+                  ingredients,
+                ),
+              },
+              currentGroceryListVersion: currentGroceryListVersion + 1,
+            };
+          }),
         setHasHydrated: (hasHydrated: boolean) => {
           set({ hasHydrated });
         },

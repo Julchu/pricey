@@ -10,8 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "node_modules",
+      ".next",
+      "dist",
+      "build",
+      "old_pricey",
+      "pricey-generated",
+    ],
+  },
   ...compat.config({
-    extends: ['next', 'prettier'],
+    extends: ["next", "prettier"],
   }),
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
