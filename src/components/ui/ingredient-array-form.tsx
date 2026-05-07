@@ -149,9 +149,7 @@ export const IngredientArrayForm = ({
         }
       >
         <div
-          className={
-            "group col-span-2 sm:col-span-1 lg:order-1 lg:col-span-2 lg:col-start-13"
-          }
+          className={"group col-span-2 sm:col-span-1 lg:order-1 lg:col-span-2"}
         >
           <button
             className={
