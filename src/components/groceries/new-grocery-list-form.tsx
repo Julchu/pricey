@@ -43,6 +43,7 @@ export const NewGroceryListForm = ({
     clearCurrentGroceryList,
     addGroceryList,
     currentGroceryList,
+    currentGroceryListVersion,
     hasHydrated,
   } = useGroceryListsStore(
     useShallow(
@@ -51,12 +52,14 @@ export const NewGroceryListForm = ({
         clearCurrentGroceryList,
         addGroceryList,
         currentGroceryList,
+        currentGroceryListVersion,
         hasHydrated,
       }) => ({
         setCurrentGroceryList,
         clearCurrentGroceryList,
         addGroceryList,
         currentGroceryList,
+        currentGroceryListVersion,
         hasHydrated,
       }),
     ),
@@ -68,18 +71,22 @@ export const NewGroceryListForm = ({
 
   const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
-  const hasRestoredDraft = useRef(false);
+  const prevVersionRef = useRef<number | null>(null);
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
   useEffect(() => {
-    if (hasHydrated && currentGroceryList && !hasRestoredDraft.current) {
+    if (!hasHydrated || !currentGroceryList) return;
+    if (
+      prevVersionRef.current === null ||
+      prevVersionRef.current !== currentGroceryListVersion
+    ) {
       reset(currentGroceryList);
-      hasRestoredDraft.current = true;
+      prevVersionRef.current = currentGroceryListVersion;
     }
-  }, [hasHydrated, currentGroceryList, reset]);
+  }, [hasHydrated, currentGroceryList, reset, currentGroceryListVersion]);
 
   useEffect(() => {
     const subscription = watch((value) => {

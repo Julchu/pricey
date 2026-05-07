@@ -43,6 +43,7 @@ export const NewRecipeForm = ({
     currentRecipe,
     setCurrentRecipe,
     clearCurrentRecipe,
+    currentRecipeVersion,
     hasHydrated,
   } = useRecipesStore(
     useShallow(
@@ -51,12 +52,14 @@ export const NewRecipeForm = ({
         currentRecipe,
         setCurrentRecipe,
         clearCurrentRecipe,
+        currentRecipeVersion,
         hasHydrated,
       }) => ({
         addRecipe,
         currentRecipe,
         setCurrentRecipe,
         clearCurrentRecipe,
+        currentRecipeVersion,
         hasHydrated,
       }),
     ),
@@ -68,18 +71,22 @@ export const NewRecipeForm = ({
 
   const { register, control, handleSubmit, setFocus, reset, watch } = methods;
 
-  const hasRestoredDraft = useRef(false);
+  const prevVersionRef = useRef<number | null>(null);
 
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
   useEffect(() => {
-    if (hasHydrated && currentRecipe && !hasRestoredDraft.current) {
+    if (!hasHydrated || !currentRecipe) return;
+    if (
+      prevVersionRef.current === null ||
+      prevVersionRef.current !== currentRecipeVersion
+    ) {
       reset(currentRecipe);
-      hasRestoredDraft.current = true;
+      prevVersionRef.current = currentRecipeVersion;
     }
-  }, [hasHydrated, currentRecipe, reset]);
+  }, [hasHydrated, currentRecipe, reset, currentRecipeVersion]);
 
   useEffect(() => {
     const subscription = watch((value) => {

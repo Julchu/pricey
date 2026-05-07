@@ -1,10 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Recipe, RecipeFormData } from "@/utils/interfaces";
+import {
+  Recipe,
+  RecipeFormData,
+  RecipeIngredientFormData,
+} from "@/utils/interfaces";
+import { mergeIngredients } from "@/utils/merge-ingredients";
 
 export type RecipesState = {
   recipes: Recipe[];
   currentRecipe: RecipeFormData | null;
+  currentRecipeVersion: number;
   hasHydrated: boolean;
 };
 
@@ -17,6 +23,9 @@ export type RecipesActions = {
   removeRecipe: (recipeId: string) => void;
   setCurrentRecipe: (recipe: RecipeFormData | null) => void;
   clearCurrentRecipe: () => void;
+  addIngredientsToCurrentRecipe: (
+    ingredients: RecipeIngredientFormData[],
+  ) => void;
   setHasHydrated: (hasHydrated: boolean) => void;
 };
 
@@ -27,6 +36,7 @@ export const initRecipesStore = (recipes?: Recipe[] | null): RecipesState => {
     // TODO: Zod validation on recipes
     recipes: recipes && recipes.length > 0 ? recipes : [],
     currentRecipe: null,
+    currentRecipeVersion: 1,
     hasHydrated: false,
   };
 };
@@ -66,6 +76,29 @@ export const createRecipesStore = (initialState: RecipesState) => {
         setCurrentRecipe: (recipe: RecipeFormData | null) =>
           set({ currentRecipe: recipe }),
         clearCurrentRecipe: () => set({ currentRecipe: null }),
+        addIngredientsToCurrentRecipe: (ingredients) =>
+          set(({ currentRecipe, currentRecipeVersion }) => {
+            if (!currentRecipe) {
+              return {
+                currentRecipe: {
+                  name: "",
+                  ingredients,
+                  public: false,
+                },
+                currentRecipeVersion: currentRecipeVersion + 1,
+              };
+            }
+            return {
+              currentRecipe: {
+                ...currentRecipe,
+                ingredients: mergeIngredients(
+                  currentRecipe.ingredients,
+                  ingredients,
+                ),
+              },
+              currentRecipeVersion: currentRecipeVersion + 1,
+            };
+          }),
         setHasHydrated: (hasHydrated: boolean) => {
           set({ hasHydrated });
         },

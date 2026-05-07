@@ -1,9 +1,4 @@
-import {
-  GroceryListIngredientFormData,
-  LiquidType,
-  MassType,
-  UnitType,
-} from "@/utils/interfaces";
+import { LiquidType, MassType, UnitType } from "@/utils/interfaces";
 import {
   isMass,
   isVolume,
@@ -35,11 +30,21 @@ const fromBaseAmount = (
   return baseAmount / (capacity * factor);
 };
 
-export const mergeIngredients = (
-  existing: GroceryListIngredientFormData[],
-  incoming: GroceryListIngredientFormData[],
-): GroceryListIngredientFormData[] => {
-  const map = new Map<string, GroceryListIngredientFormData>();
+export const mergeIngredients = <
+  T extends {
+    name: string;
+    quantity?: number;
+    capacity?: number;
+    unit: UnitType;
+    price?: number;
+    ingredientPublicId?: string;
+    publicId?: string;
+  },
+>(
+  existing: T[],
+  incoming: T[],
+): T[] => {
+  const map = new Map<string, T>();
 
   for (const item of existing) {
     map.set(item.name.trim().toLowerCase(), { ...item });
