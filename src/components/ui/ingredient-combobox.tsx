@@ -4,7 +4,7 @@ import { Popover } from "radix-ui";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { Ingredient } from "@/utils/interfaces";
 import { useShallow } from "zustand/react/shallow";
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useController, useFormContext, useWatch } from "react-hook-form";
 import { useLayoutEffect } from "@radix-ui/react-use-layout-effect";
@@ -42,9 +42,18 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
     ({ publicId }) => publicId === ingredientPublicId,
   );
 
+  const [debouncedName, setDebouncedName] = useState(name);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedName(name);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [name]);
+
   const filtered = useMemo(() => {
-    if (!name) return ingredients;
-    const q = name.toLowerCase().trim();
+    if (!debouncedName) return ingredients;
+    const q = debouncedName.toLowerCase().trim();
     if (!q) return ingredients;
 
     // Filter ingredients that contain the search term
@@ -70,7 +79,7 @@ export const IngredientCombobox = ({ index }: { index: number }) => {
       // Alphabetical order for same-priority items
       return nameA.localeCompare(nameB);
     });
-  }, [ingredients, name]);
+  }, [ingredients, debouncedName]);
 
   const {
     field: { onChange },

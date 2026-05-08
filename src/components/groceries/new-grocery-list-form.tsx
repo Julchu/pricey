@@ -10,8 +10,8 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import {
   FormProvider,
   SubmitHandler,
+  useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import { GroceryListFormData, UnitType } from "@/utils/interfaces";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
@@ -89,11 +89,18 @@ export const NewGroceryListForm = ({
   }, [hasHydrated, currentGroceryList, reset, currentGroceryListVersion]);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {
       if (!hasHydrated) return;
-      setCurrentGroceryList(value as GroceryListFormData);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setCurrentGroceryList(value as GroceryListFormData);
+      }, 300);
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, [watch, setCurrentGroceryList, hasHydrated]);
 
   const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
@@ -129,9 +136,9 @@ export const NewGroceryListForm = ({
     });
   };
 
-  const [ingredients] = useWatch({
+  const { fields } = useFieldArray({
     control,
-    name: ["ingredients"],
+    name: "ingredients",
   });
 
   const groceryListReset = () => {
@@ -162,7 +169,7 @@ export const NewGroceryListForm = ({
               type={"search"}
               {...register("name")}
             />
-            <AccordionSubheader ingredientsLength={ingredients.length} />
+            <AccordionSubheader ingredientsLength={fields.length} />
           </div>
           <AccordionTrigger tabIndex={-1} />
         </AccordionHeader>

@@ -10,8 +10,8 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import {
   FormProvider,
   SubmitHandler,
+  useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import { RecipeFormData, UnitType } from "@/utils/interfaces";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
@@ -89,11 +89,18 @@ export const NewRecipeForm = ({
   }, [hasHydrated, currentRecipe, reset, currentRecipeVersion]);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {
       if (!hasHydrated) return;
-      setCurrentRecipe(value as RecipeFormData);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setCurrentRecipe(value as RecipeFormData);
+      }, 300);
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, [watch, setCurrentRecipe, hasHydrated]);
 
   const onSubmitHandler: SubmitHandler<RecipeFormData> = async (recipeData) => {
@@ -120,9 +127,9 @@ export const NewRecipeForm = ({
     });
   };
 
-  const [ingredients] = useWatch({
+  const { fields } = useFieldArray({
     control,
-    name: ["ingredients"],
+    name: "ingredients",
   });
 
   const recipeReset = () => {
@@ -148,7 +155,20 @@ export const NewRecipeForm = ({
               type={"search"}
               {...register("name")}
             />
-            <AccordionSubheader ingredientsLength={ingredients?.length ?? 0} />
+            <AccordionSubheader ingredientsLength={fields.length} />
+          </div>
+
+          <div className={"flex w-full flex-col"}>
+            <Input
+              className={
+                "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
+              }
+              placeholder={"Enter new recipe name"}
+              id={"name"}
+              type={"search"}
+              {...register("name")}
+            />
+            <AccordionSubheader ingredientsLength={fields.length} />
           </div>
           <AccordionTrigger tabIndex={-1} />
         </AccordionHeader>

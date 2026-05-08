@@ -83,7 +83,7 @@ const IngredientsChecklist = ({
 
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
-      <div className={"group col-span-2 sm:col-span-1 lg:col-span-2"}>
+      <div className={"group"}>
         <button
           className={
             "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
