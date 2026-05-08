@@ -1,18 +1,8 @@
 "use client";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import {
-  FormProvider,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, SubmitHandler, useFieldArray, useForm, } from "react-hook-form";
 import { RecipeFormData, UnitType } from "@/utils/interfaces";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
@@ -143,19 +133,6 @@ export const NewRecipeForm = ({
         <AccordionHeader className="flex h-auto flex-col items-center rounded-t-md px-0 text-white">
           <div onClick={toggleHeader} className={"pl-4"}>
             <ImageUploadIcon />
-          </div>
-
-          <div className={"flex w-full flex-col"}>
-            <Input
-              className={
-                "border-none bg-blue-500 font-medium focus:outline-none sm:text-xl"
-              }
-              placeholder={"Enter new recipe name"}
-              id={"name"}
-              type={"search"}
-              {...register("name")}
-            />
-            <AccordionSubheader ingredientsLength={fields.length} />
           </div>
 
           <div className={"flex w-full flex-col"}>
