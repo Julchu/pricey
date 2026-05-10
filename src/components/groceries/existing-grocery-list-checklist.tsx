@@ -1,20 +1,13 @@
 "use client";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-} from "@/utils/interfaces";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import { GroceryListFormData, GroceryListIngredientFormData, } from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
+import { formatPrice } from "@/utils/text-formatters";
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
@@ -144,7 +137,7 @@ const ChecklistIngredient = ({
           <div className="flex items-center rounded-md bg-blue-100 pl-3">
             <span className={"text-gray-400"}>$</span>
             <ExistingGroceryListField id={"price"}>
-              {price ? `${price}` : "0"}
+              {price ? formatPrice(price / 100) : "0.00"}
             </ExistingGroceryListField>
           </div>
         </div>
