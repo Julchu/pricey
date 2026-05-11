@@ -1,10 +1,9 @@
 "use client";
 import { UnitType } from "@/utils/interfaces";
-import { useFieldArray } from "@hookform/lenses/rhf";
 import { IngredientLabel, Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { BagCheckIcon } from "@/components/icons/grocery-bag/check";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
