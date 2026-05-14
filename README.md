@@ -45,7 +45,7 @@ cp .env.example .env.development .env.production
 git clone https://github.com/Julchu/pricey.git
 cd pricey
 
-# Installing the React app; a browser tab should open at localhost:3000
+# Installing the React app; a browser tab should open at localhost:8000
 pnpm install
 pnpm dev
 ```
@@ -100,7 +100,7 @@ Deploying app to test Google Auth on mobile, with `ngrok`
     # Create ngrok account
     ngrok config add-authtoken <AuthToken>
     ttps://dashboard.ngrok.com/get-started/your-authtoken
-    ngrok http 3000
+    ngrok http 8000
   ```
 
 # Notes
@@ -158,11 +158,11 @@ top-level `state` data that is also being passed down to other neighbouring chil
 
 - Files in this directory are treated as API routes instead of React pages
     - RouteName
-        - CropAlgorithm.tsx: localhost:3000/RouteName
+        - CropAlgorithm.tsx: localhost:8000/RouteName
         - SubRouteName
-            - CropAlgorithm.tsx: localhost:3000/RouteName/SubRouteName
-            - [templateIndex].tsx: localhost:3000/RouteName/SubRouteName/templateIndex
-- CropAlgorithm.tsx files are the displayed components, so `/pages/CropAlgorithm.tsx` will be the base `localhost:3000/`
+            - CropAlgorithm.tsx: localhost:8000/RouteName/SubRouteName
+            - [templateIndex].tsx: localhost:8000/RouteName/SubRouteName/templateIndex
+- CropAlgorithm.tsx files are the displayed components, so `/pages/CropAlgorithm.tsx` will be the base `localhost:8000/`
   file
 
 ### /package.json
