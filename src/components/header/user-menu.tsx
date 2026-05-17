@@ -86,6 +86,7 @@ export const UserMenu = () => {
               className={"cursor-pointer"}
             >
               <MenuRadioItem value={Unit.KILOGRAM} name={"kg"} />
+              <MenuRadioItem value={Unit.GRAM} name={"g"} />
               <MenuRadioItem value={Unit.POUND} name={"lb"} />
             </DropdownMenu.RadioGroup>
 
@@ -104,6 +105,7 @@ export const UserMenu = () => {
               className={"cursor-pointer"}
             >
               <MenuRadioItem value={Unit.LITRE} name={"L"} />
+              <MenuRadioItem value={Unit.MILLILITER} name={"ml"} />
               <MenuRadioItem value={Unit.QUART} name={"qt"} />
             </DropdownMenu.RadioGroup>
           </section>
