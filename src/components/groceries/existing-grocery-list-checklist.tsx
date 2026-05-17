@@ -1,13 +1,21 @@
 "use client";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
-import { GroceryListFormData, GroceryListIngredientFormData, } from "@/utils/interfaces";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+} from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
-import { formatPrice } from "@/utils/text-formatters";
+import { formatPrice } from "@/utils/text-formatters"; // TODO: re-add checking off ingredients
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
@@ -103,6 +111,32 @@ const IngredientsChecklist = ({
           </div>
         );
       })}
+
+      <div
+        className={
+          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
+        }
+      >
+        <div
+          className={
+            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
+          }
+        >
+          Total cost:
+        </div>
+        <div
+          className={
+            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
+          }
+        >
+          {formatPrice(
+            ingredients.reduce(
+              (sum, ingredient) => sum + (ingredient.price || 0) / 100,
+              0,
+            ),
+          ) || "0.00"}
+        </div>
+      </div>
     </div>
   );
 };
