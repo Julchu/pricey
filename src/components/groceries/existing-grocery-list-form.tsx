@@ -1,22 +1,15 @@
 "use client";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
-} from "@/utils/interfaces";
+import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
-import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete"; // Grocery list editing form
+import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
+import { AlertDialog } from "radix-ui";
+import { DeleteList } from "@/components/ui/delete-list-alert"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
@@ -227,14 +220,22 @@ export const ExistingGroceryListForm = ({
               ingredientsLength={groceryList.ingredients.length ?? 0}
             />
           </div>
-          <div
-            onClick={handleSubmit(onDeleteHandler)}
-            className={"flex cursor-pointer items-center"}
-          >
-            <BagDeleteIcon
-              className={"h-6 fill-none stroke-white hover:stroke-red-500"}
+
+          <AlertDialog.Root>
+            <AlertDialog.Trigger asChild>
+              <div className={"flex cursor-pointer items-center"}>
+                <BagDeleteIcon
+                  className={"h-6 fill-none stroke-white hover:stroke-red-500"}
+                />
+              </div>
+            </AlertDialog.Trigger>
+            <DeleteList
+              title={"Delete grocery list?"}
+              subtitle={"This action cannot be undone."}
+              onDeleteHandler={handleSubmit(onDeleteHandler)}
             />
-          </div>
+          </AlertDialog.Root>
+
           <AccordionTrigger />
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>

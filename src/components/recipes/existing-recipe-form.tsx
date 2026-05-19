@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
+import { AlertDialog } from "radix-ui";
+import { DeleteList } from "@/components/ui/delete-list-alert";
 
 export const ExistingRecipeForm = ({
   recipe,
@@ -181,14 +183,21 @@ export const ExistingRecipeForm = ({
               ingredientsLength={recipe.ingredients.length ?? 0}
             />
           </div>
-          <div
-            onClick={handleSubmit(onDeleteHandler)}
-            className={"flex cursor-pointer items-center"}
-          >
-            <BagDeleteIcon
-              className={"h-6 fill-none stroke-white hover:stroke-red-500"}
+          <AlertDialog.Root>
+            <AlertDialog.Trigger asChild>
+              <div className={"flex cursor-pointer items-center"}>
+                <BagDeleteIcon
+                  className={"h-6 fill-none stroke-white hover:stroke-red-500"}
+                />
+              </div>
+            </AlertDialog.Trigger>
+            <DeleteList
+              title={"Delete recipe?"}
+              subtitle={"This action cannot be undone."}
+              onDeleteHandler={handleSubmit(onDeleteHandler)}
             />
-          </div>
+          </AlertDialog.Root>
+
           <AccordionTrigger />
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
