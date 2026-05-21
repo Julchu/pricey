@@ -1,16 +1,16 @@
 "use client";
-import { Label } from "radix-ui";
+import { Field } from "@base-ui/react/field";
 import { IngredientUnitSelect } from "@/components/ui/unit-select";
 import { Input } from "@/components/ui/input";
 import {
   handleIngredientSubmit,
+  ingredientControl,
   ingredientRegister,
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useFormState } from "react-hook-form";
 import { IngredientFormData } from "@/utils/interfaces";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
-import { LabelProps } from "@radix-ui/react-label";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
 
@@ -18,6 +18,9 @@ export const Calculator = () => {
   const updateIngredients = useIngredientsStore(
     ({ updateIngredients }) => updateIngredients,
   );
+
+  // Subscribe to live form errors from the singleton control
+  const { errors } = useFormState({ control: ingredientControl });
 
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
@@ -43,9 +46,8 @@ export const Calculator = () => {
     }
   };
 
-  const resetHandler = () => {
-    ingredientReset();
-  };
+  const labelClass = "text-xs font-medium text-black uppercase opacity-50";
+  const errorClass = "mt-1 text-xs text-red-500";
 
   return (
     <div
@@ -53,71 +55,80 @@ export const Calculator = () => {
         "flex h-2/3 grid-cols-1 flex-col gap-4 p-4 text-sm tracking-widest"
       }
     >
-      <div>
-        <CalculatorLabel htmlFor={"name"}>Name</CalculatorLabel>
+      {/* Name */}
+      <Field.Root invalid={!!errors.name}>
+        <Field.Label className={labelClass}>Name</Field.Label>
         <Input
           placeholder={"Pepsi"}
-          id={"name"}
           type={"search"}
-          {...ingredientRegister("name")}
+          {...ingredientRegister("name", {
+            required: "Name is required",
+          })}
         />
-      </div>
+        <Field.Error className={errorClass}>{errors.name?.message}</Field.Error>
+      </Field.Root>
 
       <div className={"grid grid-cols-2 gap-4"}>
-        <div>
-          <CalculatorLabel htmlFor={"price"}>Price</CalculatorLabel>
+        {/* Price */}
+        <Field.Root invalid={!!errors.price}>
+          <Field.Label className={labelClass}>Price</Field.Label>
           <div className="flex h-10 items-center rounded-md border border-gray-200 pl-3">
             <span className={"text-gray-400"}>$</span>
-
             <Input
               className={"border-none"}
               placeholder={"4.99"}
               step={"0.01"}
-              id={"price"}
               type={"number"}
               {...ingredientRegister("price", {
+                min: { value: 0, message: "Must be ≥ 0" },
                 setValueAs: (val) => (val ? val * 100 : ""),
               })}
             />
           </div>
-        </div>
+          <Field.Error className={errorClass}>
+            {errors.price?.message}
+          </Field.Error>
+        </Field.Root>
 
-        <div>
-          <CalculatorLabel htmlFor={"quantity"}>(Quantity)</CalculatorLabel>
-
+        {/* Quantity */}
+        <Field.Root invalid={!!errors.quantity}>
+          <Field.Label className={labelClass}>(Quantity)</Field.Label>
           <Input
             placeholder={"1"}
-            id={"quantity"}
             type={"number"}
             {...ingredientRegister("quantity", {
-              min: 0,
+              min: { value: 0, message: "Must be ≥ 0" },
               setValueAs: (val) => (val ? Number(val) : ""),
             })}
           />
-        </div>
+          <Field.Error className={errorClass}>
+            {errors.quantity?.message}
+          </Field.Error>
+        </Field.Root>
       </div>
 
       <div className={"grid grid-cols-2 gap-4"}>
-        <div>
-          <CalculatorLabel htmlFor={"capacity"}>Capacity</CalculatorLabel>
-
+        {/* Capacity */}
+        <Field.Root invalid={!!errors.capacity}>
+          <Field.Label className={labelClass}>Capacity</Field.Label>
           <Input
             placeholder={"0.710"}
             step={"0.1"}
-            min={0}
-            id={"capacity"}
             type={"number"}
             {...ingredientRegister("capacity", {
-              min: 0,
+              min: { value: 0, message: "Must be ≥ 0" },
               setValueAs: (val) => (val ? Number(val) : ""),
             })}
           />
-        </div>
+          <Field.Error className={errorClass}>
+            {errors.capacity?.message}
+          </Field.Error>
+        </Field.Root>
 
-        <div>
-          <CalculatorLabel htmlFor={"unit"}>Unit</CalculatorLabel>
+        <Field.Root>
+          <Field.Label className={labelClass}>Unit</Field.Label>
           <IngredientUnitSelect />
-        </div>
+        </Field.Root>
       </div>
 
       <div className={"grid grid-cols-2 gap-4"}>
@@ -126,7 +137,7 @@ export const Calculator = () => {
             className={
               "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
             }
-            onClick={resetHandler}
+            onClick={() => ingredientReset()}
             type={"reset"}
           >
             <CircleResetIcon
@@ -149,16 +160,5 @@ export const Calculator = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const CalculatorLabel = ({ children, className, ...props }: LabelProps) => {
-  return (
-    <Label.Root
-      className={`text-xs font-medium text-black uppercase opacity-50 ${className}`}
-      {...props}
-    >
-      {children}
-    </Label.Root>
   );
 };

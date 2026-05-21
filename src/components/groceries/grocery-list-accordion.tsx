@@ -1,5 +1,5 @@
 "use client";
-import { Accordion } from "radix-ui";
+import { Accordion } from "@base-ui/react/accordion";
 import { AccordionItem } from "@/components/ui/accordion";
 import { NewGroceryListForm } from "./new-grocery-list-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
@@ -13,13 +13,9 @@ export const GroceryListAccordion = () => {
   // TODO: switch new grocery list form back to useForm
   return (
     <Accordion.Root
-      // className={"flex w-full flex-col gap-4"} // here
       className={"flex w-full flex-col gap-px"}
-      type={"single"}
-      collapsible
-      defaultValue={"new-list"}
-      value={openList}
-      onValueChange={setOpenList}
+      value={[openList]}
+      onValueChange={(values) => setOpenList(values[0] ?? "")}
     >
       <AccordionItem value={"new-list"}>
         <NewGroceryListForm setOpenListAction={setOpenList} />

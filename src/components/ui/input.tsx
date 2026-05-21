@@ -1,13 +1,11 @@
 import { InputHTMLAttributes } from "react";
-import { LabelProps } from "@radix-ui/react-label";
-import { Label } from "radix-ui";
+import { Field } from "@base-ui/react/field";
 
 export const Input = ({
   className,
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    // TODO: test px-4
     <input
       min={0}
       className={`text-md flex min-h-10 w-full rounded-md border border-gray-200 px-[15px] font-medium outline-none placeholder:font-normal placeholder:text-gray-400 ${className}`}
@@ -21,13 +19,13 @@ export const IngredientLabel = ({
   className,
   index,
   ...props
-}: LabelProps & { index: number }) => {
+}: Field.Label.Props & { index: number }) => {
   return (
-    <Label.Root
-      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""} ${className}`}
+    <Field.Label
+      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""} ${className ?? ""}`}
       {...props}
     >
       {children}
-    </Label.Root>
+    </Field.Label>
   );
 };

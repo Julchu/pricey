@@ -18,9 +18,9 @@ import {
 } from "@radix-ui/react-icons";
 import Image from "next/image";
 import FoodPlaceholder from "@/images/food-placeholder.png";
-import { Separator } from "radix-ui";
 import { memo } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
+import { Separator } from "@base-ui/react/separator";
 
 export const CardComponent = ({
   ingredient,
@@ -110,11 +110,7 @@ export const CardComponent = ({
 
       <h1 className={"text-xl font-bold capitalize"}>{name}</h1>
 
-      <Separator.Root
-        decorative
-        orientation="horizontal"
-        className={"my-1 h-px w-full bg-white"}
-      />
+      <Separator className={"my-1 h-px w-full border-none bg-white"} />
 
       <h3>{`${formattedPricePerMeasurement}/${formattedUnit}`}</h3>
 

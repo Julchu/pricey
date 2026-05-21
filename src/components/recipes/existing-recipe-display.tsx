@@ -19,6 +19,7 @@ import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { formatPrice } from "@/utils/text-formatters";
 import { ChefTransparent } from "@/components/icons/chef/chef-transparent";
+import { Field } from "@base-ui/react/field";
 
 export const ExistingRecipeDisplay = ({
   recipe,
@@ -169,14 +170,14 @@ const DisplayIngredient = ({
           "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
-        <div className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
+        <Field.Root className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
           <IngredientLabel htmlFor={"name"} index={index}>
             Name
           </IngredientLabel>
           <DisplayField id={"name"}>{name}</DisplayField>
-        </div>
+        </Field.Root>
 
-        <div className={"col-span-1 sm:col-span-1"}>
+        <Field.Root className={"col-span-1 sm:col-span-1"}>
           <IngredientLabel htmlFor={"price"} index={index}>
             Price
           </IngredientLabel>
@@ -186,28 +187,28 @@ const DisplayIngredient = ({
               {price ? formatPrice(price / 100) : "0.00"}
             </DisplayField>
           </div>
-        </div>
+        </Field.Root>
 
-        <div className={"col-span-1 sm:col-span-1"}>
+        <Field.Root className={"col-span-1 sm:col-span-1"}>
           <IngredientLabel htmlFor={"quantity"} index={index}>
             (Quantity)
           </IngredientLabel>
           <DisplayField id={"quantity"}>{quantity}</DisplayField>
-        </div>
+        </Field.Root>
 
-        <div className={"col-span-1 sm:col-span-1"}>
+        <Field.Root className={"col-span-1 sm:col-span-1"}>
           <IngredientLabel htmlFor={"capacity"} index={index}>
             Capacity
           </IngredientLabel>
           <DisplayField id={"capacity"}>{capacity}</DisplayField>
-        </div>
+        </Field.Root>
 
-        <div className={"col-span-1 sm:col-span-1"}>
+        <Field.Root className={"col-span-1 sm:col-span-1"}>
           <IngredientLabel htmlFor={"unit"} index={index}>
             Unit
           </IngredientLabel>
           <DisplayField id={"unit"}>{unit}</DisplayField>
-        </div>
+        </Field.Root>
       </div>
     </div>
   );

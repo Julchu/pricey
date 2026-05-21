@@ -4,12 +4,13 @@ import {
   EmptyCheckbox,
 } from "@/components/icons/animated-check-icon";
 import { useState } from "react";
+import { Field } from "@base-ui/react/field";
 
 export const CurrentGroceryList = ({ index }: { index: number }) => {
   const [checked, setChecked] = useState(false);
 
   return (
-    <div>
+    <Field.Root>
       <IngredientLabel htmlFor={"checked-ingredient"} index={index}>
         Added
       </IngredientLabel>
@@ -20,6 +21,6 @@ export const CurrentGroceryList = ({ index }: { index: number }) => {
       >
         {checked ? <AnimatedCheckIcon /> : <EmptyCheckbox />}
       </div>
-    </div>
+    </Field.Root>
   );
 };

@@ -13,7 +13,6 @@ import {
   ingredientControl,
   ingredientSetValue,
 } from "@/providers/ingredient-form-provider";
-import { Label, Separator } from "radix-ui";
 import {
   TextAlignJustifyIcon,
   TriangleDownIcon,
@@ -120,7 +119,7 @@ export const Calculations = () => {
         onChange={uploadFileHandler}
       />
 
-      <Label.Root
+      <label
         className={"absolute h-full w-full cursor-pointer"}
         htmlFor={"image"}
       >
@@ -134,14 +133,10 @@ export const Calculations = () => {
         {/*    "absolute right-0 bottom-0 z-0 m-4 size-1/8 object-contain"*/}
         {/*  }*/}
         {/*/>*/}
-      </Label.Root>
+      </label>
 
       {isInProgress ? (
-        <Separator.Root
-          decorative
-          orientation="horizontal"
-          className={"my-1 h-px w-full bg-white"}
-        />
+        <hr className={"my-1 h-px w-full border-none bg-white"} />
       ) : null}
 
       {isInProgress ? (

@@ -1,4 +1,4 @@
-import { AlertDialog } from "radix-ui";
+import { AlertDialog } from "@base-ui/react/alert-dialog";
 
 export const DeleteList = ({
   title,
@@ -11,8 +11,8 @@ export const DeleteList = ({
 }) => {
   return (
     <AlertDialog.Portal>
-      <AlertDialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 bg-black/50" />
-      <AlertDialog.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-md bg-blue-500 p-6 text-white shadow-xl outline-none">
+      <AlertDialog.Backdrop className="fixed inset-0 bg-black/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
+      <AlertDialog.Popup className="fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-md bg-blue-950 p-6 text-white shadow-xl transition-all outline-none data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
         <AlertDialog.Title className="text-lg font-bold">
           {title}
         </AlertDialog.Title>
@@ -20,29 +20,24 @@ export const DeleteList = ({
           {subtitle}
         </AlertDialog.Description>
         <div className={"mt-6 flex justify-end gap-3"}>
-          <AlertDialog.Cancel asChild>
-            <button
-              type={"button"}
-              className={
-                "cursor-pointer rounded-md border border-blue-400 px-4 py-2 text-sm font-medium text-blue-100 hover:bg-blue-900 focus:outline-none"
-              }
-            >
-              Cancel
-            </button>
-          </AlertDialog.Cancel>
-          <AlertDialog.Action asChild>
-            <button
-              type={"button"}
-              onClick={onDeleteHandler}
-              className={
-                "cursor-rounded cursor-pointer rounded-md bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-red-500 hover:text-white focus:outline-none"
-              }
-            >
-              Delete
-            </button>
-          </AlertDialog.Action>
+          <AlertDialog.Close
+            className={
+              "cursor-pointer rounded-md border border-blue-400 px-4 py-2 text-sm font-medium text-blue-100 hover:bg-blue-900 focus:outline-none"
+            }
+          >
+            Cancel
+          </AlertDialog.Close>
+          <button
+            type={"button"}
+            onClick={onDeleteHandler}
+            className={
+              "cursor-pointer rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none"
+            }
+          >
+            Delete
+          </button>
         </div>
-      </AlertDialog.Content>
+      </AlertDialog.Popup>
     </AlertDialog.Portal>
   );
 };

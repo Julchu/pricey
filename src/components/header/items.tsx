@@ -1,4 +1,4 @@
-import { DropdownMenu } from "radix-ui";
+import { Menu } from "@base-ui/react/menu";
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,18 +12,18 @@ export const MenuRadioItem = ({
   name: string;
 }) => {
   return (
-    <DropdownMenu.RadioItem
+    <Menu.RadioItem
       className={
         "text-md relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
       }
       value={value}
-      onSelect={(event) => event.preventDefault()}
+      closeOnClick={false}
     >
-      <DropdownMenu.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
+      <Menu.RadioItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
         <CaretRightIcon />
-      </DropdownMenu.ItemIndicator>
+      </Menu.RadioItemIndicator>
       {name}
-    </DropdownMenu.RadioItem>
+    </Menu.RadioItem>
   );
 };
 
@@ -42,14 +42,13 @@ export const MenuLinks = () => {
   ];
 
   return (
-    <section>
-      <DropdownMenu.Separator className={"m-[5px] h-px bg-black opacity-20"} />
-      <DropdownMenu.Label
+    <Menu.Group>
+      <Menu.Separator className={"m-[5px] h-px bg-black opacity-20"} />
+      <Menu.GroupLabel
         className={"pl-4 text-xs leading-[25px] font-medium opacity-50"}
       >
         Links
-      </DropdownMenu.Label>
-
+      </Menu.GroupLabel>
       {publicLinks.map(({ href, title }, index) => {
         if (activePage == href) return;
         return <MenuLink key={`${title}_${index}`} href={href} title={title} />;
@@ -59,20 +58,20 @@ export const MenuLinks = () => {
         if (activePage == href || !userInfo) return;
         return <MenuLink key={`${title}_${index}`} href={href} title={title} />;
       })}
-    </section>
+    </Menu.Group>
   );
 };
 
 export const MenuLink = ({ href, title }: { href: string; title: string }) => {
   return (
     <Link href={href}>
-      <DropdownMenu.Item
+      <Menu.Item
         className={
           "text-md relative flex h-[25px] items-center rounded-[3px] p-4 pr-[5px] pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
         }
       >
         {title}
-      </DropdownMenu.Item>
+      </Menu.Item>
     </Link>
   );
 };

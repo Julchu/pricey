@@ -1,12 +1,11 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { Accordion } from "radix-ui";
-import {
-  AccordionContentProps,
-  AccordionHeaderProps,
-  AccordionItemProps,
-  AccordionTriggerProps,
-} from "@radix-ui/react-accordion";
-import { useEffect, useState } from "react";
+import { Accordion } from "@base-ui/react/accordion";
+import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
+
+type AccordionItemProps = ComponentPropsWithoutRef<typeof Accordion.Item>;
+type AccordionHeaderProps = ComponentPropsWithoutRef<typeof Accordion.Header>;
+type AccordionTriggerProps = ComponentPropsWithoutRef<typeof Accordion.Trigger>;
+type AccordionPanelProps = ComponentPropsWithoutRef<typeof Accordion.Panel>;
 
 export const AccordionItem = ({
   children,
@@ -45,7 +44,7 @@ export const AccordionTrigger = ({
   >
     {children}
     <ChevronDownIcon
-      className="ml-auto text-white transition-transform duration-300 ease-[cubic-bezier(0.87,_0,_0.13,_1)] group-data-[state=open]:rotate-180"
+      className="ml-auto text-white transition-transform duration-300 ease-[cubic-bezier(0.87,_0,_0.13,_1)] group-data-[panel-open]:rotate-180"
       aria-hidden
     />
   </Accordion.Trigger>
@@ -55,14 +54,13 @@ export const AccordionContent = ({
   children,
   className,
   ...props
-}: AccordionContentProps) => (
-  <Accordion.Content
-    // className={`bg-mauve2 data-[state=closed]:animate-accordion-slide-up data-[state=open]:animate-accordion-slide-down overflow-hidden ${className} rounded-b-md`} // here
-    className={`bg-mauve2 data-[state=closed]:animate-accordion-slide-up data-[state=open]:animate-accordion-slide-down overflow-hidden ${className}`}
+}: AccordionPanelProps) => (
+  <Accordion.Panel
+    className={`bg-mauve2 data-[closed]:animate-accordion-slide-up data-[open]:animate-accordion-slide-down overflow-hidden ${className}`}
     {...props}
   >
     {children}
-  </Accordion.Content>
+  </Accordion.Panel>
 );
 
 export const AccordionSubheader = ({

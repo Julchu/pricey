@@ -1,6 +1,6 @@
 "use client";
 import { UnitType } from "@/utils/interfaces";
-import { IngredientLabel, Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -10,6 +10,7 @@ import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { PriceDisplay } from "@/components/ui/price-display";
 import { IngredientCombobox } from "@/components/ui/ingredient-combobox";
 import { TotalPriceDisplay } from "@/components/ui/total-price-display";
+import { Field } from "@base-ui/react/field";
 
 export const IngredientArrayForm = ({
   submitAction,
@@ -18,7 +19,7 @@ export const IngredientArrayForm = ({
   submitAction: () => void;
   resetAction: () => void;
 }) => {
-  const { control, register } = useFormContext();
+  const { control, register, getFieldState, formState } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -31,6 +32,19 @@ export const IngredientArrayForm = ({
     >
       <div className={"flex flex-col gap-4"}>
         {fields.map((field, index) => {
+          const nameState = getFieldState(
+            `ingredients.${index}.name`,
+            formState,
+          );
+          const quantityState = getFieldState(
+            `ingredients.${index}.quantity`,
+            formState,
+          );
+          const capacityState = getFieldState(
+            `ingredients.${index}.capacity`,
+            formState,
+          );
+
           return (
             <div
               className={
@@ -64,77 +78,123 @@ export const IngredientArrayForm = ({
                   "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14"
                 }
               >
-                <div
+                {/* Name */}
+                <Field.Root
                   className={"relative col-span-4 sm:col-span-2 lg:col-span-4"}
+                  invalid={nameState.invalid}
+                  touched={nameState.isTouched}
+                  dirty={nameState.isDirty}
                 >
-                  <IngredientLabel htmlFor={"ingredient-name"} index={index}>
+                  <Field.Label
+                    className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                  >
                     Name
-                  </IngredientLabel>
-
+                  </Field.Label>
                   <IngredientCombobox index={index} />
+                  <Field.Error className="mt-1 text-xs text-red-500">
+                    {nameState.error?.message}
+                  </Field.Error>
+                </Field.Root>
+
+                {/* Price (read-only computed, no validation) */}
+                <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
+                  <Field.Root>
+                    <Field.Label
+                      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                    >
+                      Price
+                    </Field.Label>
+                    <PriceDisplay index={index} />
+                  </Field.Root>
                 </div>
 
-                <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <IngredientLabel htmlFor={"price"} index={index}>
-                    Price
-                  </IngredientLabel>
-                  <PriceDisplay index={index} />
-                </div>
-
-                <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <IngredientLabel htmlFor={"quantity"} index={index}>
+                {/* Quantity */}
+                <Field.Root
+                  className={"col-span-2 sm:col-span-1 lg:col-span-2"}
+                  invalid={quantityState.invalid}
+                  touched={quantityState.isTouched}
+                  dirty={quantityState.isDirty}
+                >
+                  <Field.Label
+                    className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                  >
                     (Quantity)
-                  </IngredientLabel>
+                  </Field.Label>
                   <Input
                     placeholder={"6"}
-                    id={"quantity"}
                     type={"number"}
                     {...register(`ingredients.${index}.quantity`, {
+                      min: { value: 0, message: "Must be ≥ 0" },
                       setValueAs: (val) => (val ? Number(val) : ""),
                     })}
                   />
-                </div>
+                  <Field.Error className="mt-1 text-xs text-red-500">
+                    {quantityState.error?.message}
+                  </Field.Error>
+                </Field.Root>
 
-                <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <IngredientLabel htmlFor={"capacity"} index={index}>
+                {/* Capacity */}
+                <Field.Root
+                  className={"col-span-2 sm:col-span-1 lg:col-span-2"}
+                  invalid={capacityState.invalid}
+                  touched={capacityState.isTouched}
+                  dirty={capacityState.isDirty}
+                >
+                  <Field.Label
+                    className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                  >
                     Capacity
-                  </IngredientLabel>
+                  </Field.Label>
                   <Input
                     placeholder={"0.710"}
                     step={"0.001"}
-                    id={"capacity"}
                     type={"number"}
                     {...register(`ingredients.${index}.capacity`, {
+                      min: { value: 0, message: "Must be ≥ 0" },
                       setValueAs: (val) => (val ? Number(val) : ""),
                     })}
                   />
-                </div>
+                  <Field.Error className="mt-1 text-xs text-red-500">
+                    {capacityState.error?.message}
+                  </Field.Error>
+                </Field.Root>
 
+                {/* Unit */}
                 <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <IngredientLabel htmlFor={"unit"} index={index}>
-                    Unit
-                  </IngredientLabel>
-                  <GroceryFormIngredientUnitSelect index={index} />
+                  <Field.Root>
+                    <Field.Label
+                      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                    >
+                      Unit
+                    </Field.Label>
+                    <GroceryFormIngredientUnitSelect index={index} />
+                  </Field.Root>
                 </div>
 
+                {/* Desktop delete button column */}
                 <div className={"group col-span-2 hidden flex-col lg:block"}>
-                  <IngredientLabel htmlFor={"unit"} index={index}>
-                    &nbsp;
-                  </IngredientLabel>
-                  <button
-                    className={
-                      "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
-                    }
-                    name={"remove-ingredient"}
-                    onClick={() => remove(index)}
-                  >
-                    <BagDeleteIcon
+                  <Field.Root>
+                    <Field.Label
+                      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                    >
+                      &nbsp;
+                    </Field.Label>
+
+                    <button
                       className={
-                        "h-6 fill-none stroke-red-500 group-hover:stroke-white"
+                        "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
                       }
-                    />
-                    Delete
-                  </button>
+                      name={"remove-ingredient"}
+                      onClick={() => remove(index)}
+                    >
+                      <BagDeleteIcon
+                        className={
+                          "h-6 fill-none stroke-red-500 group-hover:stroke-white"
+                        }
+                      />
+                      Delete
+                    </button>
+                  </Field.Root>
                 </div>
               </div>
             </div>
@@ -211,7 +271,7 @@ export const IngredientArrayForm = ({
             type={"reset"}
           >
             <CircleResetIcon
-              className={"h-6 fill-blue-500 group-hover:fill-white"}
+              className={"fill-blue-500 group-hover:fill-white"}
             />
             Cancel
           </button>

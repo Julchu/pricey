@@ -1,15 +1,25 @@
 "use client";
-import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
+import {
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+  GroceryListUpdateFormData,
+} from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
-import { AlertDialog } from "radix-ui";
+import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { DeleteList } from "@/components/ui/delete-list-alert"; // Grocery list editing form
+import { Button } from "@base-ui/react/button"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
@@ -222,13 +232,17 @@ export const ExistingGroceryListForm = ({
           </div>
 
           <AlertDialog.Root>
-            <AlertDialog.Trigger asChild>
-              <div className={"flex cursor-pointer items-center"}>
-                <BagDeleteIcon
-                  className={"h-6 fill-none stroke-white hover:stroke-red-500"}
-                />
-              </div>
-            </AlertDialog.Trigger>
+            <AlertDialog.Trigger
+              render={
+                <Button className={"flex cursor-pointer items-center"}>
+                  <BagDeleteIcon
+                    className={
+                      "h-6 fill-none stroke-white hover:stroke-red-500"
+                    }
+                  />
+                </Button>
+              }
+            />
             <DeleteList
               title={"Delete grocery list?"}
               subtitle={"This action cannot be undone."}

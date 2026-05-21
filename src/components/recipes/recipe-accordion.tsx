@@ -1,5 +1,5 @@
 "use client";
-import { Accordion } from "radix-ui";
+import { Accordion } from "@base-ui/react/accordion";
 import { AccordionItem } from "@/components/ui/accordion";
 import { NewRecipeForm } from "./new-recipe-form";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
@@ -13,11 +13,8 @@ export const RecipeAccordion = () => {
   return (
     <Accordion.Root
       className={"flex w-full flex-col gap-px"}
-      type={"single"}
-      collapsible
-      defaultValue={"new-recipe"}
-      value={openRecipe}
-      onValueChange={setOpenRecipe}
+      value={[openRecipe]}
+      onValueChange={(values) => setOpenRecipe(values[0] ?? "")}
     >
       <AccordionItem value={"new-recipe"}>
         <NewRecipeForm setOpenRecipeAction={setOpenRecipe} />

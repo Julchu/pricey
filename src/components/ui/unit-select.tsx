@@ -1,5 +1,5 @@
 "use client";
-import { Select } from "radix-ui";
+import { Select } from "@base-ui/react/select";
 import { CaretRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { UnitSelectDropdown } from "@/components/ingredients/calculator/unit-dropdown";
 import { useShallow } from "zustand/react/shallow";
@@ -28,10 +28,10 @@ export const SelectItem = ({
       }
       value={value}
     >
-      <Select.ItemText>{children}</Select.ItemText>
       <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
         <CaretRightIcon />
       </Select.ItemIndicator>
+      <Select.ItemText>{children}</Select.ItemText>
     </Select.Item>
   );
 };
@@ -50,18 +50,15 @@ const UnitController = ({
     })),
   );
 
-  const onChangeHandler = (value: string) => {
+  const onChangeHandler = (value: string | null | undefined) => {
+    if (!value) return;
     field.onChange(value);
     if (isMass(value)) setMass(value);
     else if (isVolume(value)) setLiquidVolume(value);
   };
 
   return (
-    <Select.Root
-      onValueChange={onChangeHandler}
-      defaultValue={undefined}
-      value={field.value || ""}
-    >
+    <Select.Root onValueChange={onChangeHandler} value={field.value || ""}>
       <Select.Trigger
         key={"select-trigger"}
         className={
@@ -69,13 +66,13 @@ const UnitController = ({
         }
       >
         <Select.Value placeholder={"kg"} id={"unit"} />
-        <Select.Icon>
-          <ChevronDownIcon />
-        </Select.Icon>
+        <ChevronDownIcon className="ml-auto" />
       </Select.Trigger>
 
       <Select.Portal key={"select-portal"}>
-        <UnitSelectDropdown />
+        <Select.Positioner sideOffset={4}>
+          <UnitSelectDropdown />
+        </Select.Positioner>
       </Select.Portal>
     </Select.Root>
   );

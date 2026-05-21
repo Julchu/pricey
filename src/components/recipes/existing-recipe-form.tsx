@@ -17,8 +17,9 @@ import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
-import { AlertDialog } from "radix-ui";
+import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { DeleteList } from "@/components/ui/delete-list-alert";
+import { Button } from "@base-ui/react/button";
 
 export const ExistingRecipeForm = ({
   recipe,
@@ -184,13 +185,17 @@ export const ExistingRecipeForm = ({
             />
           </div>
           <AlertDialog.Root>
-            <AlertDialog.Trigger asChild>
-              <div className={"flex cursor-pointer items-center"}>
-                <BagDeleteIcon
-                  className={"h-6 fill-none stroke-white hover:stroke-red-500"}
-                />
-              </div>
-            </AlertDialog.Trigger>
+            <AlertDialog.Trigger
+              render={
+                <Button className={"flex cursor-pointer items-center"}>
+                  <BagDeleteIcon
+                    className={
+                      "h-6 fill-none stroke-white hover:stroke-red-500"
+                    }
+                  />
+                </Button>
+              }
+            />
             <DeleteList
               title={"Delete recipe?"}
               subtitle={"This action cannot be undone."}

@@ -1,7 +1,6 @@
 import { IngredientsList } from "@/components/ingredients/ingredients-list/ingredients-list";
 import { Calculator } from "@/components/ingredients/calculator/calculator";
 import { Calculations } from "@/components/ingredients/calculator/calculations";
-import { Separator } from "radix-ui";
 
 export const Ingredients = () => {
   return (
@@ -10,11 +9,7 @@ export const Ingredients = () => {
         <form className={"flex h-full flex-col"}>
           <Calculations />
 
-          <Separator.Root
-            decorative
-            orientation="horizontal"
-            className={"my-1 h-px w-full bg-gray-200"}
-          />
+          <hr className={"my-1 h-px w-full border-none bg-gray-200"} />
 
           <Calculator />
         </form>
