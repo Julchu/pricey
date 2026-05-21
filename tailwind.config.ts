@@ -1,57 +1,16 @@
 import { Config } from "tailwindcss";
 
-// Replaces @radix-ui/colors blackA, mauve, violet scales
-const blackA = Object.fromEntries(
-  Array.from({ length: 12 }, (_, i) => [
-    `blackA${i + 1}`,
-    `rgba(0,0,0,${(0.05 * (i + 1)).toFixed(2)})`,
-  ]),
-);
-
-const mauve = {
-  mauve1: "#fdfcfd",
-  mauve2: "#faf9fb",
-  mauve3: "#f2eff3",
-  mauve4: "#eae7ec",
-  mauve5: "#e3dfe6",
-  mauve6: "#dbd8e0",
-  mauve7: "#d0cdd7",
-  mauve8: "#bcbac7",
-  mauve9: "#8e8c99",
-  mauve10: "#84828e",
-  mauve11: "#65636d",
-  mauve12: "#211f26",
-};
-
-const violet = {
-  violet1: "#fdfcfe",
-  violet2: "#fbfaff",
-  violet3: "#f5f2ff",
-  violet4: "#ede9fe",
-  violet5: "#e4defc",
-  violet6: "#d7cff9",
-  violet7: "#c4b8f3",
-  violet8: "#aa99ec",
-  violet9: "#6e56cf",
-  violet10: "#644fc1",
-  violet11: "#5746af",
-  violet12: "#20134b",
-};
-
 const config: Config = {
   darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,[PERSON_NAME],jsx,tsx,mdx}",
-    "./src/**/*.{js,[PERSON_NAME],jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        ...blackA,
-        ...mauve,
-        ...violet,
         "background-grey": "#F5F7FA",
         "card-white": "#FFFFFF",
         "dark-background-navy": "#0F172A",
