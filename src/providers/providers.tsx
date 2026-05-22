@@ -5,13 +5,7 @@ import { RecipeStoreProvider } from "./recipe-store-provider";
 import { PantryStoreProvider } from "./pantry-store-provider";
 import { PropsWithChildren } from "react";
 import { serverFetch } from "@/utils/server-actions/server-fetch";
-import {
-  GroceryList,
-  Ingredient,
-  PantryItem,
-  Recipe,
-  UserFormData,
-} from "@/utils/interfaces";
+import { GroceryList, Ingredient, PantryItem, Recipe, UserFormData, } from "@/utils/interfaces";
 
 export const Providers = async ({ children }: PropsWithChildren) => {
   // const headersList = await headers();
@@ -49,10 +43,11 @@ export const Providers = async ({ children }: PropsWithChildren) => {
   recipes = fetchedRecipes ? fetchedRecipes : [];
   // }
 
-  // const fetchedPantryItems = await serverFetch<PantryItem[]>({
-  //   endpoint: "pantry",
-  // });
-  const pantryItems: PantryItem[] = /*fetchedPantryItems ??*/ [];
+  const fetchedPantryItems = await serverFetch<PantryItem[]>({
+    endpoint: "pantry",
+  });
+
+  const pantryItems = fetchedPantryItems ?? [];
 
   return (
     <UserStoreProvider userInfo={userInfo}>

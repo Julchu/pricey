@@ -18,7 +18,7 @@ import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { usePantryStore } from "@/providers/pantry-store-provider";
 import { formatPrice } from "@/utils/text-formatters"; // TODO: re-add checking off ingredients
 import { Field } from "@base-ui/react/field";
-import { useShallow } from "zustand/react/shallow";
+import { useShallow } from "zustand/react/shallow"; // TODO: re-add checking off ingredients
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
@@ -92,35 +92,31 @@ const IngredientsChecklist = ({
 
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
-      <div className={"flex w-full flex-col gap-4 sm:flex-row"}>
-        <div className={"group w-full"}>
-          <button
-            className={
-              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-            }
-            type="button"
-            onClick={() => addIngredientsToCurrentList(ingredients)}
-          >
-            <BagAddIcon
-              className={
-                "h-6 fill-none stroke-blue-500 group-hover:stroke-white"
-              }
-            />
-            Add to current list
-          </button>
-        </div>
+      <div className={"group"}>
+        <button
+          className={
+            "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+          }
+          type="button"
+          onClick={() => addIngredientsToCurrentList(ingredients)}
+        >
+          <BagAddIcon
+            className={"h-6 fill-none stroke-blue-500 group-hover:stroke-white"}
+          />
+          Add to current list
+        </button>
+      </div>
 
-        <div className={"group w-full"}>
-          <button
-            className={
-              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-            }
-            type="button"
-            onClick={() => addItemsToPantry(ingredients)}
-          >
-            Add all to pantry
-          </button>
-        </div>
+      <div className={"group w-full"}>
+        <button
+          className={
+            "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+          }
+          type="button"
+          onClick={() => addItemsToPantry(ingredients)}
+        >
+          Add all to pantry
+        </button>
       </div>
 
       {ingredients.map((ingredient, index) => {
