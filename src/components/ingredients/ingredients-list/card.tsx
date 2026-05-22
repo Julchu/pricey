@@ -21,6 +21,7 @@ import FoodPlaceholder from "@/images/food-placeholder.png";
 import { memo } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { Separator } from "@base-ui/react/separator";
+import { usePantryStore } from "@/providers/pantry-store-provider";
 
 export const CardComponent = ({
   ingredient,
@@ -41,6 +42,8 @@ export const CardComponent = ({
   const { mass, liquidVolume } = useUserStore(
     useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
   );
+
+  const addItem = usePantryStore(({ addItem }) => addItem);
 
   const userUnits = {
     mass,
@@ -126,6 +129,17 @@ export const CardComponent = ({
           <h3>{PercentageFormatter.format(delta)}%</h3>
         </div>
       ) : null}
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          addItem({ name, price, quantity, capacity, unit });
+        }}
+        className={"mt-1 text-sm underline opacity-80 hover:opacity-100"}
+      >
+        + Add to pantry
+      </button>
     </div>
   );
 };

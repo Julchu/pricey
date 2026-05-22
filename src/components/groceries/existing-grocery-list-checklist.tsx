@@ -15,8 +15,10 @@ import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
+import { usePantryStore } from "@/providers/pantry-store-provider";
 import { formatPrice } from "@/utils/text-formatters"; // TODO: re-add checking off ingredients
 import { Field } from "@base-ui/react/field";
+import { useShallow } from "zustand/react/shallow";
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
@@ -83,21 +85,42 @@ const IngredientsChecklist = ({
     (state) => state.addIngredientsToCurrentList,
   );
 
+  const { addItems: addItemsToPantry, addItem: addItemToPantry } =
+    usePantryStore(
+      useShallow(({ addItems, addItem }) => ({ addItems, addItem })),
+    );
+
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
-      <div className={"group"}>
-        <button
-          className={
-            "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-          }
-          type="button"
-          onClick={() => addIngredientsToCurrentList(ingredients)}
-        >
-          <BagAddIcon
-            className={"h-6 fill-none stroke-blue-500 group-hover:stroke-white"}
-          />
-          Add to current list
-        </button>
+      <div className={"flex w-full flex-col gap-4 sm:flex-row"}>
+        <div className={"group w-full"}>
+          <button
+            className={
+              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+            }
+            type="button"
+            onClick={() => addIngredientsToCurrentList(ingredients)}
+          >
+            <BagAddIcon
+              className={
+                "h-6 fill-none stroke-blue-500 group-hover:stroke-white"
+              }
+            />
+            Add to current list
+          </button>
+        </div>
+
+        <div className={"group w-full"}>
+          <button
+            className={
+              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
+            }
+            type="button"
+            onClick={() => addItemsToPantry(ingredients)}
+          >
+            Add all to pantry
+          </button>
+        </div>
       </div>
 
       {ingredients.map((ingredient, index) => {
@@ -108,7 +131,11 @@ const IngredientsChecklist = ({
               "rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
             }
           >
-            <ChecklistIngredient ingredient={ingredient} index={index} />
+            <ChecklistIngredient
+              ingredient={ingredient}
+              index={index}
+              onAddToPantry={addItemToPantry}
+            />
           </div>
         );
       })}
@@ -145,9 +172,11 @@ const IngredientsChecklist = ({
 const ChecklistIngredient = ({
   ingredient: { name, quantity, unit, capacity, price },
   index,
+  onAddToPantry,
 }: {
   ingredient: GroceryListIngredientFormData;
   index: number;
+  onAddToPantry: (item: GroceryListIngredientFormData) => void;
 }) => {
   return (
     <div className={`flex w-full flex-row gap-4`}>
@@ -202,6 +231,22 @@ const ChecklistIngredient = ({
           <ExistingGroceryListField id={"unit"}>
             {unit}
           </ExistingGroceryListField>
+        </Field.Root>
+
+        <Field.Root
+          className={"col-span-2 flex items-end sm:col-span-4 lg:col-span-1"}
+        >
+          <button
+            type="button"
+            onClick={() =>
+              onAddToPantry({ name, quantity, unit, capacity, price })
+            }
+            className={
+              "h-10 w-full cursor-pointer rounded-md border border-gray-200 text-sm"
+            }
+          >
+            + Pantry
+          </button>
         </Field.Root>
       </div>
     </div>

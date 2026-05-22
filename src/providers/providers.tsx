@@ -2,11 +2,13 @@ import { UserStoreProvider } from "./user-store-provider";
 import { IngredientStoreProvider } from "./ingredient-store-provider";
 import { GroceryListStoreProvider } from "./grocery-list-store-provider";
 import { RecipeStoreProvider } from "./recipe-store-provider";
+import { PantryStoreProvider } from "./pantry-store-provider";
 import { PropsWithChildren } from "react";
 import { serverFetch } from "@/utils/server-actions/server-fetch";
 import {
   GroceryList,
   Ingredient,
+  PantryItem,
   Recipe,
   UserFormData,
 } from "@/utils/interfaces";
@@ -47,12 +49,19 @@ export const Providers = async ({ children }: PropsWithChildren) => {
   recipes = fetchedRecipes ? fetchedRecipes : [];
   // }
 
+  // const fetchedPantryItems = await serverFetch<PantryItem[]>({
+  //   endpoint: "pantry",
+  // });
+  const pantryItems: PantryItem[] = /*fetchedPantryItems ??*/ [];
+
   return (
     <UserStoreProvider userInfo={userInfo}>
       <IngredientStoreProvider ingredients={ingredients}>
         <GroceryListStoreProvider groceryLists={groceryLists}>
           <RecipeStoreProvider recipes={recipes}>
-            {children}
+            <PantryStoreProvider pantryItems={pantryItems}>
+              {children}
+            </PantryStoreProvider>
           </RecipeStoreProvider>
         </GroceryListStoreProvider>
       </IngredientStoreProvider>

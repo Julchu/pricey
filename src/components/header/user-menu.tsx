@@ -10,6 +10,7 @@ import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { GoogleIcon } from "@/components/icons/google-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
+import { usePantryStore } from "@/providers/pantry-store-provider";
 
 export const UserMenu = () => {
   const clearIngredients = useIngredientsStore(
@@ -21,6 +22,8 @@ export const UserMenu = () => {
   );
 
   const clearRecipes = useRecipesStore(({ clearRecipes }) => clearRecipes);
+
+  const setPantryOpen = usePantryStore(({ setPantryOpen }) => setPantryOpen);
 
   const { mass, setMass, liquidVolume, setLiquidVolume, userInfo, logout } =
     useUserStore(
@@ -110,6 +113,21 @@ export const UserMenu = () => {
             </Menu.Group>
 
             <MenuLinks />
+
+            <Menu.Group>
+              <Menu.Separator className={"m-1 h-px bg-black opacity-20"} />
+              <Menu.GroupLabel className="pl-4 text-xs leading-6 font-medium opacity-50">
+                Kitchen
+              </Menu.GroupLabel>
+              <Menu.Item
+                className={
+                  "text-md relative flex h-6 content-center items-center rounded-md py-4 leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+                }
+                onClick={() => setPantryOpen(true)}
+              >
+                <p className={"ml-6 w-full cursor-pointer"}>Pantry</p>
+              </Menu.Item>
+            </Menu.Group>
 
             <Menu.Group>
               <Menu.Separator className={"m-1 h-px bg-black opacity-20"} />

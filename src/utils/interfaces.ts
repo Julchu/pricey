@@ -190,6 +190,15 @@ export type RecipeUpdateFormData = {
   recipe: Omit<RecipeFormData, "ingredients">;
 };
 
+export type PantryItem = {
+  name: string;
+  quantity?: number;
+  capacity?: number;
+  unit: UnitType;
+  price?: number;
+  image?: string;
+};
+
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
 
 /* Logged in user features:
