@@ -207,7 +207,7 @@ export const ExistingGroceryListForm = ({
       <FormProvider {...methods}>
         <AccordionHeader
           // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
-          className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+          className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
         >
           <div onClick={() => 0} className={"pl-4"}>
             <ImageUploadIcon />

@@ -40,7 +40,7 @@ export const ExistingRecipeDisplay = ({
   return (
     <div className={"flex flex-col"}>
       <AccordionHeader
-        className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+        className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
       >
         <div onClick={onClickHandler} className={"pl-4"}>
           <ImageUploadIcon />
