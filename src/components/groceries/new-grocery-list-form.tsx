@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -20,9 +19,9 @@ import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { useShallow } from "zustand/react/shallow";
 
 export const NewGroceryListForm = ({
-  setOpenListAction,
+  setOpenList,
 }: {
-  setOpenListAction: Dispatch<SetStateAction<string>>;
+  setOpenList: Dispatch<SetStateAction<string>>;
 }) => {
   const defaultEmptyValues = {
     name: "",
@@ -130,7 +129,7 @@ export const NewGroceryListForm = ({
   };
 
   const toggleHeader = () => {
-    setOpenListAction((newListOpen) => {
+    setOpenList((newListOpen) => {
       if (newListOpen === "new-list") return "";
       return "new-list";
     });
@@ -176,8 +175,8 @@ export const NewGroceryListForm = ({
 
         <AccordionContent>
           <IngredientArrayForm
-            submitAction={handleSubmit(onSubmitHandler)}
-            resetAction={groceryListReset}
+            submitHandler={handleSubmit(onSubmitHandler)}
+            resetHandler={groceryListReset}
           />
         </AccordionContent>
       </FormProvider>

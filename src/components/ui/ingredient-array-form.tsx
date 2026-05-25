@@ -1,4 +1,3 @@
-"use client";
 import { UnitType } from "@/utils/interfaces";
 import { Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
@@ -13,11 +12,11 @@ import { TotalPriceDisplay } from "@/components/ui/total-price-display";
 import { Field } from "@base-ui/react/field";
 
 export const IngredientArrayForm = ({
-  submitAction,
-  resetAction,
+  submitHandler,
+  resetHandler,
 }: {
-  submitAction: () => void;
-  resetAction: () => void;
+  submitHandler: () => void;
+  resetHandler: () => void;
 }) => {
   const { control, register, getFieldState, formState } = useFormContext();
 
@@ -267,7 +266,7 @@ export const IngredientArrayForm = ({
             className={
               "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
             }
-            onClick={resetAction}
+            onClick={resetHandler}
             type={"reset"}
           >
             <CircleResetIcon
@@ -282,7 +281,7 @@ export const IngredientArrayForm = ({
             className={
               "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-green-500"
             }
-            onClick={submitAction}
+            onClick={submitHandler}
             type={"button"}
           >
             <BagCheckIcon className={"h-6 animate-pulse"} />

@@ -29,18 +29,25 @@ export const UnitValues = [
   Unit.TEASPOON,
   Unit.PIECES,
   undefined,
-] as const;
-export const MassValues = [
-  Unit.KILOGRAM,
-  Unit.GRAM,
-  Unit.POUND,
-  Unit.OUNCE,
-] as const;
-export const VolumeValues = [Unit.LITRE, Unit.MILLILITER, Unit.QUART] as const;
+];
+export const UnitEnums = [...UnitValues] as const;
 
-export type UnitType = (typeof UnitValues)[number];
-export type MassType = (typeof MassValues)[number];
-export type LiquidType = (typeof VolumeValues)[number];
+export const MassValues = [Unit.KILOGRAM, Unit.GRAM, Unit.POUND, Unit.OUNCE];
+export const MassEnums = [...MassValues] as const;
+
+export const VolumeValues = [
+  Unit.LITRE,
+  Unit.MILLILITER,
+  Unit.QUART,
+  Unit.CUP,
+  Unit.TABLESPOON,
+  Unit.TEASPOON,
+];
+export const VolumeEnums = [...VolumeValues] as const;
+
+export type UnitType = (typeof UnitEnums)[number];
+export type MassType = (typeof MassEnums)[number];
+export type LiquidType = (typeof VolumeEnums)[number];
 
 export type UnitCategory = {
   mass: MassType;

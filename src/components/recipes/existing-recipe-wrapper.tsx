@@ -36,8 +36,8 @@ export const ExistingRecipe = ({
     return (
       <ExistingRecipeForm
         recipe={recipe}
-        closeEditingCallbackAction={closeEditingCallback}
-        deleteRecipeCallbackAction={deleteRecipeCallback}
+        closeEditingCallback={closeEditingCallback}
+        deleteRecipeCallback={deleteRecipeCallback}
         last={last}
       />
     );
@@ -46,7 +46,7 @@ export const ExistingRecipe = ({
   return (
     <ExistingRecipeDisplay
       recipe={recipe}
-      startEditingAction={startEditingCallback}
+      startEditingHandler={startEditingCallback}
       last={last}
     />
   );

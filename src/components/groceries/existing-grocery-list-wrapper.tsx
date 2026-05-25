@@ -35,8 +35,8 @@ export const ExistingGroceryList = ({
     return (
       <ExistingGroceryListForm
         groceryList={groceryList}
-        closeEditingCallbackAction={closeEditingCallback}
-        deleteListCallbackAction={deleteListCallback}
+        closeEditingCallback={closeEditingCallback}
+        deleteListCallback={deleteListCallback}
         last={last}
       />
     );
@@ -45,7 +45,7 @@ export const ExistingGroceryList = ({
   return (
     <ExistingGroceryListChecklist
       groceryList={groceryList}
-      startEditingAction={startEditingCallback}
+      startEditing={startEditingCallback}
       last={last}
     />
   );

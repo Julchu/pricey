@@ -1,4 +1,3 @@
-"use client";
 import {
   RecipeFormData,
   RecipeIngredientFormData,
@@ -23,13 +22,13 @@ import { Button } from "@base-ui/react/button";
 
 export const ExistingRecipeForm = ({
   recipe,
-  closeEditingCallbackAction,
-  deleteRecipeCallbackAction,
+  closeEditingCallback,
+  deleteRecipeCallback,
   last,
 }: {
   recipe: RecipeFormData;
-  closeEditingCallbackAction: () => void;
-  deleteRecipeCallbackAction: () => void;
+  closeEditingCallback: () => void;
+  deleteRecipeCallback: () => void;
   last: boolean;
 }) => {
   const methods = useForm<RecipeFormData>({
@@ -66,7 +65,7 @@ export const ExistingRecipeForm = ({
       const { recipeId } = response;
       removeRecipe(recipeId);
     }
-    return deleteRecipeCallbackAction();
+    return deleteRecipeCallback();
   };
 
   const filterChangedData = (
@@ -152,12 +151,12 @@ export const ExistingRecipeForm = ({
       const { recipe } = response;
       updateRecipe(recipe);
     }
-    return closeEditingCallbackAction();
+    return closeEditingCallback();
   };
 
   const onResetHandler = () => {
     reset();
-    closeEditingCallbackAction();
+    closeEditingCallback();
   };
 
   return (
@@ -207,8 +206,8 @@ export const ExistingRecipeForm = ({
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
-            submitAction={handleSubmit(onUpdateHandler)}
-            resetAction={handleSubmit(onResetHandler)}
+            submitHandler={handleSubmit(onUpdateHandler)}
+            resetHandler={handleSubmit(onResetHandler)}
           />
         </AccordionContent>
       </FormProvider>

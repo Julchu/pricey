@@ -1,4 +1,3 @@
-"use client";
 import {
   GroceryListFormData,
   GroceryListIngredientFormData,
@@ -24,13 +23,13 @@ import { Button } from "@base-ui/react/button"; // Grocery list editing form
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
   groceryList,
-  closeEditingCallbackAction,
-  deleteListCallbackAction,
+  closeEditingCallback,
+  deleteListCallback,
   last,
 }: {
   groceryList: GroceryListFormData;
-  closeEditingCallbackAction: () => void;
-  deleteListCallbackAction: () => void;
+  closeEditingCallback: () => void;
+  deleteListCallback: () => void;
   last: boolean;
 }) => {
   const methods = useForm<GroceryListFormData>({
@@ -77,7 +76,7 @@ export const ExistingGroceryListForm = ({
       const { groceryListId } = response;
       removeGroceryList(groceryListId);
     }
-    return deleteListCallbackAction();
+    return deleteListCallback();
   };
 
   const filterChangedData = (
@@ -177,12 +176,12 @@ export const ExistingGroceryListForm = ({
       const { groceryList } = response;
       updateGroceryList(groceryList);
     }
-    return closeEditingCallbackAction();
+    return closeEditingCallback();
   };
 
   const onResetHandler = () => {
     reset();
-    closeEditingCallbackAction();
+    closeEditingCallback();
   };
 
   // groceryList.updatedAt
@@ -254,8 +253,8 @@ export const ExistingGroceryListForm = ({
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
-            submitAction={handleSubmit(onUpdateHandler)}
-            resetAction={handleSubmit(onResetHandler)}
+            submitHandler={handleSubmit(onUpdateHandler)}
+            resetHandler={handleSubmit(onResetHandler)}
           />
         </AccordionContent>
       </FormProvider>

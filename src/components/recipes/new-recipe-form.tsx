@@ -1,8 +1,17 @@
-"use client";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { FormProvider, SubmitHandler, useFieldArray, useForm, } from "react-hook-form";
+import {
+  FormProvider,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { RecipeFormData, UnitType } from "@/utils/interfaces";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
@@ -10,9 +19,9 @@ import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useShallow } from "zustand/react/shallow";
 
 export const NewRecipeForm = ({
-  setOpenRecipeAction,
+  setOpenRecipe,
 }: {
-  setOpenRecipeAction: Dispatch<SetStateAction<string>>;
+  setOpenRecipe: Dispatch<SetStateAction<string>>;
 }) => {
   const defaultEmptyValues = {
     name: "",
@@ -111,7 +120,7 @@ export const NewRecipeForm = ({
   };
 
   const toggleHeader = () => {
-    setOpenRecipeAction((newRecipeOpen) => {
+    setOpenRecipe((newRecipeOpen) => {
       if (newRecipeOpen === "new-recipe") return "";
       return "new-recipe";
     });
@@ -152,8 +161,8 @@ export const NewRecipeForm = ({
 
         <AccordionContent>
           <IngredientArrayForm
-            submitAction={handleSubmit(onSubmitHandler)}
-            resetAction={recipeReset}
+            submitHandler={handleSubmit(onSubmitHandler)}
+            resetHandler={recipeReset}
           />
         </AccordionContent>
       </FormProvider>

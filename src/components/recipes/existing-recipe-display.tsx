@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -24,16 +23,16 @@ import { Field } from "@base-ui/react/field";
 
 export const ExistingRecipeDisplay = ({
   recipe,
-  startEditingAction,
+  startEditingHandler,
   last,
 }: {
   recipe: RecipeFormData;
-  startEditingAction: () => void;
+  startEditingHandler: () => void;
   last: boolean;
 }) => {
   const onClickHandler = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    startEditingAction();
+    startEditingHandler();
   };
 
   const ingredients = recipe.ingredients;

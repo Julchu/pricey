@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -23,16 +22,16 @@ import { useShallow } from "zustand/react/shallow"; // TODO: re-add checking off
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
   groceryList,
-  startEditingAction,
+  startEditing,
   last,
 }: {
   groceryList: GroceryListFormData;
-  startEditingAction: () => void;
+  startEditing: () => void;
   last: boolean;
 }) => {
   const onClickHandler = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    startEditingAction();
+    startEditing();
   };
 
   const ingredients = groceryList.ingredients;
