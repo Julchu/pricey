@@ -17,7 +17,7 @@ export default async function Layout({ children }: PropsWithChildren) {
     <html lang={"en"} className={"bg-background-grey"}>
       <head>
         <Script
-          src="https://unpkg.com/react-scan@0.4.3/dist/auto.global.js"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
           crossOrigin="anonymous"
           strategy="beforeInteractive"
         />

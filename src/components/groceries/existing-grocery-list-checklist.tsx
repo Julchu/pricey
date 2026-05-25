@@ -84,10 +84,11 @@ const IngredientsChecklist = ({
     (state) => state.addIngredientsToCurrentList,
   );
 
-  const { addItems: addItemsToPantry, addItem: addItemToPantry } =
-    usePantryStore(
-      useShallow(({ addItems, addItem }) => ({ addItems, addItem })),
-    );
+  const { addItemToPantry } = usePantryStore(
+    useShallow(({ addItemToPantry }) => ({
+      addItemToPantry,
+    })),
+  );
 
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
@@ -103,18 +104,6 @@ const IngredientsChecklist = ({
             className={"h-6 fill-none stroke-blue-500 group-hover:stroke-white"}
           />
           Add to current list
-        </button>
-      </div>
-
-      <div className={"group w-full"}>
-        <button
-          className={
-            "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-          }
-          type="button"
-          onClick={() => addItemsToPantry(ingredients)}
-        >
-          Add all to pantry
         </button>
       </div>
 
@@ -178,6 +167,8 @@ const ChecklistIngredient = ({
       <div
         className={
           "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+          // TODO: update to 14 grid with add to pantry button if current grocery list
+          //   grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14
         }
       >
         <Field.Root className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
@@ -226,22 +217,6 @@ const ChecklistIngredient = ({
           <ExistingGroceryListField id={"unit"}>
             {unit}
           </ExistingGroceryListField>
-        </Field.Root>
-
-        <Field.Root
-          className={"col-span-2 flex items-end sm:col-span-4 lg:col-span-1"}
-        >
-          <button
-            type="button"
-            onClick={() =>
-              onAddToPantry({ name, quantity, unit, capacity, price })
-            }
-            className={
-              "h-10 w-full cursor-pointer rounded-md border border-gray-200 text-sm"
-            }
-          >
-            + Pantry
-          </button>
         </Field.Root>
       </div>
     </div>

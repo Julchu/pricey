@@ -7,9 +7,9 @@ export type PantryState = {
 };
 
 export type PantryActions = {
-  addItem: (item: PantryItem) => void;
+  addItemToPantry: (item: PantryItem) => void;
   addItems: (items: PantryItem[]) => void;
-  removeItem: (name: string) => void;
+  removeItemFromPantry: (name: string) => void;
   clearPantry: () => void;
   setPantryOpen: (open: boolean) => void;
   setPantryItems: (items: PantryItem[]) => void;
@@ -29,7 +29,7 @@ export const initPantryStore = (
 export const createPantryStore = (initialState: PantryState) => {
   return create<PantryStore>()((set) => ({
     ...initialState,
-    addItem: (item) =>
+    addItemToPantry: (item) =>
       set(({ pantryItems }) => ({
         pantryItems: mergePantryItem(pantryItems, item),
       })),
@@ -40,7 +40,7 @@ export const createPantryStore = (initialState: PantryState) => {
           pantryItems,
         ),
       })),
-    removeItem: (name) =>
+    removeItemFromPantry: (name) =>
       set(({ pantryItems }) => ({
         pantryItems: pantryItems.filter(
           (i) => i.name.toLowerCase() !== name.toLowerCase(),

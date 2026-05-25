@@ -16,7 +16,6 @@ import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useRecipesStore } from "@/providers/recipe-store-provider";
-import { usePantryStore } from "@/providers/pantry-store-provider";
 import { formatPrice } from "@/utils/text-formatters";
 import { ChefTransparent } from "@/components/icons/chef/chef-transparent";
 import { Field } from "@base-ui/react/field";
@@ -83,7 +82,6 @@ const IngredientsDisplay = ({
   const addIngredientsToCurrentRecipe = useRecipesStore(
     ({ addIngredientsToCurrentRecipe }) => addIngredientsToCurrentRecipe,
   );
-  const addItems = usePantryStore(({ addItems }) => addItems);
 
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
@@ -111,16 +109,6 @@ const IngredientsDisplay = ({
           >
             <ChefTransparent className="h-6 fill-none stroke-blue-500 group-hover:stroke-white" />
             Add to new recipe
-          </button>
-        </div>
-
-        <div className="group w-full">
-          <button
-            className="flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-            type="button"
-            onClick={() => addItems(ingredients)}
-          >
-            Add all to pantry
           </button>
         </div>
       </div>
@@ -174,7 +162,6 @@ const DisplayIngredient = ({
   ingredient: RecipeIngredientFormData;
   index: number;
 }) => {
-  const addItem = usePantryStore(({ addItem }) => addItem);
   return (
     <div className={`flex w-full flex-row gap-4`}>
       <div
@@ -220,20 +207,6 @@ const DisplayIngredient = ({
             Unit
           </IngredientLabel>
           <DisplayField id={"unit"}>{unit}</DisplayField>
-        </Field.Root>
-
-        <Field.Root
-          className={"col-span-2 flex items-end sm:col-span-4 lg:col-span-1"}
-        >
-          <button
-            type="button"
-            onClick={() => addItem({ name, quantity, capacity, unit, price })}
-            className={
-              "h-10 w-full cursor-pointer rounded-md border border-gray-200 text-sm"
-            }
-          >
-            + Pantry
-          </button>
         </Field.Root>
       </div>
     </div>

@@ -61,14 +61,17 @@ export const PantryDrawer = () => {
 };
 
 const PantryContent = () => {
-  const { pantryItems, removeItem, clearPantry, syncPantry } = usePantryStore(
-    useShallow(({ pantryItems, removeItem, clearPantry, syncPantry }) => ({
-      pantryItems,
-      removeItem,
-      clearPantry,
-      syncPantry,
-    })),
-  );
+  const { pantryItems, removeItemFromPantry, clearPantry, syncPantry } =
+    usePantryStore(
+      useShallow(
+        ({ pantryItems, removeItemFromPantry, clearPantry, syncPantry }) => ({
+          pantryItems,
+          removeItemFromPantry,
+          clearPantry,
+          syncPantry,
+        }),
+      ),
+    );
   return (
     <Drawer.Content className={"mx-auto w-full max-w-[32rem]"}>
       <Drawer.Title className={"mb-1 text-base font-bold"}>Pantry</Drawer.Title>
@@ -80,7 +83,7 @@ const PantryContent = () => {
           : `${pantryItems.length} item${pantryItems.length !== 1 ? "s" : ""}`}
       </Drawer.Description>
 
-      <PantryItemList items={pantryItems} onRemove={removeItem} />
+      <PantryItemList items={pantryItems} onRemove={removeItemFromPantry} />
 
       {pantryItems.length > 0 && (
         <button type="button" onClick={clearPantry}>

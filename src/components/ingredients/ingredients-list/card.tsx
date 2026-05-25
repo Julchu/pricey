@@ -43,7 +43,9 @@ export const CardComponent = ({
     useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
   );
 
-  const addItem = usePantryStore(({ addItem }) => addItem);
+  const addItemToPantry = usePantryStore(
+    ({ addItemToPantry }) => addItemToPantry,
+  );
 
   const userUnits = {
     mass,
@@ -129,17 +131,6 @@ export const CardComponent = ({
           <h3>{PercentageFormatter.format(delta)}%</h3>
         </div>
       ) : null}
-
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          addItem({ name, price, quantity, capacity, unit });
-        }}
-        className={"mt-1 text-sm underline opacity-80 hover:opacity-100"}
-      >
-        + Add to pantry
-      </button>
     </div>
   );
 };
