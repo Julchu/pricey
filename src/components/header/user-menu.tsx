@@ -132,7 +132,7 @@ export const UserMenu = () => {
                   "text-md relative flex h-6 content-center items-center rounded-md py-4 pr-[5px] pl-[25px] leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
                 }
               >
-                {mass}
+                {liquidVolume}
               </Menu.SubmenuTrigger>
               <Menu.Portal>
                 <Menu.Positioner side={"left"} sideOffset={15} align={"center"}>

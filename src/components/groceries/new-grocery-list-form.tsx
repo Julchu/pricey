@@ -70,12 +70,11 @@ export const NewGroceryListForm = ({
 
   const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
-  const prevVersionRef = useRef<number | null>(null);
-
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
+  const prevVersionRef = useRef<number | null>(null);
   useEffect(() => {
     if (!hasHydrated || !currentGroceryList) return;
     if (

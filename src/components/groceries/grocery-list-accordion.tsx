@@ -10,7 +10,6 @@ export const GroceryListAccordion = () => {
   const groceryLists = useGroceryListsStore(({ groceryLists }) => groceryLists);
   const [openList, setOpenList] = useState<string>("new-list");
 
-  // TODO: switch new grocery list form back to useForm
   return (
     <Accordion.Root
       className={"flex w-full flex-col gap-px"}
