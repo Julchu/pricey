@@ -25,7 +25,7 @@ export default async function Layout({ children }: PropsWithChildren) {
       <body
         className={`${montserrat.className} ${geistMono.variable} antialiased`}
       >
-        <main className={"flex h-dvh w-screen flex-col"}>
+        <main className={"flex h-dvh w-screen flex-row"}>
           {/*<ReactQueryProvider dehydratedState={dehydratedState}>*/}
 
           <Providers>
