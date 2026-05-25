@@ -3,7 +3,6 @@ import { UserMenu } from "@/components/header/user-menu";
 import { UserAvatar } from "@/components/header/user-avatar";
 import { UserFormData } from "@/utils/interfaces";
 import { PersonIcon } from "@radix-ui/react-icons";
-import { PantryDrawer } from "@/components/pantry/pantry-drawer";
 
 export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
   const [firstName, lastName] = userInfo?.name?.split(" ") ?? [];
@@ -28,8 +27,6 @@ export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
       </Menu.Trigger>
 
       <UserMenu />
-
-      <PantryDrawer />
     </Menu.Root>
   );
 };

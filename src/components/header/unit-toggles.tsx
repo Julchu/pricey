@@ -1,5 +1,4 @@
-import { Toggle } from "@base-ui/react/toggle";
-import { ToggleGroup } from "@base-ui/react/toggle-group";
+import { Toggle, ToggleGroup } from "@base-ui/react";
 import { LiquidType, MassType } from "@/utils/interfaces"; // <UnitToggle units={MassValues} value={mass} onValueChange={toggleMass} />;
 
 // <UnitToggle units={MassValues} value={mass} onValueChange={toggleMass} />;

@@ -5,6 +5,7 @@ import { Header } from "@/components/header/header";
 import { PropsWithChildren } from "react";
 import { Providers } from "@/providers/providers";
 import Script from "next/script";
+import { PantryDrawer } from "@/components/pantry/pantry-drawer";
 
 export const metadata: Metadata = {
   title: "The Pricey App",
@@ -24,14 +25,16 @@ export default async function Layout({ children }: PropsWithChildren) {
       <body
         className={`${montserrat.className} ${geistMono.variable} antialiased`}
       >
-        <main
-          className={"container mx-auto flex h-dvh w-screen flex-col gap-4 p-4"}
-        >
+        <main className={"flex h-dvh w-screen flex-col"}>
           {/*<ReactQueryProvider dehydratedState={dehydratedState}>*/}
 
           <Providers>
-            <Header />
-            {children}
+            <div className={"container mx-auto flex flex-col gap-4 p-4"}>
+              <Header />
+              {children}
+            </div>
+
+            <PantryDrawer />
           </Providers>
 
           {/*</ReactQueryProvider>*/}

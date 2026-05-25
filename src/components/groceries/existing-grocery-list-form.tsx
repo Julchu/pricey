@@ -16,9 +16,8 @@ import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
-import { AlertDialog } from "@base-ui/react/alert-dialog";
+import { AlertDialog, Button } from "@base-ui/react";
 import { DeleteList } from "@/components/ui/delete-list-alert"; // Grocery list editing form
-import { Button } from "@base-ui/react/button"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({

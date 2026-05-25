@@ -1,65 +1,41 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { Drawer } from "@base-ui/react/drawer";
 import { usePantryStore } from "@/providers/pantry-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { PantryItem } from "@/utils/interfaces";
 
-const SYNC_DEBOUNCE_MS = 1500;
+// const SYNC_DEBOUNCE_MS = 1500;
+
+export const pantryHandle = Drawer.createHandle();
 
 export const PantryDrawer = () => {
-  const {
-    pantryItems,
-    isPantryOpen,
-    setPantryOpen,
-    removeItem,
-    clearPantry,
-    syncPantry,
-  } = usePantryStore(
-    useShallow(
-      ({
-        pantryItems,
-        isPantryOpen,
-        setPantryOpen,
-        removeItem,
-        clearPantry,
-        syncPantry,
-      }) => ({
-        pantryItems,
-        isPantryOpen,
-        setPantryOpen,
-        removeItem,
-        clearPantry,
-        syncPantry,
-      }),
-    ),
-  );
-
-  // Debounced DB sync — fires 1.5s after any change to pantryItems
-  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isMountedRef = useRef(false);
-
-  useEffect(() => {
-    // Skip the initial mount (don't sync the seeded server data back)
-    if (!isMountedRef.current) {
-      isMountedRef.current = true;
-      return;
-    }
-
-    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
-
-    syncTimerRef.current = setTimeout(() => {
-      syncPantry(pantryItems);
-    }, SYNC_DEBOUNCE_MS);
-
-    return () => {
-      if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
-    };
-  }, [pantryItems, syncPantry]);
+  // // Debounced DB sync — fires 1.5s after any change to pantryItems
+  // const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // const isMountedRef = useRef(false);
+  //
+  // useEffect(() => {
+  //   // Skip the initial mount (don't sync the seeded server data back)
+  //   if (!isMountedRef.current) {
+  //     isMountedRef.current = true;
+  //     return;
+  //   }
+  //
+  //   if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+  //
+  //   syncTimerRef.current = setTimeout(() => {
+  //     syncPantry(pantryItems);
+  //   }, SYNC_DEBOUNCE_MS);
+  //
+  //   return () => {
+  //     if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+  //   };
+  // }, [pantryItems, syncPantry]);
 
   return (
-    <Drawer.Root open={isPantryOpen} onOpenChange={setPantryOpen}>
+    <Drawer.Root handle={pantryHandle} swipeDirection={"right"}>
+      <Drawer.SwipeArea className="absolute inset-y-0 right-0 z-999 w-5 dark:border-blue-500 dark:bg-blue-500/10"></Drawer.SwipeArea>
+
       <Drawer.Portal>
         <Drawer.Backdrop
           className={
@@ -76,43 +52,53 @@ export const PantryDrawer = () => {
               "-mr-[3rem] h-full w-[calc(20rem+3rem)] max-w-[calc(100vw-3rem+3rem)] [transform:translateX(var(--drawer-swipe-movement-x))] touch-auto overflow-y-auto overscroll-contain bg-white p-6 pr-[calc(1.5rem+3rem)] text-neutral-950 shadow-[0.25rem_0.25rem_0] shadow-black/12 transition-transform duration-[450ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none [--bleed:3rem] data-ending-style:[transform:translateX(calc(100%-var(--bleed)+var(--viewport-padding)+2px))] data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-starting-style:[transform:translateX(calc(100%-var(--bleed)+var(--viewport-padding)+2px))] data-swiping:select-none supports-[-webkit-touch-callout:none]:mr-0 supports-[-webkit-touch-callout:none]:w-[20rem] supports-[-webkit-touch-callout:none]:max-w-[calc(100vw-3rem)] supports-[-webkit-touch-callout:none]:border supports-[-webkit-touch-callout:none]:pr-6 supports-[-webkit-touch-callout:none]:[--bleed:0px] dark:border-white dark:bg-neutral-950 dark:text-white dark:shadow-none"
             }
           >
-            <Drawer.Content className={"mx-auto w-full max-w-[32rem]"}>
-              <Drawer.Title className={"mb-1 text-base font-bold"}>
-                Pantry
-              </Drawer.Title>
-              <Drawer.Description
-                className={
-                  "mb-6 text-sm text-neutral-600 dark:text-neutral-400"
-                }
-              >
-                {pantryItems.length === 0
-                  ? "Your pantry is empty."
-                  : `${pantryItems.length} item${pantryItems.length !== 1 ? "s" : ""}`}
-              </Drawer.Description>
-
-              <PantryItemList items={pantryItems} onRemove={removeItem} />
-
-              {pantryItems.length > 0 && (
-                <button type="button" onClick={clearPantry}>
-                  Clear all
-                </button>
-              )}
-
-              <div className="flex justify-end gap-3">
-                <Drawer.Close
-                  className={
-                    "flex cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-xl font-bold tracking-widest text-white"
-                    // "hover:not-data-disabled:bg-neutral-100 focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-neutral-950 active:not-data-disabled:bg-neutral-200 disabled:border-neutral-500 disabled:text-neutral-500 data-disabled:border-neutral-500 data-disabled:text-neutral-500 dark:border-white dark:bg-neutral-950 dark:text-white dark:hover:not-data-disabled:bg-neutral-800 dark:focus-visible:outline-white dark:active:not-data-disabled:bg-neutral-700 dark:data-disabled:border-neutral-400 dark:data-disabled:text-neutral-400"
-                  }
-                >
-                  Close
-                </Drawer.Close>
-              </div>
-            </Drawer.Content>
+            <PantryContent />
           </Drawer.Popup>
         </Drawer.Viewport>
       </Drawer.Portal>
     </Drawer.Root>
+  );
+};
+
+const PantryContent = () => {
+  const { pantryItems, removeItem, clearPantry, syncPantry } = usePantryStore(
+    useShallow(({ pantryItems, removeItem, clearPantry, syncPantry }) => ({
+      pantryItems,
+      removeItem,
+      clearPantry,
+      syncPantry,
+    })),
+  );
+  return (
+    <Drawer.Content className={"mx-auto w-full max-w-[32rem]"}>
+      <Drawer.Title className={"mb-1 text-base font-bold"}>Pantry</Drawer.Title>
+      <Drawer.Description
+        className={"mb-6 text-sm text-neutral-600 dark:text-neutral-400"}
+      >
+        {pantryItems.length === 0
+          ? "Your pantry is empty."
+          : `${pantryItems.length} item${pantryItems.length !== 1 ? "s" : ""}`}
+      </Drawer.Description>
+
+      <PantryItemList items={pantryItems} onRemove={removeItem} />
+
+      {pantryItems.length > 0 && (
+        <button type="button" onClick={clearPantry}>
+          Clear all
+        </button>
+      )}
+
+      <div className="flex justify-end gap-3">
+        <Drawer.Close
+          className={
+            "flex cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-xl font-bold tracking-widest text-white"
+            // "hover:not-data-disabled:bg-neutral-100 focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-neutral-950 active:not-data-disabled:bg-neutral-200 disabled:border-neutral-500 disabled:text-neutral-500 data-disabled:border-neutral-500 data-disabled:text-neutral-500 dark:border-white dark:bg-neutral-950 dark:text-white dark:hover:not-data-disabled:bg-neutral-800 dark:focus-visible:outline-white dark:active:not-data-disabled:bg-neutral-700 dark:data-disabled:border-neutral-400 dark:data-disabled:text-neutral-400"
+          }
+        >
+          Close
+        </Drawer.Close>
+      </div>
+    </Drawer.Content>
   );
 };
 
