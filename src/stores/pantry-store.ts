@@ -1,37 +1,40 @@
 import { create } from "zustand";
-import { PantryItem } from "@/utils/interfaces";
+import { PantryIngredient } from "@/utils/interfaces";
 
 export type PantryState = {
-  pantryItems: PantryItem[];
+  pantryItems: PantryIngredient[];
   isPantryOpen: boolean;
+  pantryVersion: number;
 };
 
 export type PantryActions = {
-  addItemToPantry: (item: PantryItem) => void;
-  addItems: (items: PantryItem[]) => void;
+  addItemToPantry: (item: PantryIngredient) => void;
+  addItems: (items: PantryIngredient[]) => void;
   removeItemFromPantry: (name: string) => void;
   clearPantry: () => void;
   setPantryOpen: (open: boolean) => void;
-  setPantryItems: (items: PantryItem[]) => void;
+  setPantryItems: (items: PantryIngredient[]) => void;
   fetchPantry: () => Promise<void>;
-  syncPantry: (items: PantryItem[]) => Promise<void>;
+  syncPantry: (items: PantryIngredient[]) => Promise<void>;
 };
 
 export type PantryStore = PantryState & PantryActions;
 
 export const initPantryStore = (
-  pantryItems?: PantryItem[] | null,
+  pantryItems?: PantryIngredient[] | null,
 ): PantryState => ({
   pantryItems: pantryItems ?? [],
   isPantryOpen: false,
+  pantryVersion: 1,
 });
 
 export const createPantryStore = (initialState: PantryState) => {
   return create<PantryStore>()((set) => ({
     ...initialState,
     addItemToPantry: (item) =>
-      set(({ pantryItems }) => ({
+      set(({ pantryItems, pantryVersion }) => ({
         pantryItems: mergePantryItem(pantryItems, item),
+        pantryVersion: pantryVersion + 1,
       })),
     addItems: (items) =>
       set(({ pantryItems }) => ({
@@ -72,13 +75,15 @@ export const createPantryStore = (initialState: PantryState) => {
   }));
 };
 
-// Upsert by name (case-insensitive) — skip if already present
+// Upsert by ingredientPublicId; pantry items need to exist in master list
 const mergePantryItem = (
-  items: PantryItem[],
-  incoming: PantryItem,
-): PantryItem[] => {
+  items: PantryIngredient[],
+  incoming: PantryIngredient,
+): PantryIngredient[] => {
   const exists = items.some(
-    (i) => i.name.toLowerCase() === incoming.name.toLowerCase(),
+    ({ ingredientPublicId }) =>
+      ingredientPublicId?.toLowerCase() ===
+      incoming.ingredientPublicId?.toLowerCase(),
   );
   if (exists) return items;
   return [...items, incoming];

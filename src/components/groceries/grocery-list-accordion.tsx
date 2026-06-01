@@ -8,7 +8,7 @@ import { ExistingGroceryList } from "@/components/groceries/existing-grocery-lis
 
 export const GroceryListAccordion = () => {
   const groceryLists = useGroceryListsStore(({ groceryLists }) => groceryLists);
-  const [openList, setOpenList] = useState<string>("new-list");
+  const [openList, setOpenList] = useState("new-list");
 
   return (
     <Accordion.Root

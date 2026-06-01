@@ -98,9 +98,7 @@ export const calcTotalPrice = (
   quantity?: number,
 ): number | undefined => {
   if (!priceCents) return;
-  return (
-    (priceCents * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
-  );
+  return priceCents * (capacity ? capacity : 1) * (quantity ? quantity : 1);
 };
 
 export const CurrencyFormatter = new Intl.NumberFormat("en-US", {
@@ -121,7 +119,7 @@ export const PriceFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export const formatPrice = (price?: number) => {
-  if (!price) return "";
+  if (!price) return "0.00";
   return PriceFormatter.format(price);
 };
 

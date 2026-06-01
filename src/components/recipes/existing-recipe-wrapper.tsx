@@ -1,4 +1,3 @@
-"use client";
 import { RecipeFormData } from "@/utils/interfaces";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ExistingRecipeForm } from "@/components/recipes/existing-recipe-form";

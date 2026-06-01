@@ -1,6 +1,7 @@
 import { IngredientsList } from "@/components/ingredients/ingredients-list/ingredients-list";
 import { Calculator } from "@/components/ingredients/calculator/calculator";
 import { Calculations } from "@/components/ingredients/calculator/calculations";
+import { Separator } from "@base-ui/react";
 
 export const Ingredients = () => {
   return (
@@ -9,7 +10,10 @@ export const Ingredients = () => {
         <form className={"flex h-full flex-col"}>
           <Calculations />
 
-          <hr className={"my-1 h-px w-full border-none bg-gray-200"} />
+          <Separator
+            orientation={"horizontal"}
+            className="h-px bg-gray-200 dark:bg-neutral-700"
+          />
 
           <Calculator />
         </form>
@@ -21,14 +25,3 @@ export const Ingredients = () => {
     </>
   );
 };
-
-//[&::-webkit-scrollbar]:hidden
-/* Custom scrollbar
- * [&::-webkit-scrollbar]:w-2
- * [&::-webkit-scrollbar-track]:rounded-full
- * [&::-webkit-scrollbar-track]:bg-gray-100
- * [&::-webkit-scrollbar-thumb]:rounded-full
- * [&::-webkit-scrollbar-thumb]:bg-gray-300
- * dark:[&::-webkit-scrollbar-track]:bg-neutral-700
- * dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
- * */

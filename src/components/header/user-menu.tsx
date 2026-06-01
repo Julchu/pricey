@@ -112,9 +112,7 @@ export const UserMenu = () => {
             </Menu.SubmenuRoot>
           </Menu.Group>
 
-          <Menu.Separator
-            className={"relative m-1 flex h-px bg-black opacity-20"}
-          />
+          <Menu.Separator className={"relative m-1 flex h-px bg-gray-200"} />
           <Menu.Group>
             <Menu.GroupLabel
               className={"pl-4 text-xs leading-6 font-medium opacity-50"}
@@ -158,7 +156,7 @@ export const UserMenu = () => {
           </Menu.Group>
 
           <Menu.Group>
-            <Menu.Separator className={"m-1 h-px bg-black opacity-20"} />
+            <Menu.Separator className={"m-1 h-px bg-gray-200"} />
             <Menu.GroupLabel className="pl-4 text-xs leading-6 font-medium opacity-50">
               Kitchen
             </Menu.GroupLabel>
@@ -178,7 +176,7 @@ export const UserMenu = () => {
           </Menu.Group>
 
           <Menu.Group>
-            <Menu.Separator className={"m-1 h-px bg-black opacity-20"} />
+            <Menu.Separator className={"m-1 h-px bg-gray-200"} />
             <Menu.GroupLabel className="pl-4 text-xs leading-6 font-medium opacity-50">
               Profile
             </Menu.GroupLabel>

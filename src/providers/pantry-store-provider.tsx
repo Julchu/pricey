@@ -8,14 +8,14 @@ import {
   PantryStore,
   PantryStoreApi,
 } from "@/stores/pantry-store";
-import { PantryItem } from "@/utils/interfaces";
+import { PantryIngredient } from "@/utils/interfaces";
 
 export const PantryStoreContext = createContext<PantryStoreApi | undefined>(
   undefined,
 );
 
 export type PantryStoreProviderProps = PropsWithChildren<{
-  pantryItems?: PantryItem[] | null;
+  pantryItems?: PantryIngredient[] | null;
 }>;
 
 export const PantryStoreProvider = ({

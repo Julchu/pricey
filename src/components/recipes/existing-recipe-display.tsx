@@ -1,5 +1,14 @@
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
-import { GroceryListIngredientFormData, RecipeFormData, RecipeIngredientFormData, } from "@/utils/interfaces";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  GroceryListIngredientFormData,
+  RecipeFormData,
+  RecipeIngredientFormData,
+} from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
@@ -10,6 +19,7 @@ import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { formatPrice } from "@/utils/text-formatters";
 import { ChefTransparent } from "@/components/icons/chef/chef-transparent";
 import { Field } from "@base-ui/react/field";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 
 export const ExistingRecipeDisplay = ({
   recipe,
@@ -74,6 +84,10 @@ const IngredientsDisplay = ({
     ({ addIngredientsToCurrentRecipe }) => addIngredientsToCurrentRecipe,
   );
 
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
+  );
+
   return (
     <div className={"flex flex-col gap-4 p-4 font-medium"}>
       <div className={"flex w-full flex-col gap-4 sm:flex-row"}>
@@ -134,12 +148,18 @@ const IngredientsDisplay = ({
             "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
           }
         >
-          {formatPrice(
-            ingredients.reduce(
-              (sum, ingredient) => sum + (ingredient.price || 0) / 100,
-              0,
-            ),
-          ) || "0.00"}
+          <p className={"text-center font-medium"}>
+            $
+            {formatPrice(
+              ingredients.reduce((sum, { publicId }) => {
+                const foundIngredient = masterIngredients.find(
+                  ({ publicId: masterPublicId }) => masterPublicId === publicId,
+                );
+                if (foundIngredient?.price) return sum + foundIngredient.price;
+                return sum;
+              }, 0),
+            ) || "0.00"}
+          </p>
         </div>
       </div>
     </div>
@@ -147,12 +167,20 @@ const IngredientsDisplay = ({
 };
 
 const DisplayIngredient = ({
-  ingredient: { name, quantity, unit, capacity, price },
+  ingredient: { name, quantity, unit, capacity, publicId },
   index,
 }: {
   ingredient: RecipeIngredientFormData;
   index: number;
 }) => {
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
+  );
+
+  const foundIngredient = masterIngredients.find(
+    ({ publicId: masterPublicId }) => masterPublicId === publicId,
+  );
+
   return (
     <div className={`flex w-full flex-row gap-4`}>
       <div
@@ -174,7 +202,9 @@ const DisplayIngredient = ({
           <div className="flex items-center rounded-md bg-blue-100 pl-3">
             <span className={"text-gray-400"}>$</span>
             <DisplayField id={"price"}>
-              {price ? formatPrice(price / 100) : "0.00"}
+              {foundIngredient?.price
+                ? formatPrice(foundIngredient.price / 100)
+                : "0.00"}
             </DisplayField>
           </div>
         </Field.Root>

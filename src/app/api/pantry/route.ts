@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { PantryItem } from "@/utils/interfaces";
+import { PantryIngredient } from "@/utils/interfaces";
 import { cookies } from "next/headers";
 
 export const GET = async () => {
@@ -40,7 +40,8 @@ export const PUT = async (req: NextRequest) => {
     if (!token)
       return new Response(JSON.stringify({ pantryItems: [] }), { status: 401 });
 
-    const { pantryItems }: { pantryItems: PantryItem[] } = await req.json();
+    const { pantryItems }: { pantryItems: PantryIngredient[] } =
+      await req.json();
 
     const syncResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/pantry`,

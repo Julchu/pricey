@@ -85,6 +85,7 @@ export type RoleType = (typeof RoleValues)[number];
 
 // Public user data (aka not private auth data)
 export type User = {
+  publicId: string;
   email: string;
   image?: string;
   name?: string;
@@ -104,7 +105,7 @@ export type UserPreferences = {
 };
 
 export type Ingredient = {
-  publicId: string;
+  publicId?: string;
   name: string;
   price?: number;
   capacity?: number;
@@ -114,8 +115,15 @@ export type Ingredient = {
   season?: SeasonType;
 };
 
+export type GroceryListIngredient = Omit<
+  Ingredient & {
+    groceryListId: string;
+    ingredientPublicId?: string;
+  },
+  "price"
+>;
+
 export type GroceryList = {
-  userId: string;
   publicId: string;
   name: string;
   ingredients: GroceryListIngredient[];
@@ -124,36 +132,38 @@ export type GroceryList = {
   updatedAt?: Date;
 };
 
-export type GroceryListIngredient = {
-  userId: string;
-  groceryListId: string;
-  publicId?: string;
-  price?: number;
-  name: string;
-  capacity?: number;
-  quantity?: number;
-  unit: UnitType;
-  image?: string;
-  ingredientPublicId?: string;
-};
+export type RecipeIngredient = Omit<
+  Ingredient & {
+    recipeId: string;
+    ingredientPublicId?: string;
+  },
+  "price"
+>;
 
 export type Recipe = {
   publicId: string;
   name: string;
-  ingredients: Ingredient[];
-  userId: string;
+  ingredients: RecipeIngredient[];
   public?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
-type FormData<T> = Omit<T, "userId" | "publicId">;
+export type PantryIngredient = Omit<
+  Ingredient & {
+    ingredientPublicId?: string;
+  },
+  "price"
+>;
 
-// TODO: fix types; form data might differ from public returned types, but ids aren't included
-export type IngredientFormData = FormData<Ingredient>;
-export type GroceryListIngredientFormData = Omit<
-  FormData<GroceryListIngredient>,
-  "groceryListId"
-> & { publicId?: string };
+type FormData<T> = Omit<T, "userId" | "groceryListId" | "recipeId">;
+
+// TODO: fix types; form data might differ from public returned types, but ids should not be included in form submission types
 export type UserFormData = FormData<User>;
+export type IngredientFormData = FormData<Ingredient>;
+
+export type GroceryListIngredientFormData = FormData<GroceryListIngredient>;
+
 export type GroceryListFormData = {
   name: string;
   ingredients: GroceryListIngredientFormData[];
@@ -170,16 +180,7 @@ export type GroceryListUpdateFormData = {
   groceryList: Omit<GroceryListFormData, "ingredients">;
 };
 
-export type RecipeIngredientFormData = {
-  publicId?: string;
-  name: string;
-  price?: number;
-  capacity?: number;
-  quantity?: number;
-  unit: UnitType;
-  image?: string;
-  ingredientPublicId?: string;
-};
+export type RecipeIngredientFormData = FormData<RecipeIngredient>;
 
 export type RecipeFormData = {
   name: string;
@@ -197,13 +198,10 @@ export type RecipeUpdateFormData = {
   recipe: Omit<RecipeFormData, "ingredients">;
 };
 
-export type PantryItem = {
-  name: string;
-  quantity?: number;
-  capacity?: number;
-  unit: UnitType;
-  price?: number;
-  image?: string;
+export type PantryIngredientFormData = FormData<PantryIngredient>;
+
+export type PantryFormData = {
+  ingredients: PantryIngredientFormData[];
 };
 
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
