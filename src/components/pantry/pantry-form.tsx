@@ -81,6 +81,7 @@ export const PantryForm = () => {
               className="h-px bg-gray-200 dark:bg-neutral-700"
             />
 
+            {/* Clear pantry button */}
             <div className="flex justify-end gap-4 p-4">
               <button
                 type="button"
@@ -90,6 +91,8 @@ export const PantryForm = () => {
                 <CircleResetIcon className={"group-hover:fill-white"} />
                 Clear pantry
               </button>
+
+              {/* Save pantry button */}
               <button
                 type="button"
                 onClick={onClearHandler}
@@ -228,10 +231,8 @@ const PantryIngredientRow = ({
 
   return (
     <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:border-none lg:p-0">
-      {/* Mobile row header with inline delete */}
       <div className="flex flex-row items-center justify-between gap-4 lg:hidden">
-        {/* Name — read-only, comes from master ingredient list */}
-        <div className="text-md flex min-h-10 w-full items-center rounded-md font-medium capitalize">
+        <div className="flex min-h-10 w-full items-center rounded-md text-xl font-medium capitalize">
           {ingredientName}
         </div>
 
@@ -246,14 +247,13 @@ const PantryIngredientRow = ({
 
       <div className={"flex flex-row gap-4"}>
         <div className="grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-12">
-          {/* Name — read-only, comes from master ingredient list */}
           <Field.Root className="relative col-span-4 hidden sm:col-span-2 lg:col-span-4 lg:inline">
             <Field.Label
               className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
             >
               Name
             </Field.Label>
-            <div className="text-md hidden min-h-10 w-full items-center rounded-md font-medium capitalize lg:flex">
+            <div className="hidden min-h-10 w-full items-center rounded-md text-lg font-medium capitalize lg:flex">
               {ingredientName}
             </div>
           </Field.Root>
