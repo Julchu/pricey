@@ -93,9 +93,9 @@ export const PantryForm = () => {
               <button
                 type="button"
                 onClick={onClearHandler}
-                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-blue-500 hover:text-white"
+                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500"
               >
-                <AddFridge className={"fill-blue-500 group-hover:fill-white"} />
+                <AddFridge className={"fill-white"} />
                 Save pantry
               </button>
 

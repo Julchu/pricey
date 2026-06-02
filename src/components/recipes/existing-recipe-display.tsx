@@ -1,14 +1,5 @@
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  GroceryListIngredientFormData,
-  RecipeFormData,
-  RecipeIngredientFormData,
-} from "@/utils/interfaces";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import { GroceryListIngredientFormData, RecipeFormData, RecipeIngredientFormData, } from "@/utils/interfaces";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";

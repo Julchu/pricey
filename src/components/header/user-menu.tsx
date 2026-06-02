@@ -161,18 +161,14 @@ export const UserMenu = () => {
               Kitchen
             </Menu.GroupLabel>
 
-            <div
+            <Drawer.Trigger
+              handle={pantryHandle}
               className={
                 "text-md relative flex h-6 w-full cursor-pointer content-center items-center rounded-md py-4 pr-[5px] pl-[25px] leading-none outline-none hover:bg-blue-500 hover:text-white"
               }
             >
-              <Drawer.Trigger
-                handle={pantryHandle}
-                className={"cursor-pointer"}
-              >
-                Pantry
-              </Drawer.Trigger>
-            </div>
+              Pantry
+            </Drawer.Trigger>
           </Menu.Group>
 
           <Menu.Group>
