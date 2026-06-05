@@ -86,6 +86,7 @@ export const NewGroceryListForm = ({
     }
   }, [hasHydrated, currentGroceryList, reset, currentGroceryListVersion]);
 
+  // TODO: clean up/simplify debouncing saving current list
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {

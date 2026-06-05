@@ -38,20 +38,6 @@ export const PantryContent = () => {
       </div>
 
       <PantryForm />
-
-      {pantryItems.length === 0 ? (
-        <div className={"flex h-full flex-col gap-4"}>
-          <div
-            className={
-              "flex h-2/3 flex-col justify-center p-4 text-center font-medium"
-            }
-          >
-            <Drawer.Description className={"text-xl font-bold capitalize"}>
-              Your pantry is empty.
-            </Drawer.Description>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };

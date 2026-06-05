@@ -154,7 +154,6 @@ export const ExistingGroceryListForm = ({
 
     const changedFields = filterChangedData(groceryListData);
 
-    console.log(changedFields);
     const submitResponse = await fetch(
       `/api/grocery-list/${groceryListData.publicId}`,
       {

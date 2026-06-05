@@ -26,7 +26,6 @@ export const Calculator = () => {
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
   ) => {
-    console.log("ingredientFormData", ingredientFormData);
     const submitResponse = await fetch("/api/ingredient", {
       method: "POST",
       body: JSON.stringify(ingredientFormData),
@@ -85,7 +84,7 @@ export const Calculator = () => {
                 type={"number"}
                 {...ingredientRegister("price", {
                   min: { value: 0, message: "Must be ≥ 0" },
-                  setValueAs: (val) => (val ? val * 100 : ""),
+                  setValueAs: (val) => (val ? val * 100 : undefined),
                 })}
               />
             </div>
@@ -102,7 +101,7 @@ export const Calculator = () => {
               type={"number"}
               {...ingredientRegister("quantity", {
                 min: { value: 0, message: "Must be ≥ 0" },
-                setValueAs: (val) => (val ? Number(val) : ""),
+                setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />
             <Field.Error className={errorClass}>
@@ -121,7 +120,7 @@ export const Calculator = () => {
               type={"number"}
               {...ingredientRegister("capacity", {
                 min: { value: 0, message: "Must be ≥ 0" },
-                setValueAs: (val) => (val ? Number(val) : ""),
+                setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />
             <Field.Error className={errorClass}>

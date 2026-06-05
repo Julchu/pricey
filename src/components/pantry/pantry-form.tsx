@@ -1,10 +1,15 @@
-import { Ingredient, PantryFormData } from "@/utils/interfaces";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import {
+  Ingredient,
+  PantryFormData,
+  PantryIngredientFormData,
+  PantryUpdateFormData,
+} from "@/utils/interfaces";
+import { SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { Autocomplete } from "@base-ui/react/autocomplete";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Field, Separator } from "@base-ui/react";
+import { Drawer, Field, Separator } from "@base-ui/react";
 import { Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
 import { PriceDisplay } from "@/components/ui/price-display";
@@ -12,37 +17,123 @@ import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { usePantryStore } from "@/providers/pantry-store-provider";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AddFridge } from "@/components/icons/fridge/add";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 export const PantryForm = () => {
-  const { control } = useFormContext<PantryFormData>();
+  const { control, handleSubmit, reset, formState, getValues } =
+    useFormContext<PantryFormData>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",
   });
 
+  const { pantryItems, setPantryItems, clearPantry, pantryVersion } =
+    usePantryStore(
+      useShallow(
+        ({ pantryItems, setPantryItems, clearPantry, pantryVersion }) => ({
+          pantryItems,
+          setPantryItems,
+          clearPantry,
+          pantryVersion,
+        }),
+      ),
+    );
+
   const handleIngredientSelect = (ingredient: Ingredient) => {
-    append({
-      name: ingredient.name,
-      ingredientPublicId: ingredient.publicId,
-      unit: ingredient.unit,
-      quantity: "" as unknown as number,
-      capacity: "" as unknown as number,
-    });
+    const pantryIngredients = getValues("ingredients");
+    const indexOfFoundIngredient = pantryIngredients.findIndex(
+      ({ ingredientPublicId }) => {
+        return ingredientPublicId === ingredient.publicId;
+      },
+    );
+    if (indexOfFoundIngredient === -1)
+      append({
+        name: ingredient.name,
+        ingredientPublicId: ingredient.publicId,
+        unit: ingredient.unit,
+        quantity: undefined as unknown as number,
+        capacity: undefined as unknown as number,
+      });
   };
-
-  const { pantryItems, clearPantry, pantryVersion } = usePantryStore(
-    useShallow(({ pantryItems, clearPantry, pantryVersion }) => ({
-      pantryItems,
-      clearPantry,
-      pantryVersion,
-    })),
-  );
-
-  const { reset } = useFormContext<PantryFormData>();
 
   const onClearHandler = () => {
     reset({ ingredients: [] });
     clearPantry();
+  };
+
+  const onResetHandler = () => {
+    reset({ ingredients: pantryItems });
+  };
+
+  const filterChangedData = ({
+    ingredients,
+  }: PantryFormData): PantryUpdateFormData => {
+    const originalIngredients = formState.defaultValues?.ingredients ?? [];
+
+    const newIngredients: PantryIngredientFormData[] = [];
+    const updatedIngredients: PantryIngredientFormData[] = [];
+    const deletedIngredientIds: string[] = [];
+
+    //   If ingredient.publicId exists in originalIngredients but not in ingredientChanges: deleted ingredient
+    for (const originalIngredient of originalIngredients) {
+      if (
+        originalIngredient &&
+        originalIngredient.publicId &&
+        !ingredients.some(
+          ({ publicId }) => publicId === originalIngredient?.publicId,
+        )
+      ) {
+        deletedIngredientIds.push(originalIngredient.publicId);
+      }
+    }
+
+    for (const dirtyIngredient of ingredients) {
+      //   If no ingredient.publicId: new ingredient
+      if (!dirtyIngredient.publicId) newIngredients.push(dirtyIngredient);
+      else {
+        //   If ingredient.publicId exists in originalIngredients: do difference check to see if updated
+        const existingIngredient = originalIngredients.find(
+          (originalIngredient) =>
+            originalIngredient?.publicId === dirtyIngredient.publicId,
+        );
+
+        if (existingIngredient) {
+          if (
+            JSON.stringify(dirtyIngredient) !==
+            JSON.stringify(existingIngredient)
+          ) {
+            updatedIngredients.push(dirtyIngredient);
+          }
+        }
+      }
+    }
+
+    return {
+      deletedIngredientIds,
+      newIngredients,
+      updatedIngredients,
+    };
+  };
+
+  const onSaveHandler: SubmitHandler<PantryFormData> = async (pantryData) => {
+    // "use server";
+
+    const changedFields = filterChangedData(pantryData);
+
+    const submitResponse = await fetch(`/api/pantry`, {
+      method: "PATCH",
+      body: JSON.stringify(changedFields),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (submitResponse.status === 200 || submitResponse.status === 401) {
+      const response = await submitResponse.json();
+      const { ingredients } = response;
+      setPantryItems([]);
+    }
+    return;
   };
 
   const prevVersionRef = useRef<number | null>(null);
@@ -88,35 +179,50 @@ export const PantryForm = () => {
                 onClick={onClearHandler}
                 className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white"
               >
+                <TrashIcon className={"group-hover:fill-white"} />
+                Empty
+              </button>
+
+              <button
+                type="button"
+                onClick={onResetHandler}
+                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white"
+              >
                 <CircleResetIcon className={"group-hover:fill-white"} />
-                Clear pantry
+                Restore
               </button>
 
               {/* Save pantry button */}
               <button
                 type="button"
-                onClick={onClearHandler}
+                onClick={handleSubmit(onSaveHandler)}
                 className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500"
               >
                 <AddFridge className={"fill-white"} />
                 Save pantry
               </button>
-
-              {/*<div className={"group"}>
-            <button
-              className={
-                "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-green-500"
-              }
-              onClick={handleIngredientSubmit(onSubmitHandler)}
-            >
-              <AnimatedCheckIcon />
-              Save
-            </button>
-          </div>*/}
             </div>
           </div>
-        ) : null}
+        ) : (
+          <EmptyPantry />
+        )}
       </form>
+    </div>
+  );
+};
+
+const EmptyPantry = () => {
+  return (
+    <div className={"flex h-full flex-col gap-4"}>
+      <div
+        className={
+          "flex h-2/3 flex-col justify-center p-4 text-center font-medium"
+        }
+      >
+        <Drawer.Description className={"text-xl font-bold"}>
+          <p>Your pantry is empty.</p>
+        </Drawer.Description>
+      </div>
     </div>
   );
 };
@@ -216,10 +322,9 @@ const PantryIngredientRow = ({
   onRemove: () => void;
   ingredientName: string;
 }) => {
-  const { register, /*control, */ getFieldState, formState } = useFormContext();
+  const { register, getFieldState, formState } = useFormContext();
 
-  // const [name] = useWatch({ control, name: [`ingredients.${index}.name`] });
-
+  // TODO: use to display form errors
   const quantityState = getFieldState(
     `ingredients.${index}.quantity`,
     formState,
@@ -287,7 +392,7 @@ const PantryIngredientRow = ({
               type="number"
               {...register(`ingredients.${index}.quantity`, {
                 min: { value: 0, message: "Must be ≥ 0" },
-                setValueAs: (val) => (val ? Number(val) : ""),
+                setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />
             <Field.Error className="mt-1 text-xs text-red-500">
@@ -313,7 +418,7 @@ const PantryIngredientRow = ({
               type="number"
               {...register(`ingredients.${index}.capacity`, {
                 min: { value: 0, message: "Must be ≥ 0" },
-                setValueAs: (val) => (val ? Number(val) : ""),
+                setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />
             <Field.Error className="mt-1 text-xs text-red-500">
@@ -337,11 +442,6 @@ const PantryIngredientRow = ({
         {/* Delete — desktop layout only */}
         <div className="group mt-auto hidden flex-col lg:flex">
           <Field.Root>
-            {/*<Field.Label*/}
-            {/*  className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}*/}
-            {/*>*/}
-            {/*  &nbsp;*/}
-            {/*</Field.Label>*/}
             <button
               className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md border border-gray-200 px-2 py-2 font-medium tracking-widest group-hover:bg-red-500 group-hover:text-white"
               type="button"

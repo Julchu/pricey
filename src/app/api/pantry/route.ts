@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { PantryIngredient } from "@/utils/interfaces";
+import { PantryUpdateFormData } from "@/utils/interfaces";
 import { cookies } from "next/headers";
 
 export const GET = async () => {
@@ -30,7 +30,7 @@ export const GET = async () => {
   }
 };
 
-export const PUT = async (req: NextRequest) => {
+export const PATCH = async (req: NextRequest) => {
   try {
     const browserCookies = await cookies();
     const token =
@@ -40,18 +40,25 @@ export const PUT = async (req: NextRequest) => {
     if (!token)
       return new Response(JSON.stringify({ pantryItems: [] }), { status: 401 });
 
-    const { pantryItems }: { pantryItems: PantryIngredient[] } =
-      await req.json();
+    const {
+      deletedIngredientIds,
+      newIngredients,
+      updatedIngredients,
+    }: PantryUpdateFormData = await req.json();
 
     const syncResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/pantry`,
       {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ pantryItems }),
+        body: JSON.stringify({
+          deletedIngredientIds,
+          newIngredients,
+          updatedIngredients,
+        }),
       },
     );
 

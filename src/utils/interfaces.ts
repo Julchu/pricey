@@ -204,6 +204,12 @@ export type PantryFormData = {
   ingredients: PantryIngredientFormData[];
 };
 
+export type PantryUpdateFormData = {
+  deletedIngredientIds: string[];
+  newIngredients: PantryIngredientFormData[];
+  updatedIngredients: PantryIngredientFormData[];
+};
+
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
 
 /* Logged in user features:

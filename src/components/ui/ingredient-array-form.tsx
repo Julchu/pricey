@@ -122,7 +122,7 @@ export const IngredientArrayForm = ({
                     type={"number"}
                     {...register(`ingredients.${index}.quantity`, {
                       min: { value: 0, message: "Must be ≥ 0" },
-                      setValueAs: (val) => (val ? Number(val) : ""),
+                      setValueAs: (val) => (val ? Number(val) : undefined),
                     })}
                   />
                   <Field.Error className="mt-1 text-xs text-red-500">
@@ -148,7 +148,7 @@ export const IngredientArrayForm = ({
                     type={"number"}
                     {...register(`ingredients.${index}.capacity`, {
                       min: { value: 0, message: "Must be ≥ 0" },
-                      setValueAs: (val) => (val ? Number(val) : ""),
+                      setValueAs: (val) => (val ? Number(val) : undefined),
                     })}
                   />
                   <Field.Error className="mt-1 text-xs text-red-500">
