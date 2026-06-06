@@ -17,7 +17,6 @@ import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { usePantryStore } from "@/providers/pantry-store-provider";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AddFridge } from "@/components/icons/fridge/add";
-import { TrashIcon } from "@radix-ui/react-icons";
 
 export const PantryForm = () => {
   const { control, handleSubmit, reset, formState, getValues } =
@@ -27,17 +26,13 @@ export const PantryForm = () => {
     name: "ingredients",
   });
 
-  const { pantryItems, setPantryItems, clearPantry, pantryVersion } =
-    usePantryStore(
-      useShallow(
-        ({ pantryItems, setPantryItems, clearPantry, pantryVersion }) => ({
-          pantryItems,
-          setPantryItems,
-          clearPantry,
-          pantryVersion,
-        }),
-      ),
-    );
+  const { pantryItems, setPantryItems, pantryVersion } = usePantryStore(
+    useShallow(({ pantryItems, setPantryItems, pantryVersion }) => ({
+      pantryItems,
+      setPantryItems,
+      pantryVersion,
+    })),
+  );
 
   const handleIngredientSelect = (ingredient: Ingredient) => {
     const pantryIngredients = getValues("ingredients");
@@ -54,11 +49,6 @@ export const PantryForm = () => {
         quantity: undefined as unknown as number,
         capacity: undefined as unknown as number,
       });
-  };
-
-  const onClearHandler = () => {
-    reset({ ingredients: [] });
-    clearPantry();
   };
 
   const onResetHandler = () => {
@@ -131,7 +121,7 @@ export const PantryForm = () => {
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
       const { ingredients } = response;
-      setPantryItems([]);
+      setPantryItems(ingredients);
     }
     return;
   };
@@ -176,17 +166,8 @@ export const PantryForm = () => {
             <div className="flex justify-end gap-4 p-4">
               <button
                 type="button"
-                onClick={onClearHandler}
-                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white"
-              >
-                <TrashIcon className={"group-hover:fill-white"} />
-                Empty
-              </button>
-
-              <button
-                type="button"
                 onClick={onResetHandler}
-                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white"
+                className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white lg:w-auto"
               >
                 <CircleResetIcon className={"group-hover:fill-white"} />
                 Restore
@@ -196,7 +177,7 @@ export const PantryForm = () => {
               <button
                 type="button"
                 onClick={handleSubmit(onSaveHandler)}
-                className="group flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500"
+                className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500 lg:w-auto"
               >
                 <AddFridge className={"fill-white"} />
                 Save pantry

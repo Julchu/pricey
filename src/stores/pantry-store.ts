@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { PantryIngredient, PantryIngredientFormData } from "@/utils/interfaces";
+import { PantryIngredient, PantryUpdateFormData } from "@/utils/interfaces";
 
 export type PantryState = {
   pantryItems: PantryIngredient[];
@@ -11,11 +11,10 @@ export type PantryActions = {
   addItemToPantry: (item: PantryIngredient) => void;
   addItems: (items: PantryIngredient[]) => void;
   removeItemFromPantry: (name: string) => void;
-  clearPantry: () => void;
   setPantryOpen: (open: boolean) => void;
   setPantryItems: (items: PantryIngredient[]) => void;
   fetchPantry: () => Promise<void>;
-  syncPantry: (ingredients: PantryIngredientFormData) => Promise<void>;
+  syncPantry: (pantryFormData: PantryUpdateFormData) => Promise<void>;
 };
 
 export type PantryStore = PantryState & PantryActions;
@@ -49,7 +48,6 @@ export const createPantryStore = (initialState: PantryState) => {
           (i) => i.name.toLowerCase() !== name.toLowerCase(),
         ),
       })),
-    clearPantry: () => set({ pantryItems: [] }),
     setPantryOpen: (isPantryOpen) => set({ isPantryOpen }),
     setPantryItems: (pantryItems) => set({ pantryItems }),
     fetchPantry: async () => {
@@ -62,9 +60,9 @@ export const createPantryStore = (initialState: PantryState) => {
         });
       }
     },
-    syncPantry: async (ingredients) => {
+    syncPantry: async (pantryFormData) => {
       try {
-        const { pantryItems } = await trySyncingPantry(ingredients);
+        const { pantryItems } = await trySyncingPantry(pantryFormData);
         set(() => ({ pantryItems }));
       } catch (error) {
         console.error("Failed to sync pantry to DB:", error);
@@ -82,12 +80,12 @@ const tryFetchingPantry = async () => {
   }
 };
 
-const trySyncingPantry = async (ingredients: PantryIngredientFormData) => {
+const trySyncingPantry = async (pantryFormData: PantryUpdateFormData) => {
   try {
     const fetchPantry = await fetch("/api/grocery-list", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredients }),
+      body: JSON.stringify(pantryFormData),
     });
     return await fetchPantry.json();
   } catch (error) {

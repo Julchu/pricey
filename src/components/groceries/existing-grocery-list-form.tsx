@@ -1,15 +1,6 @@
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
-} from "@/utils/interfaces";
+import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
