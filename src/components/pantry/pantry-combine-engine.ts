@@ -31,7 +31,7 @@
  *
  * This file is intentionally NOT integrated into pantry-store.ts.
  * Drop addItemToPantry / addItems in the store to swap in upsertPantryItem /
- * upsertPantryItems when ready.
+ * upsertPantryIngredients when ready.
  */
 
 import {
@@ -186,21 +186,24 @@ export function combineIngredientItems(
  * via combineIngredientItems. Otherwise the incoming item is appended.
  */
 export function upsertPantryItem(
-  pantryItems: PantryIngredient[],
+  pantryIngredients: PantryIngredient[],
   incoming: PantryIngredient,
 ): PantryIngredient[] {
-  const matchIndex = findMatchIndex(pantryItems, incoming);
+  const matchIndex = findMatchIndex(pantryIngredients, incoming);
 
   if (matchIndex === -1) {
-    return [...pantryItems, incoming];
+    return [...pantryIngredients, incoming];
   }
 
-  const merged = combineIngredientItems([pantryItems[matchIndex], incoming]);
+  const merged = combineIngredientItems([
+    pantryIngredients[matchIndex],
+    incoming,
+  ]);
 
   return [
-    ...pantryItems.slice(0, matchIndex),
+    ...pantryIngredients.slice(0, matchIndex),
     merged,
-    ...pantryItems.slice(matchIndex + 1),
+    ...pantryIngredients.slice(matchIndex + 1),
   ];
 }
 
@@ -208,13 +211,13 @@ export function upsertPantryItem(
  * Upsert multiple incoming items into the pantry list in a single pass.
  * Equivalent to calling upsertPantryItem for each item sequentially.
  */
-export function upsertPantryItems(
-  pantryItems: PantryIngredient[],
+export function upsertPantryIngredients(
+  pantryIngredients: PantryIngredient[],
   incoming: PantryIngredient[],
 ): PantryIngredient[] {
   return incoming.reduce(
     (acc, item) => upsertPantryItem(acc, item),
-    pantryItems,
+    pantryIngredients,
   );
 }
 
@@ -223,12 +226,12 @@ export function upsertPantryItems(
 // ---------------------------------------------------------------------------
 
 function findMatchIndex(
-  pantryItems: PantryIngredient[],
+  pantryIngredients: PantryIngredient[],
   incoming: PantryIngredient,
 ): number {
   // Prefer ingredientPublicId — stable cross-source identity
   if (incoming.ingredientPublicId) {
-    const idx = pantryItems.findIndex(
+    const idx = pantryIngredients.findIndex(
       (item) =>
         item.ingredientPublicId?.toLowerCase() ===
         incoming.ingredientPublicId!.toLowerCase(),
@@ -236,7 +239,7 @@ function findMatchIndex(
     if (idx !== -1) return idx;
   }
   // Fallback: name match (handles blank items added without a publicId)
-  return pantryItems.findIndex(
+  return pantryIngredients.findIndex(
     (item) =>
       item.name.trim().toLowerCase() === incoming.name.trim().toLowerCase(),
   );

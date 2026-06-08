@@ -26,13 +26,16 @@ export const PantryForm = () => {
     name: "ingredients",
   });
 
-  const { pantryItems, setPantryItems, pantryVersion } = usePantryStore(
-    useShallow(({ pantryItems, setPantryItems, pantryVersion }) => ({
-      pantryItems,
-      setPantryItems,
-      pantryVersion,
-    })),
-  );
+  const { pantryIngredients, setPantryIngredients, pantryVersion } =
+    usePantryStore(
+      useShallow(
+        ({ pantryIngredients, setPantryIngredients, pantryVersion }) => ({
+          pantryIngredients,
+          setPantryIngredients,
+          pantryVersion,
+        }),
+      ),
+    );
 
   const handleIngredientSelect = (ingredient: Ingredient) => {
     const pantryIngredients = getValues("ingredients");
@@ -52,7 +55,7 @@ export const PantryForm = () => {
   };
 
   const onResetHandler = () => {
-    reset({ ingredients: pantryItems });
+    reset({ ingredients: pantryIngredients });
   };
 
   const filterChangedData = ({
@@ -112,7 +115,9 @@ export const PantryForm = () => {
 
     const submitResponse = await fetch(`/api/pantry`, {
       method: "PATCH",
-      body: JSON.stringify(changedFields),
+      body: JSON.stringify(changedFields, (_key, value) =>
+        value === undefined ? null : value,
+      ),
       headers: {
         "Content-Type": "application/json",
       },
@@ -120,8 +125,8 @@ export const PantryForm = () => {
 
     if (submitResponse.status === 200 || submitResponse.status === 401) {
       const response = await submitResponse.json();
-      const { ingredients } = response;
-      setPantryItems(ingredients);
+      const { pantryIngredients } = response;
+      setPantryIngredients(pantryIngredients);
     }
     return;
   };
@@ -129,64 +134,63 @@ export const PantryForm = () => {
   const prevVersionRef = useRef<number | null>(null);
   useEffect(() => {
     if (prevVersionRef.current === pantryVersion) return;
-    reset({ ingredients: pantryItems });
+    reset({ ingredients: pantryIngredients });
     prevVersionRef.current = pantryVersion;
-  }, [pantryVersion, pantryItems, reset]);
+  }, [pantryVersion, pantryIngredients, reset]);
 
   return (
     <div className="relative flex h-full flex-col font-medium">
       <form className={"flex h-full flex-col"}>
         <PantryIngredientSearch onSelect={handleIngredientSelect} />
-
-        <div className="p-4 pt-0">
-          <div
-            className={
-              "flex flex-col gap-4 lg:rounded-md lg:border lg:border-gray-200 lg:p-4"
-            }
-          >
-            {fields.map(({ id, name }, index) => (
-              <PantryIngredientRow
-                key={id}
-                index={index}
-                onRemove={() => remove(index)}
-                ingredientName={name}
-              />
-            ))}
-          </div>
-        </div>
-
         {fields.length > 0 ? (
-          <div className={"mt-auto"}>
-            <Separator
-              orientation="horizontal"
-              className="h-px bg-gray-200 dark:bg-neutral-700"
-            />
-
-            {/* Clear pantry button */}
-            <div className="flex justify-end gap-4 p-4">
-              <button
-                type="button"
-                onClick={onResetHandler}
-                className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white lg:w-auto"
-              >
-                <CircleResetIcon className={"group-hover:fill-white"} />
-                Restore
-              </button>
-
-              {/* Save pantry button */}
-              <button
-                type="button"
-                onClick={handleSubmit(onSaveHandler)}
-                className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500 lg:w-auto"
-              >
-                <AddFridge className={"fill-white"} />
-                Save pantry
-              </button>
+          <div className="p-4 pt-0">
+            <div
+              className={
+                "flex flex-col gap-4 lg:rounded-md lg:border lg:border-gray-200 lg:p-4"
+              }
+            >
+              {fields.map(({ id, name }, index) => (
+                <PantryIngredientRow
+                  key={id}
+                  index={index}
+                  onRemove={() => remove(index)}
+                  ingredientName={name}
+                />
+              ))}
             </div>
           </div>
-        ) : (
-          <EmptyPantry />
-        )}
+        ) : null}
+
+        {fields.length === 0 ? <EmptyPantry /> : null}
+
+        <div className={"mt-auto"}>
+          <Separator
+            orientation="horizontal"
+            className="h-px bg-gray-200 dark:bg-neutral-700"
+          />
+
+          {/* Clear pantry button */}
+          <div className="flex justify-end gap-4 p-4">
+            <button
+              type="button"
+              onClick={onResetHandler}
+              className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 px-4 font-medium tracking-widest hover:bg-red-500 hover:text-white lg:w-auto"
+            >
+              <CircleResetIcon className={"group-hover:fill-white"} />
+              Restore
+            </button>
+
+            {/* Save pantry button */}
+            <button
+              type="button"
+              onClick={handleSubmit(onSaveHandler)}
+              className="group flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-blue-500 px-4 font-medium tracking-widest text-white hover:bg-green-500 lg:w-auto"
+            >
+              <AddFridge className={"fill-white"} />
+              Save pantry
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );
@@ -201,7 +205,7 @@ const EmptyPantry = () => {
         }
       >
         <Drawer.Description className={"text-xl font-bold"}>
-          <p>Your pantry is empty.</p>
+          Your pantry is empty.
         </Drawer.Description>
       </div>
     </div>
@@ -372,7 +376,6 @@ const PantryIngredientRow = ({
               placeholder="6"
               type="number"
               {...register(`ingredients.${index}.quantity`, {
-                min: { value: 0, message: "Must be ≥ 0" },
                 setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />
@@ -398,7 +401,6 @@ const PantryIngredientRow = ({
               step="0.001"
               type="number"
               {...register(`ingredients.${index}.capacity`, {
-                min: { value: 0, message: "Must be ≥ 0" },
                 setValueAs: (val) => (val ? Number(val) : undefined),
               })}
             />

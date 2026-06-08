@@ -10,12 +10,12 @@ import { PantryContent } from "@/components/pantry/pantry-content";
 export const pantryHandle = Drawer.createHandle();
 
 export const PantryDrawer = () => {
-  const { pantryItems } = usePantryStore(
-    useShallow(({ pantryItems }) => ({ pantryItems })),
+  const { pantryIngredients } = usePantryStore(
+    useShallow(({ pantryIngredients }) => ({ pantryIngredients })),
   );
 
   const methods = useForm<PantryFormData>({
-    defaultValues: { ingredients: pantryItems },
+    defaultValues: { ingredients: pantryIngredients },
   });
 
   return (
@@ -24,7 +24,7 @@ export const PantryDrawer = () => {
         handle={pantryHandle}
         swipeDirection={"right"}
         onOpenChange={(open) => {
-          if (open) methods.reset({ ingredients: pantryItems });
+          if (open) methods.reset({ ingredients: pantryIngredients });
         }}
       >
         <Drawer.SwipeArea className="absolute inset-y-0 right-0 z-999 w-5 sm:w-10 dark:border-blue-500 dark:bg-blue-500/10" />

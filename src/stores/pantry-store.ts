@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { PantryIngredient, PantryUpdateFormData } from "@/utils/interfaces";
 
 export type PantryState = {
-  pantryItems: PantryIngredient[];
+  pantryIngredients: PantryIngredient[];
   isPantryOpen: boolean;
   pantryVersion: number;
 };
@@ -12,7 +12,7 @@ export type PantryActions = {
   addItems: (items: PantryIngredient[]) => void;
   removeItemFromPantry: (name: string) => void;
   setPantryOpen: (open: boolean) => void;
-  setPantryItems: (items: PantryIngredient[]) => void;
+  setPantryIngredients: (items: PantryIngredient[]) => void;
   fetchPantry: () => Promise<void>;
   syncPantry: (pantryFormData: PantryUpdateFormData) => Promise<void>;
 };
@@ -20,9 +20,9 @@ export type PantryActions = {
 export type PantryStore = PantryState & PantryActions;
 
 export const initPantryStore = (
-  pantryItems?: PantryIngredient[] | null,
+  pantryIngredients?: PantryIngredient[] | null,
 ): PantryState => ({
-  pantryItems: pantryItems ?? [],
+  pantryIngredients: pantryIngredients ?? [],
   isPantryOpen: false,
   pantryVersion: 1,
 });
@@ -31,29 +31,29 @@ export const createPantryStore = (initialState: PantryState) => {
   return create<PantryStore>()((set) => ({
     ...initialState,
     addItemToPantry: (item) =>
-      set(({ pantryItems, pantryVersion }) => ({
-        pantryItems: mergePantryItem(pantryItems, item),
+      set(({ pantryIngredients, pantryVersion }) => ({
+        pantryIngredients: mergePantryItem(pantryIngredients, item),
         pantryVersion: pantryVersion + 1,
       })),
     addItems: (items) =>
-      set(({ pantryItems }) => ({
-        pantryItems: items.reduce(
+      set(({ pantryIngredients }) => ({
+        pantryIngredients: items.reduce(
           (acc, item) => mergePantryItem(acc, item),
-          pantryItems,
+          pantryIngredients,
         ),
       })),
     removeItemFromPantry: (name) =>
-      set(({ pantryItems }) => ({
-        pantryItems: pantryItems.filter(
+      set(({ pantryIngredients }) => ({
+        pantryIngredients: pantryIngredients.filter(
           (i) => i.name.toLowerCase() !== name.toLowerCase(),
         ),
       })),
     setPantryOpen: (isPantryOpen) => set({ isPantryOpen }),
-    setPantryItems: (pantryItems) => set({ pantryItems }),
+    setPantryIngredients: (pantryIngredients) => set({ pantryIngredients }),
     fetchPantry: async () => {
       try {
-        const { pantryItems } = await tryFetchingPantry();
-        set(() => ({ pantryItems }));
+        const { pantryIngredients } = await tryFetchingPantry();
+        set(() => ({ pantryIngredients }));
       } catch (error) {
         throw new Error("Unable to fetch pantry", {
           cause: error,
@@ -62,8 +62,8 @@ export const createPantryStore = (initialState: PantryState) => {
     },
     syncPantry: async (pantryFormData) => {
       try {
-        const { pantryItems } = await trySyncingPantry(pantryFormData);
-        set(() => ({ pantryItems }));
+        const pantryIngredients = await trySyncingPantry(pantryFormData);
+        set(() => ({ pantryIngredients }));
       } catch (error) {
         console.error("Failed to sync pantry to DB:", error);
       }

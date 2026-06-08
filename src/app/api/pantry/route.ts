@@ -10,7 +10,9 @@ export const GET = async () => {
       browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     if (!token)
-      return new Response(JSON.stringify({ pantryItems: [] }), { status: 200 });
+      return new Response(JSON.stringify({ pantryIngredients: [] }), {
+        status: 200,
+      });
 
     const pantryResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/pantry`,
@@ -24,7 +26,9 @@ export const GET = async () => {
     const { success, data, error } = await pantryResponse.json();
 
     if (!success) return new Response(error, { status: pantryResponse.status });
-    return new Response(JSON.stringify({ pantryItems: data }), { status: 200 });
+    return new Response(JSON.stringify({ pantryIngredients: data }), {
+      status: 200,
+    });
   } catch (error) {
     return new Response(`Pantry fetch error: ${error}`, { status: 400 });
   }
@@ -38,7 +42,9 @@ export const PATCH = async (req: NextRequest) => {
       browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
 
     if (!token)
-      return new Response(JSON.stringify({ pantryItems: [] }), { status: 401 });
+      return new Response(JSON.stringify({ pantryIngredients: [] }), {
+        status: 401,
+      });
 
     const {
       deletedIngredientIds,
@@ -54,18 +60,23 @@ export const PATCH = async (req: NextRequest) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          deletedIngredientIds,
-          newIngredients,
-          updatedIngredients,
-        }),
+        body: JSON.stringify(
+          {
+            deletedIngredientIds,
+            newIngredients,
+            updatedIngredients,
+          },
+          (_key, value) => (value === undefined ? null : value),
+        ),
       },
     );
 
     const { success, data, error } = await syncResponse.json();
 
     if (!success) return new Response(error, { status: syncResponse.status });
-    return new Response(JSON.stringify({ pantryItems: data }), { status: 200 });
+    return new Response(JSON.stringify({ pantryIngredients: data }), {
+      status: 200,
+    });
   } catch (error) {
     return new Response(`Pantry sync error: ${error}`, { status: 400 });
   }

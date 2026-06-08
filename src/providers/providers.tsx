@@ -49,18 +49,18 @@ export const Providers = async ({ children }: PropsWithChildren) => {
   recipes = fetchedRecipes ? fetchedRecipes : [];
   // }
 
-  const fetchedPantryItems = await serverFetch<PantryIngredient[]>({
+  const fetchedPantryIngredients = await serverFetch<PantryIngredient[]>({
     endpoint: "pantry",
   });
 
-  const pantryItems = fetchedPantryItems ?? [];
+  const pantryIngredients = fetchedPantryIngredients ?? [];
 
   return (
     <UserStoreProvider userInfo={userInfo}>
       <IngredientStoreProvider ingredients={ingredients}>
         <GroceryListStoreProvider groceryLists={groceryLists}>
           <RecipeStoreProvider recipes={recipes}>
-            <PantryStoreProvider pantryItems={pantryItems}>
+            <PantryStoreProvider pantryIngredients={pantryIngredients}>
               {children}
             </PantryStoreProvider>
           </RecipeStoreProvider>

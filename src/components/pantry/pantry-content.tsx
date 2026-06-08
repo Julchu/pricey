@@ -1,16 +1,8 @@
 import { Drawer } from "@base-ui/react/drawer";
-import { usePantryStore } from "@/providers/pantry-store-provider";
-import { useShallow } from "zustand/react/shallow";
 import { PantryForm } from "@/components/pantry/pantry-form";
 import { CircleAddIcon } from "@/components/icons/circle-close-icon";
 
 export const PantryContent = () => {
-  const { pantryItems } = usePantryStore(
-    useShallow(({ pantryItems }) => ({
-      pantryItems,
-    })),
-  );
-
   // // const { formState } = useFormContext();
   // // usePreventUnload(formState.isDirty, "You have unsaved pantry items");
 

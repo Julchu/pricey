@@ -15,15 +15,15 @@ export const PantryStoreContext = createContext<PantryStoreApi | undefined>(
 );
 
 export type PantryStoreProviderProps = PropsWithChildren<{
-  pantryItems?: PantryIngredient[] | null;
+  pantryIngredients?: PantryIngredient[] | null;
 }>;
 
 export const PantryStoreProvider = ({
   children,
-  pantryItems,
+  pantryIngredients,
 }: PantryStoreProviderProps) => {
   const [pantryStoreState] = useState(() =>
-    createPantryStore(initPantryStore(pantryItems)),
+    createPantryStore(initPantryStore(pantryIngredients)),
   );
 
   return (
