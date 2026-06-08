@@ -46,7 +46,7 @@ export const PriceDisplay = ({ index }: { index: number }) => {
   }, [masterIngredient, capacity, quantity, mass, liquidVolume]);
 
   return (
-    <div className="flex h-10 items-center rounded-md border border-gray-200 pl-3">
+    <div className="flex h-10 w-full items-center rounded-md border border-dashed border-gray-200 pl-3">
       <span className="text-gray-400">$</span>
       <span className="flex-1 px-[15px] text-sm font-medium">
         {formatPrice(derivedPrice) || "0.00"}

@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -9,28 +8,32 @@ import {
   GroceryListFormData,
   GroceryListIngredientFormData,
 } from "@/utils/interfaces";
+import * as React from "react"; // TODO: re-add checking off ingredients
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagAddIcon } from "@/components/icons/grocery-bag/add";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
+import { usePantryStore } from "@/providers/pantry-store-provider";
 import { formatPrice } from "@/utils/text-formatters"; // TODO: re-add checking off ingredients
 import { Field } from "@base-ui/react/field";
+import { useShallow } from "zustand/react/shallow";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider"; // TODO: re-add checking off ingredients
 
 // TODO: re-add checking off ingredients
 export const ExistingGroceryListChecklist = ({
   groceryList,
-  startEditingAction,
+  startEditing,
   last,
 }: {
   groceryList: GroceryListFormData;
-  startEditingAction: () => void;
+  startEditing: () => void;
   last: boolean;
 }) => {
   const onClickHandler = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    startEditingAction();
+    startEditing();
   };
 
   const ingredients = groceryList.ingredients;
@@ -39,7 +42,7 @@ export const ExistingGroceryListChecklist = ({
     <div className={"flex flex-col"}>
       <AccordionHeader
         // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
-        className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+        className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
       >
         <div onClick={onClickHandler} className={"pl-4"}>
           <ImageUploadIcon />
@@ -79,8 +82,20 @@ const IngredientsChecklist = ({
 }: {
   ingredients: GroceryListIngredientFormData[];
 }) => {
+  // TODO: destructure
   const addIngredientsToCurrentList = useGroceryListsStore(
     (state) => state.addIngredientsToCurrentList,
+  );
+
+  // TODO: remove useShallow
+  const { addItemToPantry } = usePantryStore(
+    useShallow(({ addItemToPantry }) => ({
+      addItemToPantry,
+    })),
+  );
+
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
   );
 
   return (
@@ -108,7 +123,11 @@ const IngredientsChecklist = ({
               "rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
             }
           >
-            <ChecklistIngredient ingredient={ingredient} index={index} />
+            <ChecklistIngredient
+              ingredient={ingredient}
+              index={index}
+              onAddToPantry={addItemToPantry}
+            />
           </div>
         );
       })}
@@ -125,17 +144,24 @@ const IngredientsChecklist = ({
         >
           Total cost:
         </div>
+
         <div
           className={
             "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
           }
         >
-          {formatPrice(
-            ingredients.reduce(
-              (sum, ingredient) => sum + (ingredient.price || 0) / 100,
-              0,
-            ),
-          ) || "0.00"}
+          <p className={"text-center font-medium"}>
+            $
+            {formatPrice(
+              ingredients.reduce((sum, { publicId }) => {
+                const foundIngredient = masterIngredients.find(
+                  ({ publicId: masterPublicId }) => masterPublicId === publicId,
+                );
+                if (foundIngredient?.price) return sum + foundIngredient.price;
+                return sum;
+              }, 0),
+            ) || "0.00"}
+          </p>
         </div>
       </div>
     </div>
@@ -143,17 +169,29 @@ const IngredientsChecklist = ({
 };
 
 const ChecklistIngredient = ({
-  ingredient: { name, quantity, unit, capacity, price },
+  ingredient: { name, quantity, unit, capacity, publicId },
   index,
+  onAddToPantry: _onAddToPantry,
 }: {
   ingredient: GroceryListIngredientFormData;
   index: number;
+  onAddToPantry: (item: GroceryListIngredientFormData) => void;
 }) => {
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
+  );
+
+  const foundIngredient = masterIngredients.find(
+    ({ publicId: masterPublicId }) => masterPublicId === publicId,
+  );
+
   return (
     <div className={`flex w-full flex-row gap-4`}>
       <div
         className={
           "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+          // TODO: update to 14 grid with add to pantry button if current grocery list
+          //   grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14
         }
       >
         <Field.Root className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
@@ -172,7 +210,9 @@ const ChecklistIngredient = ({
           <div className="flex items-center rounded-md bg-blue-100 pl-3">
             <span className={"text-gray-400"}>$</span>
             <ExistingGroceryListField id={"price"}>
-              {price ? formatPrice(price / 100) : "0.00"}
+              {foundIngredient?.price
+                ? formatPrice(foundIngredient.price / 100)
+                : "0.00"}
             </ExistingGroceryListField>
           </div>
         </Field.Root>

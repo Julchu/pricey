@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -20,9 +19,9 @@ import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { useShallow } from "zustand/react/shallow";
 
 export const NewGroceryListForm = ({
-  setOpenListAction,
+  setOpenList,
 }: {
-  setOpenListAction: Dispatch<SetStateAction<string>>;
+  setOpenList: Dispatch<SetStateAction<string>>;
 }) => {
   const defaultEmptyValues = {
     name: "",
@@ -71,12 +70,11 @@ export const NewGroceryListForm = ({
 
   const { register, handleSubmit, setFocus, control, reset, watch } = methods;
 
-  const prevVersionRef = useRef<number | null>(null);
-
   useEffect(() => {
     setFocus("name");
   }, [setFocus]);
 
+  const prevVersionRef = useRef<number | null>(null);
   useEffect(() => {
     if (!hasHydrated || !currentGroceryList) return;
     if (
@@ -88,6 +86,7 @@ export const NewGroceryListForm = ({
     }
   }, [hasHydrated, currentGroceryList, reset, currentGroceryListVersion]);
 
+  // TODO: clean up/simplify debouncing saving current list
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {
@@ -130,7 +129,7 @@ export const NewGroceryListForm = ({
   };
 
   const toggleHeader = () => {
-    setOpenListAction((newListOpen) => {
+    setOpenList((newListOpen) => {
       if (newListOpen === "new-list") return "";
       return "new-list";
     });
@@ -176,8 +175,8 @@ export const NewGroceryListForm = ({
 
         <AccordionContent>
           <IngredientArrayForm
-            submitAction={handleSubmit(onSubmitHandler)}
-            resetAction={groceryListReset}
+            submitHandler={handleSubmit(onSubmitHandler)}
+            resetHandler={groceryListReset}
           />
         </AccordionContent>
       </FormProvider>

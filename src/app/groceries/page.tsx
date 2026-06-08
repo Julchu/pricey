@@ -5,7 +5,7 @@ const Groceries = async () => {
   // Current list toggle (only 1 at a time) will be a checklist
   // TODO: rename checklists to existing/previous grocery lists
   return (
-    <div className="flex w-full flex-col overflow-scroll rounded-md pb-4 drop-shadow-lg">
+    <div className="flex w-full flex-col overflow-scroll rounded-md drop-shadow-lg">
       <GroceryListAccordion />
     </div>
   );

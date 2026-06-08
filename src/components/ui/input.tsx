@@ -1,6 +1,7 @@
 import { InputHTMLAttributes } from "react";
 import { Field } from "@base-ui/react/field";
 
+// TODO: swap with BaseUI input
 export const Input = ({
   className,
   ...props

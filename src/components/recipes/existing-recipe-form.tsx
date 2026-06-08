@@ -1,4 +1,3 @@
-"use client";
 import {
   RecipeFormData,
   RecipeIngredientFormData,
@@ -17,19 +16,18 @@ import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
-import { AlertDialog } from "@base-ui/react/alert-dialog";
+import { AlertDialog, Button } from "@base-ui/react";
 import { DeleteList } from "@/components/ui/delete-list-alert";
-import { Button } from "@base-ui/react/button";
 
 export const ExistingRecipeForm = ({
   recipe,
-  closeEditingCallbackAction,
-  deleteRecipeCallbackAction,
+  closeEditingCallback,
+  deleteRecipeCallback,
   last,
 }: {
   recipe: RecipeFormData;
-  closeEditingCallbackAction: () => void;
-  deleteRecipeCallbackAction: () => void;
+  closeEditingCallback: () => void;
+  deleteRecipeCallback: () => void;
   last: boolean;
 }) => {
   const methods = useForm<RecipeFormData>({
@@ -66,7 +64,7 @@ export const ExistingRecipeForm = ({
       const { recipeId } = response;
       removeRecipe(recipeId);
     }
-    return deleteRecipeCallbackAction();
+    return deleteRecipeCallback();
   };
 
   const filterChangedData = (
@@ -152,19 +150,19 @@ export const ExistingRecipeForm = ({
       const { recipe } = response;
       updateRecipe(recipe);
     }
-    return closeEditingCallbackAction();
+    return closeEditingCallback();
   };
 
   const onResetHandler = () => {
     reset();
-    closeEditingCallbackAction();
+    closeEditingCallback();
   };
 
   return (
     <form>
       <FormProvider {...methods}>
         <AccordionHeader
-          className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+          className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
         >
           <div onClick={() => 0} className={"pl-4"}>
             <ImageUploadIcon />
@@ -207,8 +205,8 @@ export const ExistingRecipeForm = ({
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
-            submitAction={handleSubmit(onUpdateHandler)}
-            resetAction={handleSubmit(onResetHandler)}
+            submitHandler={handleSubmit(onUpdateHandler)}
+            resetHandler={handleSubmit(onResetHandler)}
           />
         </AccordionContent>
       </FormProvider>

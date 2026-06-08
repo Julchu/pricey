@@ -1,4 +1,3 @@
-"use client";
 import { RecipeFormData } from "@/utils/interfaces";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ExistingRecipeForm } from "@/components/recipes/existing-recipe-form";
@@ -36,8 +35,8 @@ export const ExistingRecipe = ({
     return (
       <ExistingRecipeForm
         recipe={recipe}
-        closeEditingCallbackAction={closeEditingCallback}
-        deleteRecipeCallbackAction={deleteRecipeCallback}
+        closeEditingCallback={closeEditingCallback}
+        deleteRecipeCallback={deleteRecipeCallback}
         last={last}
       />
     );
@@ -46,7 +45,7 @@ export const ExistingRecipe = ({
   return (
     <ExistingRecipeDisplay
       recipe={recipe}
-      startEditingAction={startEditingCallback}
+      startEditingHandler={startEditingCallback}
       last={last}
     />
   );

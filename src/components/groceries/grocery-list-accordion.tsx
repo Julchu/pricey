@@ -8,9 +8,8 @@ import { ExistingGroceryList } from "@/components/groceries/existing-grocery-lis
 
 export const GroceryListAccordion = () => {
   const groceryLists = useGroceryListsStore(({ groceryLists }) => groceryLists);
-  const [openList, setOpenList] = useState<string>("new-list");
+  const [openList, setOpenList] = useState("new-list");
 
-  // TODO: switch new grocery list form back to useForm
   return (
     <Accordion.Root
       className={"flex w-full flex-col gap-px"}
@@ -18,7 +17,7 @@ export const GroceryListAccordion = () => {
       onValueChange={(values) => setOpenList(values[0] ?? "")}
     >
       <AccordionItem value={"new-list"}>
-        <NewGroceryListForm setOpenListAction={setOpenList} />
+        <NewGroceryListForm setOpenList={setOpenList} />
       </AccordionItem>
 
       {groceryLists.map((groceryList, index) => (

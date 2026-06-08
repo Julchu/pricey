@@ -1,36 +1,25 @@
-"use client";
-import {
-  GroceryListFormData,
-  GroceryListIngredientFormData,
-  GroceryListUpdateFormData,
-} from "@/utils/interfaces";
+import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {
-  AccordionContent,
-  AccordionHeader,
-  AccordionSubheader,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
 import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
-import { AlertDialog } from "@base-ui/react/alert-dialog";
+import { AlertDialog, Button } from "@base-ui/react";
 import { DeleteList } from "@/components/ui/delete-list-alert"; // Grocery list editing form
-import { Button } from "@base-ui/react/button"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
   groceryList,
-  closeEditingCallbackAction,
-  deleteListCallbackAction,
+  closeEditingCallback,
+  deleteListCallback,
   last,
 }: {
   groceryList: GroceryListFormData;
-  closeEditingCallbackAction: () => void;
-  deleteListCallbackAction: () => void;
+  closeEditingCallback: () => void;
+  deleteListCallback: () => void;
   last: boolean;
 }) => {
   const methods = useForm<GroceryListFormData>({
@@ -77,7 +66,7 @@ export const ExistingGroceryListForm = ({
       const { groceryListId } = response;
       removeGroceryList(groceryListId);
     }
-    return deleteListCallbackAction();
+    return deleteListCallback();
   };
 
   const filterChangedData = (
@@ -156,7 +145,6 @@ export const ExistingGroceryListForm = ({
 
     const changedFields = filterChangedData(groceryListData);
 
-    console.log(changedFields);
     const submitResponse = await fetch(
       `/api/grocery-list/${groceryListData.publicId}`,
       {
@@ -177,12 +165,12 @@ export const ExistingGroceryListForm = ({
       const { groceryList } = response;
       updateGroceryList(groceryList);
     }
-    return closeEditingCallbackAction();
+    return closeEditingCallback();
   };
 
   const onResetHandler = () => {
     reset();
-    closeEditingCallbackAction();
+    closeEditingCallback();
   };
 
   // groceryList.updatedAt
@@ -208,7 +196,7 @@ export const ExistingGroceryListForm = ({
       <FormProvider {...methods}>
         <AccordionHeader
           // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
-          className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+          className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
         >
           <div onClick={() => 0} className={"pl-4"}>
             <ImageUploadIcon />
@@ -254,8 +242,8 @@ export const ExistingGroceryListForm = ({
         </AccordionHeader>
         <AccordionContent className={`${last ? "rounded-b-md" : ""}`}>
           <IngredientArrayForm
-            submitAction={handleSubmit(onUpdateHandler)}
-            resetAction={handleSubmit(onResetHandler)}
+            submitHandler={handleSubmit(onUpdateHandler)}
+            resetHandler={handleSubmit(onResetHandler)}
           />
         </AccordionContent>
       </FormProvider>

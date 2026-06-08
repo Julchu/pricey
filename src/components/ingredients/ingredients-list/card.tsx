@@ -21,6 +21,7 @@ import FoodPlaceholder from "@/images/food-placeholder.png";
 import { memo } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { Separator } from "@base-ui/react/separator";
+import { usePantryStore } from "@/providers/pantry-store-provider";
 
 export const CardComponent = ({
   ingredient,
@@ -40,6 +41,10 @@ export const CardComponent = ({
 
   const { mass, liquidVolume } = useUserStore(
     useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
+  );
+
+  const addItemToPantry = usePantryStore(
+    ({ addItemToPantry }) => addItemToPantry,
   );
 
   const userUnits = {

@@ -70,7 +70,7 @@ const UnitController = ({
       </Select.Trigger>
 
       <Select.Portal key={"select-portal"}>
-        <Select.Positioner sideOffset={4}>
+        <Select.Positioner className={"w-(--anchor-width)"}>
           <UnitSelectDropdown />
         </Select.Positioner>
       </Select.Portal>

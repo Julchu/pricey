@@ -1,4 +1,3 @@
-"use client";
 import { UnitType } from "@/utils/interfaces";
 import { Input } from "@/components/ui/input";
 import { GroceryFormIngredientUnitSelect } from "@/components/ui/unit-select";
@@ -10,16 +9,17 @@ import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { PriceDisplay } from "@/components/ui/price-display";
 import { IngredientCombobox } from "@/components/ui/ingredient-combobox";
 import { TotalPriceDisplay } from "@/components/ui/total-price-display";
-import { Field } from "@base-ui/react/field";
+import { Field, Separator } from "@base-ui/react";
 
 export const IngredientArrayForm = ({
-  submitAction,
-  resetAction,
+  submitHandler,
+  resetHandler,
 }: {
-  submitAction: () => void;
-  resetAction: () => void;
+  submitHandler: () => void;
+  resetHandler: () => void;
 }) => {
-  const { control, register, getFieldState, formState } = useFormContext();
+  const { control, register, getFieldState, formState, setValue } =
+    useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -27,10 +27,8 @@ export const IngredientArrayForm = ({
   });
 
   return (
-    <div
-      className={"bg-card-white relative flex flex-col gap-4 p-4 font-medium"}
-    >
-      <div className={"flex flex-col gap-4"}>
+    <div className={"bg-card-white relative flex flex-col font-medium"}>
+      <div className={"flex flex-col gap-4 p-4"}>
         {fields.map((field, index) => {
           const nameState = getFieldState(
             `ingredients.${index}.name`,
@@ -70,7 +68,6 @@ export const IngredientArrayForm = ({
                       "h-6 fill-none stroke-red-500 group-hover:stroke-white"
                     }
                   />
-                  Delete
                 </button>
               </div>
               <div
@@ -125,7 +122,7 @@ export const IngredientArrayForm = ({
                     type={"number"}
                     {...register(`ingredients.${index}.quantity`, {
                       min: { value: 0, message: "Must be ≥ 0" },
-                      setValueAs: (val) => (val ? Number(val) : ""),
+                      setValueAs: (val) => (val ? Number(val) : undefined),
                     })}
                   />
                   <Field.Error className="mt-1 text-xs text-red-500">
@@ -151,7 +148,7 @@ export const IngredientArrayForm = ({
                     type={"number"}
                     {...register(`ingredients.${index}.capacity`, {
                       min: { value: 0, message: "Must be ≥ 0" },
-                      setValueAs: (val) => (val ? Number(val) : ""),
+                      setValueAs: (val) => (val ? Number(val) : undefined),
                     })}
                   />
                   <Field.Error className="mt-1 text-xs text-red-500">
@@ -202,92 +199,99 @@ export const IngredientArrayForm = ({
         })}
       </div>
 
-      <div className="border-t border-gray-200" />
+      <Separator
+        orientation={"horizontal"}
+        className="h-px bg-gray-200 dark:bg-neutral-700"
+      />
 
-      <div
-        className={
-          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
-        }
-      >
+      <div className={"flex flex-col gap-4 p-4"}>
         <div
           className={
-            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
+            "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
           }
         >
-          Total cost:
-        </div>
-        <div
-          className={
-            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
-          }
-        >
-          <TotalPriceDisplay />
-        </div>
-      </div>
-
-      {/* Save buttons bar */}
-      <div
-        className={
-          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
-        }
-      >
-        <div
-          className={"group col-span-2 sm:col-span-1 lg:order-1 lg:col-span-2"}
-        >
-          <button
+          <div
             className={
-              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
-            }
-            type="button"
-            onClick={() =>
-              append({
-                name: "",
-                capacity: "" as unknown as number,
-                quantity: "" as unknown as number,
-                unit: "" as UnitType,
-                ingredientPublicId: undefined,
-              })
+              "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
             }
           >
-            <BagAddIcon
+            Total cost:
+          </div>
+          <div
+            className={
+              "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
+            }
+          >
+            <TotalPriceDisplay />
+          </div>
+        </div>
+
+        {/* Save buttons bar */}
+        <div
+          className={
+            "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
+          }
+        >
+          <div
+            className={
+              "group col-span-2 sm:col-span-1 lg:order-1 lg:col-span-2"
+            }
+          >
+            <button
               className={
-                "h-6 fill-none stroke-blue-500 group-hover:stroke-white"
+                "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-blue-500 group-hover:text-white"
               }
-            />
-            Item
-          </button>
-        </div>
+              type="button"
+              onClick={() =>
+                append({
+                  name: "",
+                  capacity: "" as unknown as number,
+                  quantity: "" as unknown as number,
+                  unit: "" as UnitType,
+                  ingredientPublicId: undefined,
+                })
+              }
+            >
+              <BagAddIcon
+                className={
+                  "h-6 fill-none stroke-blue-500 group-hover:stroke-white"
+                }
+              />
+              Item
+            </button>
+          </div>
 
-        <div
-          className={
-            "group sm:col-start-2 lg:col-span-2 lg:col-start-9 lg:col-end-11"
-          }
-        >
-          <button
+          <div
             className={
-              "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
+              "group sm:col-start-2 lg:col-span-2 lg:col-start-9 lg:col-end-11"
             }
-            onClick={resetAction}
-            type={"reset"}
           >
-            <CircleResetIcon
-              className={"fill-blue-500 group-hover:fill-white"}
-            />
-            Cancel
-          </button>
-        </div>
+            <button
+              className={
+                "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"
+              }
+              onClick={resetHandler}
+              type={"reset"}
+            >
+              <CircleResetIcon
+                className={"fill-blue-500 group-hover:fill-white"}
+              />
+              Cancel
+            </button>
+          </div>
 
-        <div className={"group sm:col-start-3 lg:col-span-2 lg:col-start-11"}>
-          <button
-            className={
-              "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-green-500"
-            }
-            onClick={submitAction}
-            type={"button"}
-          >
-            <BagCheckIcon className={"h-6 animate-pulse"} />
-            Save
-          </button>
+          <div className={"group sm:col-start-3 lg:col-span-2 lg:col-start-11"}>
+            <button
+              className={
+                "group-hover:white flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md bg-blue-500 font-medium tracking-widest text-white group-hover:bg-green-500"
+              }
+              onClick={submitHandler}
+              type={"button"}
+            >
+              <BagCheckIcon className={"h-6 animate-pulse"} />
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
