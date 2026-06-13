@@ -300,11 +300,11 @@ const ChecklistIngredient = ({
         }
       >
         <Field.Root
-          className={
+          className={`${
             isCurrentList
               ? "col-span-4 sm:col-span-2 lg:col-span-4"
               : "col-span-2 sm:col-span-4 lg:col-span-2"
-          }
+          } ${checked ? "opacity-10" : ""}`}
         >
           <IngredientLabel htmlFor={"name"} index={index}>
             Name
@@ -314,7 +314,10 @@ const ChecklistIngredient = ({
           </ExistingGroceryListField>
         </Field.Root>
 
-        <IngredientRoot isCurrentList={isCurrentList}>
+        <IngredientRoot
+          isCurrentList={isCurrentList}
+          className={`${checked ? "opacity-10" : ""}`}
+        >
           <IngredientLabel htmlFor={"price"} index={index}>
             Price
           </IngredientLabel>
@@ -328,7 +331,10 @@ const ChecklistIngredient = ({
           </div>
         </IngredientRoot>
 
-        <IngredientRoot isCurrentList={isCurrentList}>
+        <IngredientRoot
+          isCurrentList={isCurrentList}
+          className={`${checked ? "opacity-10" : ""}`}
+        >
           <IngredientLabel htmlFor={"quantity"} index={index}>
             (Quantity)
           </IngredientLabel>
@@ -337,7 +343,10 @@ const ChecklistIngredient = ({
           </ExistingGroceryListField>
         </IngredientRoot>
 
-        <IngredientRoot isCurrentList={isCurrentList}>
+        <IngredientRoot
+          isCurrentList={isCurrentList}
+          className={`${checked ? "opacity-10" : ""}`}
+        >
           <IngredientLabel htmlFor={"capacity"} index={index}>
             Capacity
           </IngredientLabel>
@@ -346,7 +355,10 @@ const ChecklistIngredient = ({
           </ExistingGroceryListField>
         </IngredientRoot>
 
-        <IngredientRoot isCurrentList={isCurrentList}>
+        <IngredientRoot
+          isCurrentList={isCurrentList}
+          className={`${checked ? "opacity-10" : ""}`}
+        >
           <IngredientLabel htmlFor={"unit"} index={index}>
             Unit
           </IngredientLabel>
@@ -358,11 +370,11 @@ const ChecklistIngredient = ({
         {isCurrentList && publicId ? (
           <IngredientRoot
             isCurrentList
-            className={
-              "col-span-2 mt-auto hidden w-full justify-center lg:block"
-            }
+            className={"mt-auto hidden w-full lg:block"}
           >
-            <IngredientToggle checked={checked} publicId={publicId} />
+            <IngredientToggle checked={checked} publicId={publicId}>
+              Add
+            </IngredientToggle>
           </IngredientRoot>
         ) : null}
       </div>
