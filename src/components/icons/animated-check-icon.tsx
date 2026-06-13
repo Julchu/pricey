@@ -1,15 +1,18 @@
-export const AnimatedCheckIcon = () => {
+// hugeicons:checkmark-square-03
+import { SVGProps } from "react";
+
+export const AnimatedCheckIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      className={"cursor-pointer"}
+      {...props}
+      className={`cursor-pointer ${props.className}`}
     >
       <g
         fill="none"
-        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
@@ -34,16 +37,21 @@ export const AnimatedCheckIcon = () => {
   );
 };
 
-// TODO: iterate on designs of empty checkbox
-export const EmptyCheckbox = () => {
+export const EmptyCheckbox = ({ ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
+      {...props}
+      className={`cursor-pointer ${props.className}`}
     >
-      <path fill="none" />
+      <path
+        fill="none"
+        strokeWidth="1.5"
+        d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"
+      />
     </svg>
   );
 };

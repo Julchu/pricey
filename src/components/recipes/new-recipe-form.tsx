@@ -70,6 +70,27 @@ export const NewRecipeForm = ({
 
   const { register, control, handleSubmit, setFocus, reset, watch } = methods;
 
+  // Sync the RHF form with the persisted draft from the Zustand store.
+  //
+  // Problem: `useForm` captures `defaultValues` at mount time. If the store has
+  // not yet rehydrated from localStorage (Zustand `persist`), the form mounts
+  // with empty defaults and never sees the restored draft even after `hasHydrated`
+  // turns true.
+  //
+  // Additionally, `addIngredientsToCurrentRecipe` can merge ingredients into the
+  // draft from outside this form (e.g. the ingredients calculator). The form
+  // won't reflect those changes because they happen via the store, not via RHF.
+  //
+  // Solution: `prevVersionRef` tracks the last version we synced from. A `reset()`
+  // is triggered when:
+  //   1. First sync after hydration (`prevVersionRef.current === null`), or
+  //   2. The store version has advanced (`prevVersionRef.current !== currentRecipeVersion`),
+  //      meaning an external write (e.g. `addIngredientsToCurrentRecipe`) changed
+  //      the draft.
+  //
+  // Ordinary user typing does NOT bump `currentRecipeVersion` — the watch
+  // subscription calls `setCurrentRecipe`, which does not increment the version —
+  // so the form is never reset on each keystroke.
   const prevVersionRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -87,6 +108,19 @@ export const NewRecipeForm = ({
     }
   }, [hasHydrated, currentRecipe, reset, currentRecipeVersion]);
 
+  // Debounce-persist the in-progress draft to the Zustand store (and via
+  // `persist`, to localStorage) so the user's work survives a page refresh.
+  //
+  // `watch` fires on every field change; the 300 ms debounce batches rapid
+  // keystrokes into a single `setCurrentRecipe` call instead of writing on
+  // every character.
+  //
+  // The `hasHydrated` guard prevents overwriting a persisted draft with the
+  // stale in-memory initial values before the store finishes rehydrating from
+  // localStorage.
+  //
+  // Cleanup unsubscribes the RHF watcher and cancels any pending timeout on
+  // unmount to avoid stale state updates.
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {

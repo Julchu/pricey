@@ -38,34 +38,34 @@ export const NewGroceryListForm = ({
   };
 
   const {
-    setCurrentGroceryList,
-    clearCurrentGroceryList,
+    setNewGroceryList,
+    clearNewGroceryList,
     addGroceryList,
-    currentGroceryList,
-    currentGroceryListVersion,
+    newGroceryList,
+    newGroceryListVersion,
     hasHydrated,
   } = useGroceryListsStore(
     useShallow(
       ({
-        setCurrentGroceryList,
-        clearCurrentGroceryList,
+        setNewGroceryList,
+        clearNewGroceryList,
         addGroceryList,
-        currentGroceryList,
-        currentGroceryListVersion,
+        newGroceryList,
+        newGroceryListVersion,
         hasHydrated,
       }) => ({
-        setCurrentGroceryList,
-        clearCurrentGroceryList,
+        setNewGroceryList,
+        clearNewGroceryList,
         addGroceryList,
-        currentGroceryList,
-        currentGroceryListVersion,
+        newGroceryList,
+        newGroceryListVersion,
         hasHydrated,
       }),
     ),
   );
 
   const methods = useForm<GroceryListFormData>({
-    defaultValues: currentGroceryList ?? defaultEmptyValues,
+    defaultValues: newGroceryList ?? defaultEmptyValues,
   });
 
   const { register, handleSubmit, setFocus, control, reset, watch } = methods;
@@ -74,33 +74,66 @@ export const NewGroceryListForm = ({
     setFocus("name");
   }, [setFocus]);
 
+  // Sync the RHF form with the persisted draft from the Zustand store.
+  //
+  // Problem: `useForm` captures `defaultValues` at mount time. If the store has
+  // not yet rehydrated from localStorage (Zustand `persist`), the form mounts
+  // with empty defaults and never sees the restored draft even after `hasHydrated`
+  // turns true.
+  //
+  // Additionally, `addIngredientsToNewList` can merge ingredients into the draft
+  // from outside this form (e.g. the ingredients calculator). The form won't
+  // reflect those changes because they happen via the store, not via RHF.
+  //
+  // Solution: `prevVersionRef` tracks the last version we synced from. A `reset()`
+  // is triggered when:
+  //   1. First sync after hydration (`prevVersionRef.current === null`), or
+  //   2. The store version has advanced (`prevVersionRef.current !== newGroceryListVersion`),
+  //      meaning an external write (e.g. `addIngredientsToNewList`) changed the draft.
+  //
+  // Ordinary user typing does NOT bump `newGroceryListVersion` — the watch
+  // subscription calls `setNewGroceryList`, which does not increment the version —
+  // so the form is never reset on each keystroke.
   const prevVersionRef = useRef<number | null>(null);
   useEffect(() => {
-    if (!hasHydrated || !currentGroceryList) return;
+    if (!hasHydrated || !newGroceryList) return;
     if (
       prevVersionRef.current === null ||
-      prevVersionRef.current !== currentGroceryListVersion
+      prevVersionRef.current !== newGroceryListVersion
     ) {
-      reset(currentGroceryList);
-      prevVersionRef.current = currentGroceryListVersion;
+      reset(newGroceryList);
+      prevVersionRef.current = newGroceryListVersion;
     }
-  }, [hasHydrated, currentGroceryList, reset, currentGroceryListVersion]);
+  }, [hasHydrated, newGroceryList, reset, newGroceryListVersion]);
 
   // TODO: clean up/simplify debouncing saving current list
+  // Debounce-persist the in-progress draft to the Zustand store (and via
+  // `persist`, to localStorage) so the user's work survives a page refresh.
+  //
+  // `watch` fires on every field change; the 300 ms debounce batches rapid
+  // keystrokes into a single `setNewGroceryList` call instead of writing on
+  // every character.
+  //
+  // The `hasHydrated` guard prevents overwriting a persisted draft with the
+  // stale in-memory initial values before the store finishes rehydrating from
+  // localStorage.
+  //
+  // Cleanup unsubscribes the RHF watcher and cancels any pending timeout on
+  // unmount to avoid stale state updates.
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const subscription = watch((value) => {
       if (!hasHydrated) return;
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        setCurrentGroceryList(value as GroceryListFormData);
+        setNewGroceryList(value as GroceryListFormData);
       }, 300);
     });
     return () => {
       subscription.unsubscribe();
       clearTimeout(timeoutId);
     };
-  }, [watch, setCurrentGroceryList, hasHydrated]);
+  }, [watch, setNewGroceryList, hasHydrated]);
 
   const onSubmitHandler: SubmitHandler<GroceryListFormData> = async (
     groceryListData,
@@ -142,7 +175,7 @@ export const NewGroceryListForm = ({
 
   const groceryListReset = () => {
     reset(defaultEmptyValues);
-    clearCurrentGroceryList();
+    clearNewGroceryList();
   };
 
   return (
@@ -150,7 +183,7 @@ export const NewGroceryListForm = ({
       <FormProvider {...methods}>
         <AccordionHeader
           className={
-            // "flex h-auto flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md" // here
+            // "flex h-auto flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md"
             "flex h-auto flex-col items-center rounded-t-md px-0 text-white"
           }
         >

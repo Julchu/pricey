@@ -1,7 +1,7 @@
-// tabler: checklist;
+// tabler: click;
 import { SVGProps } from "react";
 
-export const Checklist = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const SelectClick = ({ ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@ export const Checklist = ({ ...props }: SVGProps<SVGSVGElement>) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
-        d="M9.615 20H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8m-3 5l2 2l4-4M9 8h4m-4 4h2"
+        d="M3 12h3m6-9v3M7.8 7.8L5.6 5.6m10.6 2.2l2.2-2.2M7.8 16.2l-2.2 2.2M12 12l9 3l-4 2l-2 4z"
       />
     </svg>
   );

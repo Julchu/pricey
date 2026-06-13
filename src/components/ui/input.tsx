@@ -1,5 +1,6 @@
 import { InputHTMLAttributes } from "react";
 import { Field } from "@base-ui/react/field";
+import { FieldRoot } from "@base-ui/react";
 
 // TODO: swap with BaseUI input
 export const Input = ({
@@ -28,5 +29,24 @@ export const IngredientLabel = ({
     >
       {children}
     </Field.Label>
+  );
+};
+
+export const IngredientRoot = ({
+  isCurrentList,
+  className,
+  ...props
+}: FieldRoot.Props & {
+  isCurrentList?: boolean;
+}) => {
+  return (
+    <Field.Root
+      className={`${
+        isCurrentList
+          ? "col-span-2 sm:col-span-1 lg:col-span-2"
+          : "col-span-1 sm:col-span-1"
+      } ${className}`}
+      {...props}
+    />
   );
 };

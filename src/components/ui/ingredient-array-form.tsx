@@ -94,16 +94,16 @@ export const IngredientArrayForm = ({
                 </Field.Root>
 
                 {/* Price (read-only computed, no validation) */}
-                <div className={"col-span-2 sm:col-span-1 lg:col-span-2"}>
-                  <Field.Root>
-                    <Field.Label
-                      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-                    >
-                      Price
-                    </Field.Label>
-                    <PriceDisplay index={index} />
-                  </Field.Root>
-                </div>
+                <Field.Root
+                  className={"col-span-2 sm:col-span-1 lg:col-span-2"}
+                >
+                  <Field.Label
+                    className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
+                  >
+                    Price
+                  </Field.Label>
+                  <PriceDisplay index={index} />
+                </Field.Root>
 
                 {/* Quantity */}
                 <Field.Root
@@ -169,14 +169,12 @@ export const IngredientArrayForm = ({
                 </div>
 
                 {/* Desktop delete button column */}
-                <div className={"group col-span-2 hidden flex-col lg:block"}>
+                <div
+                  className={
+                    "group col-span-2 mt-auto hidden flex-col lg:block"
+                  }
+                >
                   <Field.Root>
-                    <Field.Label
-                      className={`text-xs text-black uppercase opacity-50 ${index !== 0 ? "lg:hidden" : ""}`}
-                    >
-                      &nbsp;
-                    </Field.Label>
-
                     <button
                       className={
                         "flex h-10 w-full cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 font-medium tracking-widest group-hover:border-none group-hover:bg-red-500 group-hover:text-white"

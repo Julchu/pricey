@@ -1,5 +1,15 @@
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
-import { GroceryListIngredientFormData, RecipeFormData, RecipeIngredientFormData, } from "@/utils/interfaces";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  GroceryListIngredientFormData,
+  RecipeFormData,
+  RecipeIngredientFormData,
+} from "@/utils/interfaces";
+import * as React from "react";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
@@ -69,7 +79,7 @@ const IngredientsDisplay = ({
   ingredients: RecipeIngredientFormData[];
 }) => {
   const addIngredientsToCurrentList = useGroceryListsStore(
-    ({ addIngredientsToCurrentList }) => addIngredientsToCurrentList,
+    ({ addIngredientsToNewList }) => addIngredientsToNewList,
   );
   const addIngredientsToCurrentRecipe = useRecipesStore(
     ({ addIngredientsToCurrentRecipe }) => addIngredientsToCurrentRecipe,
@@ -114,9 +124,16 @@ const IngredientsDisplay = ({
           <div
             key={`${ingredient.publicId}_${index}`}
             className={
-              "rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
+              "flex-col rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
             }
           >
+            <div
+              className={
+                "flex h-10 flex-row items-center justify-between lg:hidden"
+              }
+            >
+              {<p>Ingredient {index + 1}</p>}
+            </div>
             <DisplayIngredient ingredient={ingredient} index={index} />
           </div>
         );

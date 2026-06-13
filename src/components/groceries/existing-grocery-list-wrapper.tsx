@@ -30,6 +30,7 @@ export const ExistingGroceryList = ({
     setIsEditing(true);
     if (groceryList.publicId) setOpenList(groceryList.publicId);
   };
+
   if (isEditing) {
     return (
       <ExistingGroceryListForm

@@ -173,6 +173,11 @@ export type GroceryListFormData = {
   updatedAt?: Date;
 };
 
+export type ChecklistData = {
+  groceryListId: string;
+  ingredients: Record<string, boolean>;
+};
+
 export type GroceryListUpdateFormData = {
   deletedIngredientIds: string[];
   newIngredients: GroceryListIngredientFormData[];
