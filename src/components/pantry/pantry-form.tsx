@@ -1,9 +1,4 @@
-import {
-  Ingredient,
-  PantryFormData,
-  PantryIngredientFormData,
-  PantryUpdateFormData,
-} from "@/utils/interfaces";
+import { Ingredient, PantryFormData, PantryIngredientFormData, PantryUpdateFormData, } from "@/utils/interfaces";
 import { SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { Autocomplete } from "@base-ui/react/autocomplete";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
@@ -265,7 +260,7 @@ const PantryIngredientSearch = ({
     >
       <div className={"flex flex-row gap-4 p-4"}>
         <Autocomplete.Input
-          placeholder="Search pantry..."
+          placeholder="Add to pantry..."
           type="search"
           className={
             "text-md flex min-h-10 w-full rounded-md border border-gray-200 px-[15px] font-medium outline-none placeholder:font-normal placeholder:text-gray-400"
@@ -322,9 +317,9 @@ const PantryIngredientRow = ({
   return (
     <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:border-none lg:p-0">
       <div className="flex flex-row items-center justify-between gap-4 lg:hidden">
-        <div className="flex min-h-10 w-full items-center rounded-md text-xl font-medium capitalize">
+        <p className="flex min-h-10 w-full items-center rounded-md text-xl font-medium capitalize">
           {ingredientName}
-        </div>
+        </p>
 
         <button
           className="group flex h-10 w-auto cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-200 p-4 hover:bg-red-500 hover:text-white"

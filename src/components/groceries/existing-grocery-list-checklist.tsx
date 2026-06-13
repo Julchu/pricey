@@ -156,7 +156,7 @@ const IngredientsChecklist = ({
                     "h-6 fill-blue-500 stroke-blue-500 group-hover:fill-white group-hover:stroke-white"
                   }
                 />
-                Unset current list
+                Unset checklist
               </>
             ) : (
               <>
@@ -165,7 +165,7 @@ const IngredientsChecklist = ({
                     "h-6 fill-blue-500 stroke-blue-500 group-hover:fill-white group-hover:stroke-white"
                   }
                 />
-                Set current list
+                Set checklist
               </>
             )}
           </button>
@@ -203,10 +203,10 @@ const IngredientsChecklist = ({
           >
             <div
               className={
-                "flex h-10 flex-row items-center justify-between lg:hidden"
+                "flex h-10 w-full flex-row items-center justify-between rounded-md text-xl font-medium capitalize lg:hidden"
               }
             >
-              {<p>Ingredient {index + 1}</p>}
+              <p>{ingredient.name}</p>
               {isCurrentList ? (
                 <IngredientRoot
                   isCurrentList
@@ -295,12 +295,12 @@ const ChecklistIngredient = ({
       <div
         className={
           isCurrentList
-            ? "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-14"
-            : "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+            ? "grid w-full grid-cols-4 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-14"
+            : "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
         <Field.Root
-          className={`${
+          className={`hidden lg:block ${
             isCurrentList
               ? "col-span-4 sm:col-span-2 lg:col-span-4"
               : "col-span-2 sm:col-span-4 lg:col-span-2"
