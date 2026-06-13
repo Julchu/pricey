@@ -49,7 +49,7 @@ export const ExistingGroceryListChecklist = ({
     <div className={"flex flex-col"}>
       <AccordionHeader
         // className={`flex flex-col items-center rounded-t-md px-0 text-white data-[state=closed]:rounded-b-md`} // here
-        className={`flex flex-col items-center px-0 ${isCurrentList ? "bg-green-500" : "bg-blue-500"} text-white ${last ? "data-closed:rounded-b-md" : ""}`}
+        className={`flex flex-col items-center bg-blue-500 px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`} // ${checklist ? (isCurrentList ? "" : "bg-blue-800 opacity-70") : ""}
       >
         {/* TODO: fix header trigger/upload image to form */}
         <div onClick={onClickHandler} className={"cursor-pointer pl-4"}>
@@ -58,7 +58,7 @@ export const ExistingGroceryListChecklist = ({
 
         <div className={"flex w-full flex-col"}>
           <div
-            className={`text-md ${isCurrentList ? "bg-green-500" : "bg-blue-500"} flex min-h-10 w-full items-center px-[15px] text-xl font-bold`}
+            className={`text-md flex min-h-10 w-full items-center px-[15px] text-xl font-bold`}
           >
             {name}
           </div>
@@ -208,12 +208,15 @@ const IngredientsChecklist = ({
             >
               {<p>Ingredient {index + 1}</p>}
               {isCurrentList ? (
-                <div className={"col-span-2 mt-auto justify-center"}>
+                <IngredientRoot
+                  isCurrentList
+                  className={"col-span-2 mt-auto justify-center"}
+                >
                   <IngredientToggle
                     publicId={ingredient.publicId}
                     checked={checked}
                   />
-                </div>
+                </IngredientRoot>
               ) : null}
             </div>
             <ChecklistIngredient
@@ -353,9 +356,14 @@ const ChecklistIngredient = ({
         </IngredientRoot>
 
         {isCurrentList && publicId ? (
-          <div className={"col-span-2 mt-auto hidden justify-center lg:block"}>
+          <IngredientRoot
+            isCurrentList
+            className={
+              "col-span-2 mt-auto hidden w-full justify-center lg:block"
+            }
+          >
             <IngredientToggle checked={checked} publicId={publicId} />
-          </div>
+          </IngredientRoot>
         ) : null}
       </div>
     </div>
