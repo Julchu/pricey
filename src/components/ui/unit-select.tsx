@@ -2,15 +2,8 @@
 import { Select } from "@base-ui/react/select";
 import { CaretRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { UnitSelectDropdown } from "@/components/ingredients/calculator/unit-dropdown";
-import { useShallow } from "zustand/react/shallow";
-import { isMass, isVolume } from "@/utils/text-formatters";
-import { useUserStore } from "@/providers/user-store-provider";
 import { ReactNode } from "react";
-import {
-  Controller,
-  ControllerRenderProps,
-  useFormContext,
-} from "react-hook-form";
+import { Controller, ControllerRenderProps, useFormContext, } from "react-hook-form";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
 import { GroceryListFormData, IngredientFormData } from "@/utils/interfaces";
 
@@ -43,18 +36,9 @@ const UnitController = ({
     | ControllerRenderProps<IngredientFormData, "unit">
     | ControllerRenderProps<GroceryListFormData, `ingredients.${number}.unit`>;
 }) => {
-  const { setMass, setLiquidVolume } = useUserStore(
-    useShallow(({ setMass, setLiquidVolume }) => ({
-      setMass,
-      setLiquidVolume,
-    })),
-  );
-
   const onChangeHandler = (value: string | null | undefined) => {
     if (!value) return;
     field.onChange(value);
-    if (isMass(value)) setMass(value);
-    else if (isVolume(value)) setLiquidVolume(value);
   };
 
   return (
