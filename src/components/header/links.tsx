@@ -7,7 +7,7 @@ export const MenuLink = ({ href, title }: { href: string; title: string }) => {
     <Link href={href}>
       <Menu.Item
         className={
-          "text-md relative flex h-[25px] items-center rounded-md p-4 leading-none outline-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white"
+          "text-md relative flex h-[25px] items-center rounded-md p-4 leading-none outline-none data-highlighted:bg-blue-500 data-highlighted:text-white"
         }
       >
         {title}

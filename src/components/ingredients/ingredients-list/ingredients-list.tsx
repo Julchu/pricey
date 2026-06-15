@@ -1,7 +1,7 @@
 "use client";
 import { useWatch } from "react-hook-form";
 import { ingredientControl } from "@/providers/ingredient-form-provider";
-import { Card } from "@/components/ingredients/ingredients-list/card";
+import { IngredientCard } from "@/components/ingredients/ingredients-list/ingredient-card";
 import { useDebouncedState } from "@/app/hooks/use-debounced-state";
 import { useMemo } from "react";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
@@ -66,7 +66,7 @@ export const IngredientsList = () => {
     <div className={"columns-1 gap-4 rounded-md sm:columns-2"}>
       {filteredIngredients.map((ingredient, index) => {
         return (
-          <Card
+          <IngredientCard
             key={`${ingredient.name}_${index}`}
             ingredient={ingredient}
             searchedIngredient={searchedIngredient}

@@ -17,7 +17,7 @@ import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { AlertDialog, Button } from "@base-ui/react";
-import { DeleteList } from "@/components/ui/delete-list-alert";
+import { DeleteListDialog } from "@/components/ui/delete-list-alert";
 
 export const ExistingRecipeForm = ({
   recipe,
@@ -194,7 +194,7 @@ export const ExistingRecipeForm = ({
                 </Button>
               }
             />
-            <DeleteList
+            <DeleteListDialog
               title={"Delete recipe?"}
               subtitle={"This action cannot be undone."}
               onDeleteHandler={handleSubmit(onDeleteHandler)}

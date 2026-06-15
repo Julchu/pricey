@@ -1,6 +1,15 @@
-import { GroceryListFormData, GroceryListIngredientFormData, GroceryListUpdateFormData, } from "@/utils/interfaces";
+import {
+  GroceryListFormData,
+  GroceryListIngredientFormData,
+  GroceryListUpdateFormData,
+} from "@/utils/interfaces";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { AccordionContent, AccordionHeader, AccordionSubheader, AccordionTrigger, } from "@/components/ui/accordion";
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionSubheader,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { IngredientArrayForm } from "@/components/ui/ingredient-array-form";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { useShallow } from "zustand/react/shallow";
@@ -8,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 import { BagDeleteIcon } from "@/components/icons/grocery-bag/delete";
 import { AlertDialog, Button } from "@base-ui/react";
-import { DeleteList } from "@/components/ui/delete-list-alert"; // Grocery list editing form
+import { DeleteListDialog } from "@/components/ui/delete-list-alert"; // Grocery list editing form
 
 // Grocery list editing form
 export const ExistingGroceryListForm = ({
@@ -231,7 +240,7 @@ export const ExistingGroceryListForm = ({
                 </Button>
               }
             />
-            <DeleteList
+            <DeleteListDialog
               title={"Delete grocery list?"}
               subtitle={"This action cannot be undone."}
               onDeleteHandler={handleSubmit(onDeleteHandler)}
