@@ -230,23 +230,28 @@ const IngredientsChecklist = ({
       })}
 
       {/*grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1*/}
+
       <div
-        className={
-          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
-        }
+        className={`grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 ${
+          isCurrentList ? "lg:grid-cols-14" : "lg:grid-cols-6 lg:grid-rows-1"
+        }`}
       >
         <div
-          className={
-            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
-          }
+          className={`col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-3 ${
+            isCurrentList
+              ? "lg:col-span-2 lg:col-start-11"
+              : "lg:col-span-1 lg:col-start-5"
+          }`}
         >
           Total cost:
         </div>
 
         <div
-          className={
-            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
-          }
+          className={`col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-4 ${
+            isCurrentList
+              ? "lg:col-span-2 lg:col-start-13"
+              : "lg:col-span-1 lg:col-start-6"
+          }`}
         >
           <p className={"text-center font-medium"}>
             $
@@ -267,7 +272,7 @@ const IngredientsChecklist = ({
 };
 
 const ChecklistIngredient = ({
-  ingredient: { name, quantity, unit, capacity, publicId },
+  ingredient,
   index,
   isCurrentList,
   checked,
@@ -277,18 +282,24 @@ const ChecklistIngredient = ({
   isCurrentList: boolean;
   checked: boolean;
 }) => {
+  const { name, quantity, unit, capacity, publicId } = ingredient;
   const masterIngredients = useIngredientsStore(
     ({ ingredients }) => ingredients,
   );
 
-  // TODO: remove useShallow
-  const _addItemToPantry = usePantryStore(
+  // // TODO: grocery list alert when master ingredient doesn't exist
+  const addItemToPantry = usePantryStore(
     ({ addItemToPantry }) => addItemToPantry,
   );
 
   const foundIngredient = masterIngredients.find(
     ({ publicId: masterPublicId }) => masterPublicId === publicId,
   );
+
+  const _groceryPantryHandler = () => {
+    // TODO: check ingredient amounts
+    if (foundIngredient) addItemToPantry(foundIngredient);
+  };
 
   return (
     <div className={`flex w-full flex-col gap-4`}>
@@ -373,7 +384,7 @@ const ChecklistIngredient = ({
             className={"mt-auto hidden w-full lg:block"}
           >
             <IngredientToggle checked={checked} publicId={publicId}>
-              Add
+              Added
             </IngredientToggle>
           </IngredientRoot>
         ) : null}

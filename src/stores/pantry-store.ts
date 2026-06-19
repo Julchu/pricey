@@ -99,10 +99,10 @@ const mergePantryItem = (
   incoming: PantryIngredient,
 ): PantryIngredient[] => {
   const exists = items.some(
-    ({ ingredientPublicId }) =>
-      ingredientPublicId?.toLowerCase() ===
-      incoming.ingredientPublicId?.toLowerCase(),
+    ({ publicId }) =>
+      publicId?.toLowerCase() === incoming.publicId?.toLowerCase(),
   );
+
   if (exists) return items;
   return [...items, incoming];
 };

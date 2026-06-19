@@ -53,6 +53,11 @@ export const CardComponent = ({
     volume: liquidVolume,
   };
 
+  const ingredientPantryHandler = () => {
+    // TODO: reset ingredient amounts
+    addItemToPantry(ingredient);
+  };
+
   const ingredientDeleteHandler = () => {
     return;
   };
@@ -157,7 +162,7 @@ export const CardComponent = ({
               className={
                 "text-md relative flex h-[25px] items-center rounded-md p-4 leading-none outline-none data-highlighted:bg-blue-500 data-highlighted:text-white"
               }
-              onClick={() => addItemToPantry(ingredient)}
+              onClick={ingredientPantryHandler}
             >
               Add to pantry
             </ContextMenu.Item>
@@ -185,17 +190,3 @@ export const CardComponent = ({
 };
 
 export const IngredientCard = memo(CardComponent);
-
-/*<dialog open={open} onClose={closeHandler}>
-        <form>
-          <button
-            type="submit"
-            aria-label="close"
-            formMethod="dialog"
-            formNoValidate
-          >
-            X
-          </button>
-        </form>
-        Test modal
-      </dialog>*/

@@ -150,9 +150,7 @@ export const Calculator = () => {
               onClick={() => ingredientReset()}
               type={"reset"}
             >
-              <CircleResetIcon
-                className={"fill-blue-500 group-hover:fill-white"}
-              />
+              <CircleResetIcon className={"group-hover:fill-white"} />
               Reset
             </button>
           </div>
@@ -164,7 +162,7 @@ export const Calculator = () => {
               }
               onClick={handleIngredientSubmit(onSubmitHandler)}
             >
-              <AnimatedCheckIcon />
+              <AnimatedCheckIcon className={"stroke-white"} />
               Save
             </button>
           </div>
