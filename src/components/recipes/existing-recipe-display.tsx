@@ -129,10 +129,10 @@ const IngredientsDisplay = ({
           >
             <div
               className={
-                "flex h-10 flex-row items-center justify-between lg:hidden"
+                "flex h-10 w-full flex-row items-center justify-between rounded-md text-xl font-medium capitalize lg:hidden"
               }
             >
-              {<p>Ingredient {index + 1}</p>}
+              <p>{ingredient.name}</p>
             </div>
             <DisplayIngredient ingredient={ingredient} index={index} />
           </div>
@@ -141,29 +141,32 @@ const IngredientsDisplay = ({
 
       <div
         className={
-          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
+          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
         <div
           className={
-            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
+            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-3 lg:col-span-1 lg:col-start-5"
           }
         >
           Total cost:
         </div>
+
         <div
           className={
-            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
+            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-4 lg:col-span-1 lg:col-start-6"
           }
         >
           <p className={"text-center font-medium"}>
             $
             {formatPrice(
-              ingredients.reduce((sum, { publicId }) => {
+              ingredients.reduce((sum, { ingredientPublicId }) => {
                 const foundIngredient = masterIngredients.find(
-                  ({ publicId: masterPublicId }) => masterPublicId === publicId,
+                  ({ publicId: masterPublicId }) =>
+                    masterPublicId === ingredientPublicId,
                 );
-                if (foundIngredient?.price) return sum + foundIngredient.price;
+                if (foundIngredient?.price)
+                  return sum + foundIngredient.price / 100;
                 return sum;
               }, 0),
             ) || "0.00"}
@@ -175,7 +178,7 @@ const IngredientsDisplay = ({
 };
 
 const DisplayIngredient = ({
-  ingredient: { name, quantity, unit, capacity, publicId },
+  ingredient: { name, quantity, unit, capacity, ingredientPublicId },
   index,
 }: {
   ingredient: RecipeIngredientFormData;
@@ -186,17 +189,19 @@ const DisplayIngredient = ({
   );
 
   const foundIngredient = masterIngredients.find(
-    ({ publicId: masterPublicId }) => masterPublicId === publicId,
+    ({ publicId: masterPublicId }) => masterPublicId === ingredientPublicId,
   );
 
   return (
     <div className={`flex w-full flex-row gap-4`}>
       <div
         className={
-          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
-        <Field.Root className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
+        <Field.Root
+          className={"col-span-2 hidden sm:col-span-4 lg:col-span-2 lg:block"}
+        >
           <IngredientLabel htmlFor={"name"} index={index}>
             Name
           </IngredientLabel>

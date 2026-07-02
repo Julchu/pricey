@@ -43,7 +43,8 @@ export const ExistingGroceryListChecklist = ({
     startEditing();
   };
 
-  const isCurrentList = checklist?.groceryListId === publicId;
+  // TODO: style non-checklist headers to emphasize checklist
+  // const isCurrentList = checklist?.groceryListId === publicId;
 
   return (
     <div className={"flex flex-col"}>
@@ -229,8 +230,6 @@ const IngredientsChecklist = ({
         );
       })}
 
-      {/*grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1*/}
-
       <div
         className={`grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 ${
           isCurrentList ? "lg:grid-cols-14" : "lg:grid-cols-6 lg:grid-rows-1"
@@ -256,11 +255,13 @@ const IngredientsChecklist = ({
           <p className={"text-center font-medium"}>
             $
             {formatPrice(
-              ingredients.reduce((sum, { publicId }) => {
+              ingredients.reduce((sum, { ingredientPublicId }) => {
                 const foundIngredient = masterIngredients.find(
-                  ({ publicId: masterPublicId }) => masterPublicId === publicId,
+                  ({ publicId: masterPublicId }) =>
+                    masterPublicId === ingredientPublicId,
                 );
-                if (foundIngredient?.price) return sum + foundIngredient.price;
+                if (foundIngredient?.price)
+                  return sum + foundIngredient.price / 100;
                 return sum;
               }, 0),
             ) || "0.00"}
@@ -282,7 +283,7 @@ const ChecklistIngredient = ({
   isCurrentList: boolean;
   checked: boolean;
 }) => {
-  const { name, quantity, unit, capacity, publicId } = ingredient;
+  const { name, quantity, unit, capacity, ingredientPublicId } = ingredient;
   const masterIngredients = useIngredientsStore(
     ({ ingredients }) => ingredients,
   );
@@ -293,7 +294,7 @@ const ChecklistIngredient = ({
   );
 
   const foundIngredient = masterIngredients.find(
-    ({ publicId: masterPublicId }) => masterPublicId === publicId,
+    ({ publicId: masterPublicId }) => masterPublicId === ingredientPublicId,
   );
 
   const _groceryPantryHandler = () => {
@@ -378,12 +379,12 @@ const ChecklistIngredient = ({
           </ExistingGroceryListField>
         </IngredientRoot>
 
-        {isCurrentList && publicId ? (
+        {isCurrentList && ingredientPublicId ? (
           <IngredientRoot
             isCurrentList
             className={"mt-auto hidden w-full lg:block"}
           >
-            <IngredientToggle checked={checked} publicId={publicId}>
+            <IngredientToggle checked={checked} publicId={ingredientPublicId}>
               Added
             </IngredientToggle>
           </IngredientRoot>
