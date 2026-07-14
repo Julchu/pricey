@@ -19,7 +19,7 @@ const Links = () => {
   return (
     <Menu.Root>
       <Menu.Trigger
-        className="relative inline-flex aspect-square h-full cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold text-white select-none"
+        className="relative inline-flex aspect-square h-full cursor-pointer items-center rounded-full bg-blue-500 font-bold text-white select-none"
         aria-label="User menu"
       >
         <div
