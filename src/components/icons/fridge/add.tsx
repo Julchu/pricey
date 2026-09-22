@@ -1,7 +1,7 @@
 // mdi: fridge;
 import { SVGProps } from "react";
 
-export const AddFridge = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const AddFridge = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

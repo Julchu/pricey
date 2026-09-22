@@ -1,7 +1,7 @@
 // hugeicons:checkmark-square-03
 import { SVGProps } from "react";
 
-export const AnimatedCheckIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const AnimatedCheckIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ export const AnimatedCheckIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
   );
 };
 
-export const EmptyCheckbox = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const EmptyCheckbox = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

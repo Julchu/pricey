@@ -1,7 +1,7 @@
 // hugeicons:hugeicons:undo-03
 import { SVGProps } from "react";
 
-export const CircleResetIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const CircleResetIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

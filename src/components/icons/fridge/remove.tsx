@@ -1,7 +1,7 @@
 // tabler:fridge-off
 import { SVGProps } from "react";
 
-export const RemoveFridge = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const RemoveFridge = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

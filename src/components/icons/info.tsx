@@ -1,7 +1,7 @@
 // tabler:info-square-rounded-filled
 import { SVGProps } from "react";
 
-export const InfoIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const InfoIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

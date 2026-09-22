@@ -1,7 +1,7 @@
 // material-symbols:playlist-add-check-rounded
 import { SVGProps } from "react";
 
-export const ChecklistAdd = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const ChecklistAdd = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
