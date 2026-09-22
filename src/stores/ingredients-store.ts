@@ -8,6 +8,7 @@ export type IngredientsState = {
 export type IngredientsActions = {
   setIngredients: (ingredients: Ingredient[]) => void;
   updateIngredients: (ingredient: Ingredient) => void;
+  deleteIngredient: (publicId: string) => void;
   clearIngredients: () => void;
   fetchIngredients: () => void;
 };
@@ -43,6 +44,11 @@ export const createIngredientsStore = (
       set({ ingredients: [...filteredIngredients, newIngredient] });
     },
     clearIngredients: () => set({ ingredients: [] }),
+    deleteIngredient: (publicId) => {
+      set({
+        ingredients: get().ingredients.filter((i) => i.publicId !== publicId),
+      });
+    },
     fetchIngredients: async () => {
       try {
         const { ingredient } = await tryFetchingIngredients();
