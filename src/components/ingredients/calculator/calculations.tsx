@@ -9,21 +9,18 @@ import {
   unitConverter,
 } from "@/utils/text-formatters";
 import { useShallow } from "zustand/react/shallow";
-import {
-  ingredientControl,
-  ingredientSetValue,
-} from "@/providers/ingredient-form-provider";
-import {
-  TextAlignJustifyIcon,
-  TriangleDownIcon,
-  TriangleUpIcon,
-} from "@radix-ui/react-icons";
-import { ChangeEvent } from "react";
+import { ingredientControl } from "@/providers/ingredient-form-provider";
+import { TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, } from "@radix-ui/react-icons";
+import { ChangeEvent, MutableRefObject } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
 
-export const Calculations = () => {
+export const Calculations = ({
+  imageFileRef,
+}: {
+  imageFileRef: MutableRefObject<File | null>;
+}) => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
   const { mass, liquidVolume } = useUserStore(
     useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
@@ -32,7 +29,7 @@ export const Calculations = () => {
   const uploadFileHandler = (fileElement: ChangeEvent<HTMLInputElement>) => {
     const file = fileElement.target.files?.[0];
     if (file) {
-      ingredientSetValue("image", URL.createObjectURL(file));
+      imageFileRef.current = file;
     }
   };
 
@@ -115,6 +112,7 @@ export const Calculations = () => {
       <input
         type={"file"}
         id={"image"}
+        accept={"image/png, image/jpeg"}
         className={"invisible absolute h-full w-full"}
         onChange={uploadFileHandler}
       />
@@ -127,7 +125,7 @@ export const Calculations = () => {
           <ImageUploadIcon />
         </div>
         {/*<Image*/}
-        {/*  src={ImageUploadIcon}*/}
+        {/*  src={}*/}
         {/*  alt={"Uploaded Ingredient"}*/}
         {/*  className={*/}
         {/*    "absolute right-0 bottom-0 z-0 m-4 size-1/8 object-contain"*/}

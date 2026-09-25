@@ -9,13 +9,18 @@ import {
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler, useFormState } from "react-hook-form";
-import { IngredientFormData } from "@/utils/interfaces";
+import { Ingredient, IngredientFormData, PresignData } from "@/utils/interfaces";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
 import { Separator } from "@base-ui/react";
+import { MutableRefObject } from "react";
 
-export const Calculator = () => {
+export const Calculator = ({
+  imageFileRef,
+}: {
+  imageFileRef: MutableRefObject<File | null>;
+}) => {
   const updateIngredients = useIngredientsStore(
     ({ updateIngredients }) => updateIngredients,
   );
@@ -34,16 +39,54 @@ export const Calculator = () => {
       },
     });
 
-    if (ingredientFormData.image) {
-      URL.revokeObjectURL(ingredientFormData.image);
+    if (submitResponse.status !== 200) {
+      ingredientReset();
+      return;
     }
 
-    if (submitResponse.status === 200 || submitResponse.status === 401) {
-      const response = await submitResponse.json();
-      const { ingredient } = response;
+    const { ingredient, presign }: { ingredient: Ingredient; presign?: PresignData } =
+      await submitResponse.json();
+
+    const file = imageFileRef.current;
+    if (ingredient?.publicId && file && presign) {
+      // Step 1: upload directly to MinIO using presigned URL from creation response
+      const minioForm = new FormData();
+      for (const [key, value] of Object.entries(presign.fields)) {
+        minioForm.append(key, value);
+      }
+      minioForm.append("file", file);
+
+      const uploadResponse = await fetch(presign.url, {
+        method: "POST",
+        body: minioForm,
+      });
+
+      if (uploadResponse.ok) {
+        // Step 2: patch ingredient with the public URL
+        const patchResponse = await fetch(
+          `/api/ingredient/${ingredient.publicId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: presign.publicUrl }),
+          },
+        );
+
+        if (patchResponse.ok) {
+          const { ingredient: updatedIngredient } = await patchResponse.json();
+          updateIngredients(updatedIngredient);
+        } else {
+          updateIngredients(ingredient);
+        }
+      } else {
+        updateIngredients(ingredient);
+      }
+    } else {
       updateIngredients(ingredient);
-      ingredientReset();
     }
+
+    imageFileRef.current = null;
+    ingredientReset();
   };
 
   const labelClass = "text-xs font-medium text-black uppercase opacity-50";

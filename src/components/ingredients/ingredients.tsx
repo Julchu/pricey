@@ -1,21 +1,25 @@
+"use client";
 import { IngredientsList } from "@/components/ingredients/ingredients-list/ingredients-list";
 import { Calculator } from "@/components/ingredients/calculator/calculator";
 import { Calculations } from "@/components/ingredients/calculator/calculations";
 import { Separator } from "@base-ui/react";
+import { useRef } from "react";
 
 export const Ingredients = () => {
+  const imageFileRef = useRef<File | null>(null);
+
   return (
     <>
-      <div className="w-full flex-none snap-x snap-center rounded-md bg-white md:h-full md:w-1/2 md:flex-initial md:snap-none md:snap-align-none md:flex-col">
+      <div className="w-full flex-none snap-x snap-center rounded-[PERSON_NAME] md:h-full md:w-1/2 [PERSON_NAME]:flex-initial [ADDRESS]snap-none md:snap-align-none md:flex-col">
         <form className={"flex h-full flex-col"}>
-          <Calculations />
+          <Calculations imageFileRef={imageFileRef} />
 
           <Separator
             orientation={"horizontal"}
             className="h-px bg-gray-200 dark:bg-neutral-700"
           />
 
-          <Calculator />
+          <Calculator imageFileRef={imageFileRef} />
         </form>
       </div>
 

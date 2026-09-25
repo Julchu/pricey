@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { IngredientFormData } from "@/utils/interfaces";
+import { IngredientFormData, PresignData } from "@/utils/interfaces";
 import { cookies } from "next/headers";
 
 export const GET = async () => {
@@ -63,9 +63,35 @@ export const POST = async (req: NextRequest) => {
     const { success, data, error } = await saveIngredientResponse.json();
     if (!success)
       return new Response(error, { status: saveIngredientResponse.status });
-    return new Response(JSON.stringify({ ingredient: data }), {
-      status: 200,
-    });
+
+    const ingredient = data;
+    const ingredientPublicId = ingredient?.publicId;
+
+    if (!ingredientPublicId)
+      return new Response(JSON.stringify({ ingredient }), { status: 200 });
+
+    const presignResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/ingredient/${ingredientPublicId}/image/presign`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const {
+      success: presignSuccess,
+      data: presignData,
+    }: { success: boolean; data: PresignData } = await presignResponse.json();
+
+    if (!presignSuccess)
+      return new Response(JSON.stringify({ ingredient }), { status: 200 });
+
+    return new Response(
+      JSON.stringify({ ingredient, presign: presignData }),
+      { status: 200 },
+    );
   } catch (error) {
     return new Response(`Ingredient creation error: ${error}`, {
       status: 400,
