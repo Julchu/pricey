@@ -26,4 +26,5 @@ export const ingredientReset = () => {
   ingredientSetValue("quantity", "" as unknown as number);
   ingredientSetValue("capacity", "" as unknown as number);
   ingredientSetValue("unit", "" as UnitType);
+  ingredientSetValue("image", undefined);
 };

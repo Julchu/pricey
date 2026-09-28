@@ -9,7 +9,11 @@ import {
   ingredientReset,
 } from "@/providers/ingredient-form-provider";
 import { SubmitHandler, useFormState } from "react-hook-form";
-import { Ingredient, IngredientFormData, PresignData } from "@/utils/interfaces";
+import {
+  Ingredient,
+  IngredientFormData,
+  PresignData,
+} from "@/utils/interfaces";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
@@ -31,20 +35,28 @@ export const Calculator = ({
   const onSubmitHandler: SubmitHandler<IngredientFormData> = async (
     ingredientFormData,
   ) => {
+    const { image: _previewImage, ...ingredientPayload } = ingredientFormData;
+
     const submitResponse = await fetch("/api/ingredient", {
       method: "POST",
-      body: JSON.stringify(ingredientFormData),
+      body: JSON.stringify(ingredientPayload),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    if (submitResponse.status !== 200) {
-      ingredientReset();
+    if (ingredientFormData.image?.startsWith("blob:")) {
+      URL.revokeObjectURL(ingredientFormData.image);
+    }
+
+    if (submitResponse.status !== 200 && submitResponse.status !== 401) {
       return;
     }
 
-    const { ingredient, presign }: { ingredient: Ingredient; presign?: PresignData } =
+    const {
+      ingredient,
+      presign,
+    }: { ingredient: Ingredient; presign?: PresignData } =
       await submitResponse.json();
 
     const file = imageFileRef.current;
@@ -66,7 +78,7 @@ export const Calculator = ({
         const patchResponse = await fetch(
           `/api/ingredient/${ingredient.publicId}`,
           {
-            method: "PUT",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ image: presign.publicUrl }),
           },

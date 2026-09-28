@@ -10,7 +10,7 @@ export const Ingredients = () => {
 
   return (
     <>
-      <div className="w-full flex-none snap-x snap-center rounded-[PERSON_NAME] md:h-full md:w-1/2 [PERSON_NAME]:flex-initial [ADDRESS]snap-none md:snap-align-none md:flex-col">
+      <div className="w-full flex-none snap-x snap-center rounded-md bg-white md:h-full md:w-1/2 md:flex-initial md:snap-none md:snap-align-none md:flex-col">
         <form className={"flex h-full flex-col"}>
           <Calculations imageFileRef={imageFileRef} />
 

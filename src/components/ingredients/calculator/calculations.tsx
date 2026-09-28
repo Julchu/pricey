@@ -9,12 +9,20 @@ import {
   unitConverter,
 } from "@/utils/text-formatters";
 import { useShallow } from "zustand/react/shallow";
-import { ingredientControl } from "@/providers/ingredient-form-provider";
-import { TextAlignJustifyIcon, TriangleDownIcon, TriangleUpIcon, } from "@radix-ui/react-icons";
+import {
+  ingredientControl,
+  ingredientSetValue,
+} from "@/providers/ingredient-form-provider";
+import {
+  TextAlignJustifyIcon,
+  TriangleDownIcon,
+  TriangleUpIcon,
+} from "@radix-ui/react-icons";
 import { ChangeEvent, MutableRefObject } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import Image from "next/image";
 
 export const Calculations = ({
   imageFileRef,
@@ -30,6 +38,7 @@ export const Calculations = ({
     const file = fileElement.target.files?.[0];
     if (file) {
       imageFileRef.current = file;
+      ingredientSetValue("image", URL.createObjectURL(file));
     }
   };
 
@@ -38,10 +47,11 @@ export const Calculations = ({
     volume: liquidVolume,
   };
 
-  const [newName, newPrice, newUnit, newCapacity, newQuantity] = useWatch({
-    name: ["name", "price", "unit", "capacity", "quantity"],
-    control: ingredientControl,
-  });
+  const [newName, newPrice, newUnit, newCapacity, newQuantity, previewImage] =
+    useWatch({
+      name: ["name", "price", "unit", "capacity", "quantity", "image"],
+      control: ingredientControl,
+    });
 
   const newPricePerCapacity = calcIndividualPrice(
     newPrice,
@@ -124,13 +134,18 @@ export const Calculations = ({
         <div className={"absolute right-0 bottom-0 m-4 flex flex-row"}>
           <ImageUploadIcon />
         </div>
-        {/*<Image*/}
-        {/*  src={}*/}
-        {/*  alt={"Uploaded Ingredient"}*/}
-        {/*  className={*/}
-        {/*    "absolute right-0 bottom-0 z-0 m-4 size-1/8 object-contain"*/}
-        {/*  }*/}
-        {/*/>*/}
+        {previewImage ? (
+          <Image
+            src={previewImage}
+            alt={"Uploaded ingredient preview"}
+            unoptimized
+            width={64}
+            height={64}
+            className={
+              "absolute right-0 bottom-0 z-0 m-4 size-16 object-contain"
+            }
+          />
+        ) : null}
       </label>
 
       {isInProgress ? (
