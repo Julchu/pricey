@@ -33,7 +33,12 @@ export const POST = async (req: NextRequest) => {
   try {
     const token = await getAccessToken();
 
-    const ingredientData: IngredientFormData = await req.json();
+    const {
+      contentType,
+      ...ingredientData
+    }: IngredientFormData & {
+      contentType?: string;
+    } = await req.json();
 
     if (!token)
       return new Response(JSON.stringify({ ingredient: ingredientData }), {
@@ -61,7 +66,7 @@ export const POST = async (req: NextRequest) => {
     const ingredient = data;
     const ingredientPublicId = ingredient?.publicId;
 
-    if (!ingredientPublicId)
+    if (!ingredientPublicId || !contentType)
       return new Response(JSON.stringify({ ingredient }), { status: 200 });
 
     const presignResponse = await fetch(
@@ -70,7 +75,9 @@ export const POST = async (req: NextRequest) => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ contentType }),
       },
     );
 

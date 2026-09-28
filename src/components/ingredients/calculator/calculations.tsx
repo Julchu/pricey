@@ -18,7 +18,7 @@ import {
   TriangleDownIcon,
   TriangleUpIcon,
 } from "@radix-ui/react-icons";
-import { ChangeEvent, MutableRefObject } from "react";
+import { ChangeEvent, RefObject } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
@@ -27,7 +27,7 @@ import Image from "next/image";
 export const Calculations = ({
   imageFileRef,
 }: {
-  imageFileRef: MutableRefObject<File | null>;
+  imageFileRef: RefObject<File | null>;
 }) => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
   const { mass, liquidVolume } = useUserStore(

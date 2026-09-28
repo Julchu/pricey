@@ -18,12 +18,12 @@ import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { CircleResetIcon } from "@/components/icons/circle-reset-icon";
 import { AnimatedCheckIcon } from "@/components/icons/animated-check-icon";
 import { Separator } from "@base-ui/react";
-import { MutableRefObject } from "react";
+import { RefObject } from "react";
 
 export const Calculator = ({
   imageFileRef,
 }: {
-  imageFileRef: MutableRefObject<File | null>;
+  imageFileRef: RefObject<File | null>;
 }) => {
   const updateIngredients = useIngredientsStore(
     ({ updateIngredients }) => updateIngredients,
@@ -36,10 +36,14 @@ export const Calculator = ({
     ingredientFormData,
   ) => {
     const { image: _previewImage, ...ingredientPayload } = ingredientFormData;
+    const file = imageFileRef.current;
 
     const submitResponse = await fetch("/api/ingredient", {
       method: "POST",
-      body: JSON.stringify(ingredientPayload),
+      body: JSON.stringify({
+        ...ingredientPayload,
+        ...(file?.type ? { contentType: file.type } : {}),
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -59,7 +63,6 @@ export const Calculator = ({
     }: { ingredient: Ingredient; presign?: PresignData } =
       await submitResponse.json();
 
-    const file = imageFileRef.current;
     if (ingredient?.publicId && file && presign) {
       // Step 1: upload directly to MinIO using presigned URL from creation response
       const minioForm = new FormData();
@@ -87,15 +90,14 @@ export const Calculator = ({
         if (patchResponse.ok) {
           const { ingredient: updatedIngredient } = await patchResponse.json();
           updateIngredients(updatedIngredient);
-        } else {
-          updateIngredients(ingredient);
+          imageFileRef.current = null;
+          ingredientReset();
+          return;
         }
-      } else {
-        updateIngredients(ingredient);
       }
-    } else {
-      updateIngredients(ingredient);
     }
+
+    updateIngredients(ingredient);
 
     imageFileRef.current = null;
     ingredientReset();

@@ -25,7 +25,7 @@ import { usePantryStore } from "@/providers/pantry-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ContextMenu } from "@base-ui/react/context-menu";
 
-export const CardComponent = ({
+const CardComponent = ({
   ingredient,
   searchedIngredient,
 }: {
@@ -132,11 +132,12 @@ export const CardComponent = ({
         }
       >
         <Image
-          src={FoodPlaceholder}
+          src={ingredient.image ?? FoodPlaceholder}
           alt={"Uploaded Ingredient"}
-          className={
-            "absolute top-0 left-0 z-0 h-full w-full object-contain mix-blend-overlay blur-sm"
-          }
+          height={150}
+          width={150}
+          // fill
+          className={`absolute top-0 left-0 z-0 h-full w-full object-contain mix-blend-overlay ${ingredient.image ? "" : "blur-sm"}`}
         />
 
         <div className={"relative z-1 flex w-full flex-row px-4 pt-4"}>
