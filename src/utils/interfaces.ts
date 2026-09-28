@@ -215,6 +215,23 @@ export type PantryUpdateFormData = {
   updatedIngredients: PantryIngredientFormData[];
 };
 
+export type PresignFields = {
+  "Content-Type": string;
+  bucket: string;
+  "X-Amz-Algorithm": string;
+  "X-Amz-Credential": string;
+  "X-Amz-Date": string;
+  key: string;
+  Policy: string;
+  "X-Amz-Signature": string;
+};
+
+export type PresignData = {
+  url: string;
+  fields: PresignFields;
+  publicUrl: string;
+};
+
 /* TODO: create Time-to-live (TTL) grocery list w/ ingredients */
 
 /* Logged in user features:

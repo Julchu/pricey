@@ -1,7 +1,7 @@
 // material-symbols:playlist-remove-rounded
 import { SVGProps } from "react";
 
-export const ChecklistRemove = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const ChecklistRemove = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

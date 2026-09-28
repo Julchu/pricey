@@ -15,6 +15,7 @@ export type IngredientsState = {
 export type IngredientsActions = {
   setIngredients: (ingredients: Ingredient[]) => void;
   updateIngredients: (ingredient: Ingredient) => void;
+  deleteIngredient: (publicId: string) => void;
   clearIngredients: () => void;
   fetchIngredients: () => Promise<void>;
 };
@@ -59,6 +60,11 @@ export const createIngredientsStore = (
     },
     clearIngredients: () =>
       set({ ingredients: [], ingredientsLoadState: "idle" }),
+    deleteIngredient: (publicId) => {
+      set({
+        ingredients: get().ingredients.filter((i) => i.publicId !== publicId),
+      });
+    },
     fetchIngredients: async () => {
       let shouldFetch = false;
       set(({ ingredientsLoadState }) => {

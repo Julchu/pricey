@@ -1,7 +1,7 @@
 // hugeicons:cancel-circle-half-dot
 import { SVGProps } from "react";
 
-export const CircleDeleteIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const CircleDeleteIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

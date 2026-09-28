@@ -1,7 +1,7 @@
 // tabler:shopping-bag-plus
 import { SVGProps } from "react";
 
-export const BagAddIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const BagAddIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

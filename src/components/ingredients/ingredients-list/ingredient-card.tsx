@@ -22,6 +22,7 @@ import { memo } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { Separator } from "@base-ui/react/separator";
 import { usePantryStore } from "@/providers/pantry-store-provider";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ContextMenu } from "@base-ui/react/context-menu";
 
 export const CardComponent = ({
@@ -48,6 +49,14 @@ export const CardComponent = ({
     ({ addItemToPantry }) => addItemToPantry,
   );
 
+  const { updateIngredients: _updateIngredients, deleteIngredient } =
+    useIngredientsStore(
+      useShallow(({ updateIngredients, deleteIngredient }) => ({
+        updateIngredients,
+        deleteIngredient,
+      })),
+    );
+
   const userUnits = {
     mass,
     volume: liquidVolume,
@@ -58,8 +67,15 @@ export const CardComponent = ({
     addItemToPantry(ingredient);
   };
 
-  const ingredientDeleteHandler = () => {
-    return;
+  const ingredientDeleteHandler = async () => {
+    const { publicId } = ingredient;
+    if (!publicId) return;
+
+    const res = await fetch(`/api/ingredient/${publicId}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) deleteIngredient(publicId);
   };
 
   const ingredientEditHandler = () => {
