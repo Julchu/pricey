@@ -1,13 +1,10 @@
 import { NextRequest } from "next/server";
 import { PantryUpdateFormData } from "@/utils/interfaces";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/utils/server-actions/session-token";
 
 export const GET = async () => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     if (!token)
       return new Response(JSON.stringify({ pantryIngredients: [] }), {
@@ -36,10 +33,7 @@ export const GET = async () => {
 
 export const PATCH = async (req: NextRequest) => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     if (!token)
       return new Response(JSON.stringify({ pantryIngredients: [] }), {

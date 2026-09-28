@@ -16,14 +16,16 @@ export const RecipesStoreContext = createContext<RecipesStoreApi | undefined>(
 
 export type RecipesStoreProviderProps = PropsWithChildren<{
   recipes?: Recipe[] | null;
+  recipesServerLoaded?: boolean;
 }>;
 
 export const RecipeStoreProvider = ({
   children,
   recipes,
+  recipesServerLoaded = false,
 }: RecipesStoreProviderProps) => {
   const [recipeStoreState] = useState(() =>
-    createRecipesStore(initRecipesStore(recipes)),
+    createRecipesStore(initRecipesStore(recipes, recipesServerLoaded)),
   );
 
   return (

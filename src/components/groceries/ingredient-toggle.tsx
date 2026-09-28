@@ -1,4 +1,7 @@
-import { AnimatedCheckIcon, EmptyCheckbox, } from "@/components/icons/animated-check-icon";
+import {
+  AnimatedCheckIcon,
+  EmptyCheckbox,
+} from "@/components/icons/animated-check-icon";
 import { useGroceryListsStore } from "@/providers/grocery-list-store-provider";
 import { ReactNode } from "react";
 

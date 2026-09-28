@@ -6,9 +6,16 @@ import {
   RecipeIngredientFormData,
 } from "@/utils/interfaces";
 import { mergeIngredients } from "@/utils/merge-ingredients";
+import {
+  CollectionLoadState,
+  fetchCollection,
+  loadStateFromServer,
+  nextLoadStateForFetch,
+} from "@/stores/collection-load";
 
 export type RecipesState = {
   recipes: Recipe[];
+  recipesLoadState: CollectionLoadState;
   currentRecipe: RecipeFormData | null;
   currentRecipeVersion: number;
   hasHydrated: boolean;
@@ -18,7 +25,7 @@ export type RecipesActions = {
   setRecipes: (recipes: Recipe[]) => void;
   addRecipe: (newRecipe: Recipe) => void;
   clearRecipes: () => void;
-  fetchRecipes: () => void;
+  fetchRecipes: () => Promise<void>;
   updateRecipe: (recipe: Recipe) => void;
   removeRecipe: (recipeId: string) => void;
   setCurrentRecipe: (recipe: RecipeFormData | null) => void;
@@ -31,10 +38,14 @@ export type RecipesActions = {
 
 export type RecipesStore = RecipesState & RecipesActions;
 
-export const initRecipesStore = (recipes?: Recipe[] | null): RecipesState => {
+export const initRecipesStore = (
+  recipes?: Recipe[] | null,
+  recipesServerLoaded = false,
+): RecipesState => {
   return {
     // TODO: Zod validation on recipes
-    recipes: recipes && recipes.length > 0 ? recipes : [],
+    recipes: recipes ?? [],
+    recipesLoadState: loadStateFromServer(recipesServerLoaded),
     currentRecipe: null,
     currentRecipeVersion: 1,
     hasHydrated: false,
@@ -51,13 +62,27 @@ export const createRecipesStore = (initialState: RecipesState) => {
           set(({ recipes }) => ({
             recipes: [...recipes, newRecipe],
           })),
-        clearRecipes: () => set({ recipes: [] }),
+        clearRecipes: () => set({ recipes: [], recipesLoadState: "idle" }),
         fetchRecipes: async () => {
+          let shouldFetch = false;
+          set(({ recipesLoadState }) => {
+            const next = nextLoadStateForFetch(recipesLoadState);
+            if (!next.shouldFetch) return {};
+            shouldFetch = true;
+            return { recipesLoadState: next.loadState };
+          });
+          if (!shouldFetch) return;
+
           try {
-            const { recipes } = await tryFetchingRecipes();
-            set(() => ({ recipes }));
+            const recipes = await fetchCollection<Recipe>(
+              "/api/recipe",
+              "recipes",
+              "Recipe",
+            );
+            set({ recipes, recipesLoadState: "loaded" });
           } catch (error) {
-            throw new Error("Unable to retrieve recipes", { cause: error });
+            console.error("Unable to retrieve recipes", error);
+            set({ recipesLoadState: "error" });
           }
         },
         updateRecipe: (existingRecipe) => {
@@ -116,15 +141,6 @@ export const createRecipesStore = (initialState: RecipesState) => {
       },
     ),
   );
-};
-
-const tryFetchingRecipes = async () => {
-  try {
-    const fetchRecipes = await fetch("/api/recipe");
-    return await fetchRecipes.json();
-  } catch (error) {
-    throw new Error("Unable to fetch recipes", { cause: error });
-  }
 };
 
 export type RecipesStoreApi = ReturnType<typeof createRecipesStore>;

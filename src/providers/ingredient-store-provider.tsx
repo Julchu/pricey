@@ -4,7 +4,6 @@ import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useStore } from "zustand";
 import {
   createIngredientsStore,
-  defaultInitState,
   IngredientsStore,
   IngredientsStoreApi,
   initIngredientsStore,
@@ -16,19 +15,19 @@ export const IngredientsStoreContext = createContext<
 >(undefined);
 
 export type IngredientsStoreProviderProps = PropsWithChildren<{
-  ingredients: Ingredient[];
+  ingredients?: Ingredient[] | null;
+  ingredientsServerLoaded?: boolean;
 }>;
 
 export const IngredientStoreProvider = ({
   children,
   ingredients,
+  ingredientsServerLoaded = false,
 }: IngredientsStoreProviderProps) => {
-  const initialState = ingredients
-    ? initIngredientsStore(ingredients)
-    : defaultInitState;
-
   const [ingredientStoreState] = useState(() =>
-    createIngredientsStore(initialState),
+    createIngredientsStore(
+      initIngredientsStore(ingredients, ingredientsServerLoaded),
+    ),
   );
 
   return (

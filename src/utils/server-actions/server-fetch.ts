@@ -1,5 +1,5 @@
 "use server";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/utils/server-actions/session-token";
 
 // TODO: paginate results
 export const serverFetch = async <T>({
@@ -12,10 +12,7 @@ export const serverFetch = async <T>({
   body?: unknown;
 }): Promise<T | null> => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     if (!token) return null;
 

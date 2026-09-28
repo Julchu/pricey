@@ -1,44 +1,36 @@
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import {
+  getAccessToken,
+  getRefreshToken,
+  sessionCookieClearOptions,
+} from "@/utils/server-actions/session-token";
 
 export async function POST() {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const accessToken = await getAccessToken();
+    const refreshToken = await getRefreshToken();
 
-    const logoutResponse = await fetch(
-      `${process.env.PRICEY_BACKEND_URL}/user/logout`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    await fetch(`${process.env.PRICEY_BACKEND_URL}/user/logout`, {
+      method: "POST",
+      headers: {
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        ...(refreshToken ? { "X-Refresh-Token": refreshToken } : {}),
       },
-    );
-
-    const { success, data } = await logoutResponse.json();
-
-    const setCookie = logoutResponse.headers.get("set-cookie");
-
-    if (success)
-      return new Response(JSON.stringify({ userInfo: data }), {
-        status: 200,
-        ...(setCookie && { headers: { "Set-Cookie": setCookie } }),
-      });
-
-    const clearCookiesHeader = [
-      `${process.env.ACCESS_TOKEN_KEY}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`,
-      `${process.env.REFRESH_TOKEN_KEY}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`,
-    ];
-
-    return new Response(JSON.stringify({ userInfo: null }), {
-      status: 200,
-      headers: { "Set-Cookie": clearCookiesHeader.join(", ") },
+      cache: "no-store",
     });
+
+    const response = NextResponse.json({ userInfo: null });
+    const clearOptions = sessionCookieClearOptions();
+    const accessKey = process.env.ACCESS_TOKEN_KEY;
+    const refreshKey = process.env.REFRESH_TOKEN_KEY;
+    if (accessKey) response.cookies.set(accessKey, "", clearOptions);
+    if (refreshKey) response.cookies.set(refreshKey, "", clearOptions);
+    return response;
   } catch (error) {
-    return new Response(`Logout error: ${error}`, {
-      status: 400,
-    });
+    console.error(
+      "Logout failed",
+      error instanceof Error ? error.name : "unknown",
+    );
+    return NextResponse.json({ userInfo: null }, { status: 500 });
   }
 }

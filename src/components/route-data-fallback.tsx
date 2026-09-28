@@ -12,50 +12,53 @@ export const RouteDataFallback = () => {
   const pathname = usePathname();
   const userInfo = useUserStore(({ userInfo }) => userInfo);
 
-  const [ingredients, fetchIngredients] = useIngredientsStore(
-    useShallow(({ ingredients, fetchIngredients }) => [
-      ingredients,
+  const [ingredientsLoadState, fetchIngredients] = useIngredientsStore(
+    useShallow(({ ingredientsLoadState, fetchIngredients }) => [
+      ingredientsLoadState,
       fetchIngredients,
     ]),
   );
-  const [groceryLists, fetchGroceryLists] = useGroceryListsStore(
-    useShallow(({ groceryLists, fetchGroceryLists }) => [
-      groceryLists,
+  const [groceryListsLoadState, fetchGroceryLists] = useGroceryListsStore(
+    useShallow(({ groceryListsLoadState, fetchGroceryLists }) => [
+      groceryListsLoadState,
       fetchGroceryLists,
     ]),
   );
-  const [recipes, fetchRecipes] = useRecipesStore(
-    useShallow(({ recipes, fetchRecipes }) => [recipes, fetchRecipes]),
+  const [recipesLoadState, fetchRecipes] = useRecipesStore(
+    useShallow(({ recipesLoadState, fetchRecipes }) => [
+      recipesLoadState,
+      fetchRecipes,
+    ]),
   );
 
   useEffect(() => {
     // Early return if user is not authenticated
     if (!userInfo) return;
 
-    // Only fetch if data is not already loaded
+    // Idle means this collection has not been loaded yet.
     if (pathname === "/" || pathname.includes("/ingredients")) {
-      if (ingredients.length === 0) {
-        fetchIngredients();
+      if (ingredientsLoadState === "idle") {
+        void fetchIngredients();
       }
     }
 
     if (pathname.includes("/groceries")) {
-      if (groceryLists.length === 0) {
-        fetchGroceryLists();
+      if (groceryListsLoadState === "idle") {
+        void fetchGroceryLists();
       }
     }
 
     if (pathname.includes("/recipes")) {
-      if (recipes.length === 0) {
-        fetchRecipes();
+      if (recipesLoadState === "idle") {
+        void fetchRecipes();
       }
     }
   }, [
     userInfo,
     pathname,
-    ingredients.length,
-    groceryLists.length,
-    recipes.length,
+    ingredientsLoadState,
+    groceryListsLoadState,
+    recipesLoadState,
     fetchIngredients,
     fetchGroceryLists,
     fetchRecipes,

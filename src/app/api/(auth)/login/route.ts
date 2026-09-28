@@ -1,33 +1,53 @@
-import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { getAccessToken } from "@/utils/server-actions/session-token";
+import {
+  googleRedirectUri,
+  OAUTH_STATE_COOKIE,
+  OAUTH_VERIFIER_COOKIE,
+  oauthCookieOptions,
+} from "@/utils/server-actions/oauth";
 
-export async function GET() {
-  const oauth2EndpointUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-  const clientId = encodeURIComponent(
-    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+const base64url = (bytes: Uint8Array) =>
+  Buffer.from(bytes).toString("base64url");
+
+export async function GET(req: NextRequest) {
+  const redirectUri = googleRedirectUri(req.url);
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+  if (!redirectUri || !clientId) {
+    return new Response("OAuth redirect is not configured", { status: 500 });
+  }
+
+  const state = crypto.randomUUID();
+  const codeVerifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(codeVerifier),
   );
-  const redirect_uri = encodeURIComponent(
-    process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URIS!,
-  );
+  const codeChallenge = base64url(new Uint8Array(digest));
 
-  // const code_verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
-  // const code_challenge = base64url(await sha256(code_verifier));
-  const response_type = encodeURIComponent("code");
-  const scope = encodeURIComponent("email profile");
-  const include_granted_scopes = "true";
-  const state = encodeURIComponent(crypto.randomUUID()); // for CSRF protection
+  const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  googleUrl.searchParams.set("client_id", clientId);
+  googleUrl.searchParams.set("redirect_uri", redirectUri);
+  googleUrl.searchParams.set("response_type", "code");
+  googleUrl.searchParams.set("scope", "openid email profile");
+  googleUrl.searchParams.set("state", state);
+  googleUrl.searchParams.set("code_challenge", codeChallenge);
+  googleUrl.searchParams.set("code_challenge_method", "S256");
 
-  const redirectToGoogle = `${oauth2EndpointUrl}?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=${response_type}&scope=${scope}&include_granted_scopes=${include_granted_scopes}&state=${state}`;
-  return Response.redirect(redirectToGoogle);
+  const response = NextResponse.redirect(googleUrl);
+  const cookieOptions = oauthCookieOptions();
+  response.cookies.set(OAUTH_STATE_COOKIE, state, cookieOptions);
+  response.cookies.set(OAUTH_VERIFIER_COOKIE, codeVerifier, cookieOptions);
+  return response;
 }
 
 export async function POST() {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
-
-    if (!token) return new Response(JSON.stringify({ userInfo: null }));
+    const token = await getAccessToken();
+    if (!token) {
+      return NextResponse.json({ userInfo: null });
+    }
 
     const loginResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/user`,
@@ -38,32 +58,20 @@ export async function POST() {
       },
     );
 
-    const { success, data, error } = await loginResponse.json();
-    // const setCookie = loginResponse.headers.get("set-cookie");
-    // console.log(
-    //   "Set-Cookie from backend:",
-    //   loginResponse.headers.get("set-cookie"),
-    // );
-    if (!success || error)
-      return new Response(`Error: ${error}`, { status: loginResponse.status });
+    const { success, data } = await loginResponse.json();
+    if (!success) {
+      return NextResponse.json(
+        { userInfo: null },
+        { status: loginResponse.status },
+      );
+    }
 
-    return new Response(JSON.stringify({ userInfo: data }), {
-      status: 200,
-      // ...(setCookie && { headers: { "Set-Cookie": setCookie } }),
-    });
+    return NextResponse.json({ userInfo: data });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Failed to load session",
+      error instanceof Error ? error.name : "unknown",
+    );
+    return NextResponse.json({ userInfo: null }, { status: 500 });
   }
 }
-
-/*
-* import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/apiFetch";
-
-export const useUser = () =>
-  useQuery({
-    queryKey: ["user"],
-    queryFn: () => apiFetch("/api/login", { method: "POST" }), // calls your backend-proxy route
-    retry: false,
-  });
-  * */

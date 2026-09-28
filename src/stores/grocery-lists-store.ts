@@ -7,9 +7,16 @@ import {
 } from "@/utils/interfaces";
 import { persist } from "zustand/middleware";
 import { mergeIngredients } from "@/utils/merge-ingredients";
+import {
+  CollectionLoadState,
+  fetchCollection,
+  loadStateFromServer,
+  nextLoadStateForFetch,
+} from "@/stores/collection-load";
 
 export type GroceryListsState = {
   groceryLists: GroceryList[];
+  groceryListsLoadState: CollectionLoadState;
   checklist: ChecklistData | null;
   newGroceryList: GroceryListFormData | null;
   newGroceryListVersion: number;
@@ -20,7 +27,7 @@ export type GroceryListsActions = {
   setGroceryLists: (groceryLists: GroceryList[]) => void;
   addGroceryList: (newGroceryList: GroceryList) => void;
   clearGroceryLists: () => void;
-  fetchGroceryLists: () => void;
+  fetchGroceryLists: () => Promise<void>;
   updateGroceryList: (groceryList: GroceryList) => void;
   removeGroceryList: (groceryListId: string) => void;
   setChecklist: (checklistData: ChecklistData) => void;
@@ -38,10 +45,12 @@ export type GroceryListsStore = GroceryListsState & GroceryListsActions;
 
 export const initGroceryListsStore = (
   groceryLists?: GroceryList[] | null,
+  groceryListsServerLoaded = false,
 ): GroceryListsState => {
   return {
     // TODO: Zod validation on grocery lists
-    groceryLists: groceryLists && groceryLists.length > 0 ? groceryLists : [],
+    groceryLists: groceryLists ?? [],
+    groceryListsLoadState: loadStateFromServer(groceryListsServerLoaded),
     checklist: null,
     newGroceryList: null,
     newGroceryListVersion: 1,
@@ -59,15 +68,28 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
           set(({ groceryLists }) => ({
             groceryLists: [...groceryLists, newGroceryList],
           })),
-        clearGroceryLists: () => set({ groceryLists: [] }),
+        clearGroceryLists: () =>
+          set({ groceryLists: [], groceryListsLoadState: "idle" }),
         fetchGroceryLists: async () => {
+          let shouldFetch = false;
+          set(({ groceryListsLoadState }) => {
+            const next = nextLoadStateForFetch(groceryListsLoadState);
+            if (!next.shouldFetch) return {};
+            shouldFetch = true;
+            return { groceryListsLoadState: next.loadState };
+          });
+          if (!shouldFetch) return;
+
           try {
-            const { groceryLists } = await tryFetchingGroceryLists();
-            set(() => ({ groceryLists }));
+            const groceryLists = await fetchCollection<GroceryList>(
+              "/api/grocery-list",
+              "groceryLists",
+              "Grocery list",
+            );
+            set({ groceryLists, groceryListsLoadState: "loaded" });
           } catch (error) {
-            throw new Error("Unable to retrieve grocery lists", {
-              cause: error,
-            });
+            console.error("Unable to retrieve grocery lists", error);
+            set({ groceryListsLoadState: "error" });
           }
         },
         updateGroceryList: (existingGroceryList) => {
@@ -149,15 +171,6 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
       },
     ),
   );
-};
-
-const tryFetchingGroceryLists = async () => {
-  try {
-    const fetchGroceryLists = await fetch("/api/grocery-list");
-    return await fetchGroceryLists.json();
-  } catch (error) {
-    throw new Error("Unable to fetch grocery lists", { cause: error });
-  }
 };
 
 export type GroceryListsStoreApi = ReturnType<typeof createGroceryListsStore>;
