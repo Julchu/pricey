@@ -1,4 +1,3 @@
-"use client";
 import {
   AccordionContent,
   AccordionHeader,
@@ -10,6 +9,7 @@ import {
   RecipeFormData,
   RecipeIngredientFormData,
 } from "@/utils/interfaces";
+import * as React from "react";
 import { ComponentPropsWithoutRef, MouseEvent } from "react";
 import { IngredientLabel } from "@/components/ui/input";
 import { BagEditIcon } from "@/components/icons/grocery-bag/edit";
@@ -20,19 +20,20 @@ import { useRecipesStore } from "@/providers/recipe-store-provider";
 import { formatPrice } from "@/utils/text-formatters";
 import { ChefTransparent } from "@/components/icons/chef/chef-transparent";
 import { Field } from "@base-ui/react/field";
+import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 
 export const ExistingRecipeDisplay = ({
   recipe,
-  startEditingAction,
+  startEditingHandler,
   last,
 }: {
   recipe: RecipeFormData;
-  startEditingAction: () => void;
+  startEditingHandler: () => void;
   last: boolean;
 }) => {
   const onClickHandler = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    startEditingAction();
+    startEditingHandler();
   };
 
   const ingredients = recipe.ingredients;
@@ -40,7 +41,7 @@ export const ExistingRecipeDisplay = ({
   return (
     <div className={"flex flex-col"}>
       <AccordionHeader
-        className={`flex flex-col items-center px-0 text-white ${last ? "data-[state=closed]:rounded-b-md" : ""}`}
+        className={`flex flex-col items-center px-0 text-white ${last ? "data-closed:rounded-b-md" : ""}`}
       >
         <div onClick={onClickHandler} className={"pl-4"}>
           <ImageUploadIcon />
@@ -78,10 +79,14 @@ const IngredientsDisplay = ({
   ingredients: RecipeIngredientFormData[];
 }) => {
   const addIngredientsToCurrentList = useGroceryListsStore(
-    (state) => state.addIngredientsToCurrentList,
+    ({ addIngredientsToNewList }) => addIngredientsToNewList,
   );
   const addIngredientsToCurrentRecipe = useRecipesStore(
-    (state) => state.addIngredientsToCurrentRecipe,
+    ({ addIngredientsToCurrentRecipe }) => addIngredientsToCurrentRecipe,
+  );
+
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
   );
 
   return (
@@ -119,9 +124,16 @@ const IngredientsDisplay = ({
           <div
             key={`${ingredient.publicId}_${index}`}
             className={
-              "rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
+              "flex-col rounded-md border border-gray-200 p-4 sm:gap-4 lg:flex-row lg:border-none lg:p-0"
             }
           >
+            <div
+              className={
+                "flex h-10 w-full flex-row items-center justify-between rounded-md text-xl font-medium capitalize lg:hidden"
+              }
+            >
+              <p>{ingredient.name}</p>
+            </div>
             <DisplayIngredient ingredient={ingredient} index={index} />
           </div>
         );
@@ -129,27 +141,36 @@ const IngredientsDisplay = ({
 
       <div
         className={
-          "grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-14"
+          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
         <div
           className={
-            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-2 lg:col-span-2 lg:col-start-11"
+            "col-span-1 flex h-10 flex-col items-end justify-center text-center sm:col-start-3 lg:col-span-1 lg:col-start-5"
           }
         >
           Total cost:
         </div>
+
         <div
           className={
-            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-3 lg:col-span-2 lg:col-start-13"
+            "col-span-1 flex h-10 flex-col justify-center rounded-md border border-gray-200 sm:col-start-4 lg:col-span-1 lg:col-start-6"
           }
         >
-          {formatPrice(
-            ingredients.reduce(
-              (sum, ingredient) => sum + (ingredient.price || 0) / 100,
-              0,
-            ),
-          ) || "0.00"}
+          <p className={"text-center font-medium"}>
+            $
+            {formatPrice(
+              ingredients.reduce((sum, { ingredientPublicId }) => {
+                const foundIngredient = masterIngredients.find(
+                  ({ publicId: masterPublicId }) =>
+                    masterPublicId === ingredientPublicId,
+                );
+                if (foundIngredient?.price)
+                  return sum + foundIngredient.price / 100;
+                return sum;
+              }, 0),
+            ) || "0.00"}
+          </p>
         </div>
       </div>
     </div>
@@ -157,20 +178,30 @@ const IngredientsDisplay = ({
 };
 
 const DisplayIngredient = ({
-  ingredient: { name, quantity, unit, capacity, price },
+  ingredient: { name, quantity, unit, capacity, ingredientPublicId },
   index,
 }: {
   ingredient: RecipeIngredientFormData;
   index: number;
 }) => {
+  const masterIngredients = useIngredientsStore(
+    ({ ingredients }) => ingredients,
+  );
+
+  const foundIngredient = masterIngredients.find(
+    ({ publicId: masterPublicId }) => masterPublicId === ingredientPublicId,
+  );
+
   return (
     <div className={`flex w-full flex-row gap-4`}>
       <div
         className={
-          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 sm:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+          "grid w-full grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4 lg:grid-cols-6 lg:grid-rows-1"
         }
       >
-        <Field.Root className={"col-span-2 sm:col-span-4 lg:col-span-2"}>
+        <Field.Root
+          className={"col-span-2 hidden sm:col-span-4 lg:col-span-2 lg:block"}
+        >
           <IngredientLabel htmlFor={"name"} index={index}>
             Name
           </IngredientLabel>
@@ -184,7 +215,9 @@ const DisplayIngredient = ({
           <div className="flex items-center rounded-md bg-blue-100 pl-3">
             <span className={"text-gray-400"}>$</span>
             <DisplayField id={"price"}>
-              {price ? formatPrice(price / 100) : "0.00"}
+              {foundIngredient?.price
+                ? formatPrice(foundIngredient.price / 100)
+                : "0.00"}
             </DisplayField>
           </div>
         </Field.Root>

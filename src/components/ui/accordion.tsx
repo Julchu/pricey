@@ -56,7 +56,7 @@ export const AccordionContent = ({
   ...props
 }: AccordionPanelProps) => (
   <Accordion.Panel
-    className={`bg-mauve2 data-[closed]:animate-accordion-slide-up data-[open]:animate-accordion-slide-down overflow-hidden ${className}`}
+    className={`data-closed:animate-accordion-slide-up data-open:animate-accordion-slide-down overflow-hidden bg-white ${className}`}
     {...props}
   >
     {children}

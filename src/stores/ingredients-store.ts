@@ -1,29 +1,45 @@
 import { create } from "zustand";
 import { Ingredient } from "@/utils/interfaces";
+import {
+  CollectionLoadState,
+  fetchCollection,
+  loadStateFromServer,
+  nextLoadStateForFetch,
+} from "@/stores/collection-load";
 
 export type IngredientsState = {
   ingredients: Ingredient[];
+  ingredientsLoadState: CollectionLoadState;
 };
 
 export type IngredientsActions = {
   setIngredients: (ingredients: Ingredient[]) => void;
   updateIngredients: (ingredient: Ingredient) => void;
+  deleteIngredient: (publicId: string) => void;
   clearIngredients: () => void;
-  fetchIngredients: () => void;
+  fetchIngredients: () => Promise<void>;
 };
 
 export type IngredientsStore = IngredientsState & IngredientsActions;
 
+const presentIngredients = (ingredients?: Ingredient[] | null): Ingredient[] =>
+  (ingredients ?? []).filter(
+    (ingredient): ingredient is Ingredient => !!ingredient,
+  );
+
 export const initIngredientsStore = (
-  ingredients: Ingredient[],
+  ingredients?: Ingredient[] | null,
+  ingredientsServerLoaded = false,
 ): IngredientsState => {
   return {
-    ingredients: ingredients?.filter((i): i is Ingredient => !!i) ?? [],
+    ingredients: presentIngredients(ingredients),
+    ingredientsLoadState: loadStateFromServer(ingredientsServerLoaded),
   };
 };
 
 export const defaultInitState: IngredientsState = {
   ingredients: [],
+  ingredientsLoadState: "idle",
 };
 
 export const createIngredientsStore = (
@@ -42,29 +58,38 @@ export const createIngredientsStore = (
       });
       set({ ingredients: [...filteredIngredients, newIngredient] });
     },
-    clearIngredients: () => set({ ingredients: [] }),
+    clearIngredients: () =>
+      set({ ingredients: [], ingredientsLoadState: "idle" }),
+    deleteIngredient: (publicId) => {
+      set({
+        ingredients: get().ingredients.filter((i) => i.publicId !== publicId),
+      });
+    },
     fetchIngredients: async () => {
+      let shouldFetch = false;
+      set(({ ingredientsLoadState }) => {
+        const next = nextLoadStateForFetch(ingredientsLoadState);
+        if (!next.shouldFetch) return {};
+        shouldFetch = true;
+        return { ingredientsLoadState: next.loadState };
+      });
+      if (!shouldFetch) return;
+
       try {
-        const { ingredient } = await tryFetchingIngredients();
-        set(() => ({
-          ingredients: Array.isArray(ingredient)
-            ? ingredient.filter((i): i is Ingredient => !!i)
-            : [],
-        }));
+        const ingredients = presentIngredients(
+          await fetchCollection<Ingredient>(
+            "/api/ingredient",
+            "ingredient",
+            "Ingredient",
+          ),
+        );
+        set({ ingredients, ingredientsLoadState: "loaded" });
       } catch (error) {
-        throw new Error("Unable to retrieve ingredients", { cause: error });
+        console.error("Unable to retrieve ingredients", error);
+        set({ ingredientsLoadState: "error" });
       }
     },
   }));
-};
-
-const tryFetchingIngredients = async () => {
-  try {
-    const fetchIngredients = await fetch("/api/ingredient");
-    return await fetchIngredients.json();
-  } catch (error) {
-    throw new Error("Unable to fetch ingredients", { cause: error });
-  }
 };
 
 export type IngredientsStoreApi = ReturnType<typeof createIngredientsStore>;

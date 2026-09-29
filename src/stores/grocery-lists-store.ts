@@ -1,16 +1,25 @@
 import { create } from "zustand";
 import {
+  ChecklistData,
   GroceryList,
   GroceryListFormData,
   GroceryListIngredientFormData,
 } from "@/utils/interfaces";
 import { persist } from "zustand/middleware";
 import { mergeIngredients } from "@/utils/merge-ingredients";
+import {
+  CollectionLoadState,
+  fetchCollection,
+  loadStateFromServer,
+  nextLoadStateForFetch,
+} from "@/stores/collection-load";
 
 export type GroceryListsState = {
   groceryLists: GroceryList[];
-  currentGroceryList: GroceryListFormData | null;
-  currentGroceryListVersion: number;
+  groceryListsLoadState: CollectionLoadState;
+  checklist: ChecklistData | null;
+  newGroceryList: GroceryListFormData | null;
+  newGroceryListVersion: number;
   hasHydrated: boolean;
 };
 
@@ -18,12 +27,15 @@ export type GroceryListsActions = {
   setGroceryLists: (groceryLists: GroceryList[]) => void;
   addGroceryList: (newGroceryList: GroceryList) => void;
   clearGroceryLists: () => void;
-  fetchGroceryLists: () => void;
+  fetchGroceryLists: () => Promise<void>;
   updateGroceryList: (groceryList: GroceryList) => void;
   removeGroceryList: (groceryListId: string) => void;
-  setCurrentGroceryList: (groceryList: GroceryListFormData | null) => void;
-  clearCurrentGroceryList: () => void;
-  addIngredientsToCurrentList: (
+  setChecklist: (checklistData: ChecklistData) => void;
+  updateChecklist: (ingredientPublicId: string) => void;
+  clearChecklist: () => void;
+  setNewGroceryList: (groceryList: GroceryListFormData | null) => void;
+  clearNewGroceryList: () => void;
+  addIngredientsToNewList: (
     ingredients: GroceryListIngredientFormData[],
   ) => void;
   setHasHydrated: (hasHydrated: boolean) => void;
@@ -33,12 +45,15 @@ export type GroceryListsStore = GroceryListsState & GroceryListsActions;
 
 export const initGroceryListsStore = (
   groceryLists?: GroceryList[] | null,
+  groceryListsServerLoaded = false,
 ): GroceryListsState => {
   return {
     // TODO: Zod validation on grocery lists
-    groceryLists: groceryLists && groceryLists.length > 0 ? groceryLists : [],
-    currentGroceryList: null,
-    currentGroceryListVersion: 1,
+    groceryLists: groceryLists ?? [],
+    groceryListsLoadState: loadStateFromServer(groceryListsServerLoaded),
+    checklist: null,
+    newGroceryList: null,
+    newGroceryListVersion: 1,
     hasHydrated: false,
   };
 };
@@ -53,15 +68,28 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
           set(({ groceryLists }) => ({
             groceryLists: [...groceryLists, newGroceryList],
           })),
-        clearGroceryLists: () => set({ groceryLists: [] }),
+        clearGroceryLists: () =>
+          set({ groceryLists: [], groceryListsLoadState: "idle" }),
         fetchGroceryLists: async () => {
+          let shouldFetch = false;
+          set(({ groceryListsLoadState }) => {
+            const next = nextLoadStateForFetch(groceryListsLoadState);
+            if (!next.shouldFetch) return {};
+            shouldFetch = true;
+            return { groceryListsLoadState: next.loadState };
+          });
+          if (!shouldFetch) return;
+
           try {
-            const { groceryLists } = await tryFetchingGroceryLists();
-            set(() => ({ groceryLists }));
+            const groceryLists = await fetchCollection<GroceryList>(
+              "/api/grocery-list",
+              "groceryLists",
+              "Grocery list",
+            );
+            set({ groceryLists, groceryListsLoadState: "loaded" });
           } catch (error) {
-            throw new Error("Unable to retrieve grocery lists", {
-              cause: error,
-            });
+            console.error("Unable to retrieve grocery lists", error);
+            set({ groceryListsLoadState: "error" });
           }
         },
         updateGroceryList: (existingGroceryList) => {
@@ -79,30 +107,50 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
               (groceryList) => groceryList.publicId !== groceryListId,
             ),
           })),
-        setCurrentGroceryList: (groceryList: GroceryListFormData | null) =>
-          set({ currentGroceryList: groceryList }),
-        clearCurrentGroceryList: () => set({ currentGroceryList: null }),
-        addIngredientsToCurrentList: (ingredients) =>
-          set(({ currentGroceryList, currentGroceryListVersion }) => {
-            if (!currentGroceryList) {
+        setChecklist: (checklistData) => set({ checklist: checklistData }),
+        clearChecklist: () => set({ checklist: null }),
+        setNewGroceryList: (groceryList) =>
+          set({ newGroceryList: groceryList }),
+        updateChecklist: (ingredientPublicId) => {
+          set(({ checklist }) => {
+            if (checklist) {
               return {
-                currentGroceryList: {
+                checklist: {
+                  ...checklist,
+                  ingredients: {
+                    ...checklist.ingredients,
+                    [ingredientPublicId]:
+                      !checklist.ingredients[ingredientPublicId],
+                  },
+                },
+              };
+            }
+
+            return { checklist };
+          });
+        },
+        clearNewGroceryList: () => set({ newGroceryList: null }),
+        addIngredientsToNewList: (ingredients) =>
+          set(({ newGroceryList, newGroceryListVersion }) => {
+            if (!newGroceryList) {
+              return {
+                newGroceryList: {
                   name: "",
                   ingredients,
                   public: false,
                 },
-                currentGroceryListVersion: currentGroceryListVersion + 1,
+                newGroceryListVersion: newGroceryListVersion + 1,
               };
             }
             return {
-              currentGroceryList: {
-                ...currentGroceryList,
+              newGroceryList: {
+                ...newGroceryList,
                 ingredients: mergeIngredients(
-                  currentGroceryList.ingredients,
+                  newGroceryList.ingredients,
                   ingredients,
                 ),
               },
-              currentGroceryListVersion: currentGroceryListVersion + 1,
+              newGroceryListVersion: newGroceryListVersion + 1,
             };
           }),
         setHasHydrated: (hasHydrated: boolean) => {
@@ -110,9 +158,10 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
         },
       }),
       {
-        name: "current-grocery-list",
-        partialize: ({ currentGroceryList }) => ({
-          currentGroceryList,
+        name: "local-grocery-lists",
+        partialize: ({ newGroceryList, checklist }) => ({
+          newGroceryList,
+          checklist,
         }),
         onRehydrateStorage: () => {
           return (state, error) => {
@@ -122,15 +171,6 @@ export const createGroceryListsStore = (initialState: GroceryListsState) => {
       },
     ),
   );
-};
-
-const tryFetchingGroceryLists = async () => {
-  try {
-    const fetchGroceryLists = await fetch("/api/grocery-list");
-    return await fetchGroceryLists.json();
-  } catch (error) {
-    throw new Error("Unable to fetch grocery lists", { cause: error });
-  }
 };
 
 export type GroceryListsStoreApi = ReturnType<typeof createGroceryListsStore>;

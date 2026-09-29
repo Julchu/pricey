@@ -1,13 +1,10 @@
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/utils/server-actions/session-token";
 import { GroceryListUpdateFormData } from "@/utils/interfaces";
 
 export const PATCH = async (req: NextRequest) => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     const groceryListData: GroceryListUpdateFormData = await req.json();
 
@@ -49,10 +46,7 @@ export const PATCH = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     const groceryListId: string = await req.json();
 

@@ -1,7 +1,7 @@
 // tabler: chef - hat;
 import { SVGProps } from "react";
 
-export const ChefTransparent = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const ChefTransparent = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

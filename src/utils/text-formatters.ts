@@ -1,12 +1,12 @@
 import {
   Ingredient,
   LiquidType,
+  MassEnums,
   MassType,
-  MassValues,
   Unit,
   UnitCategory,
   UnitType,
-  VolumeValues,
+  VolumeEnums,
 } from "@/utils/interfaces";
 
 export const filterNullableObject = (
@@ -22,10 +22,10 @@ export const filterNullableObject = (
 };
 
 export const isMass = (unit?: string): unit is MassType =>
-  MassValues.includes(unit as MassType);
+  MassEnums.includes(unit as MassType);
 
 export const isVolume = (unit?: string): unit is LiquidType =>
-  VolumeValues.includes(unit as LiquidType);
+  VolumeEnums.includes(unit as LiquidType);
 
 // Conversion factors to base units (kg for mass, L for liquid volume)
 export const massToKg: Record<MassType, number> = {
@@ -39,6 +39,9 @@ export const liquidToLitre: Record<LiquidType, number> = {
   [Unit.LITRE]: 1,
   [Unit.MILLILITER]: 0.001,
   [Unit.QUART]: 0.946353,
+  [Unit.CUP]: 0.236588,
+  [Unit.TABLESPOON]: 0.0147868,
+  [Unit.TEASPOON]: 0.00492892,
 };
 
 export const priceConverter = (
@@ -95,9 +98,7 @@ export const calcTotalPrice = (
   quantity?: number,
 ): number | undefined => {
   if (!priceCents) return;
-  return (
-    (priceCents * (capacity ? capacity : 1) * (quantity ? quantity : 1)) / 100
-  );
+  return priceCents * (capacity ? capacity : 1) * (quantity ? quantity : 1);
 };
 
 export const CurrencyFormatter = new Intl.NumberFormat("en-US", {
@@ -118,7 +119,7 @@ export const PriceFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export const formatPrice = (price?: number) => {
-  if (!price) return "";
+  if (!price) return "0.00";
   return PriceFormatter.format(price);
 };
 

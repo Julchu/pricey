@@ -1,13 +1,10 @@
 import { NextRequest } from "next/server";
-import { IngredientFormData } from "@/utils/interfaces";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/utils/server-actions/session-token";
+import { IngredientFormData, PresignData } from "@/utils/interfaces";
 
 export const GET = async () => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     const ingredientsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/ingredient`,
@@ -34,12 +31,14 @@ export const GET = async () => {
 
 export const POST = async (req: NextRequest) => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
-    const ingredientData: IngredientFormData = await req.json();
+    const {
+      contentType,
+      ...ingredientData
+    }: IngredientFormData & {
+      contentType?: string;
+    } = await req.json();
 
     if (!token)
       return new Response(JSON.stringify({ ingredient: ingredientData }), {
@@ -63,7 +62,34 @@ export const POST = async (req: NextRequest) => {
     const { success, data, error } = await saveIngredientResponse.json();
     if (!success)
       return new Response(error, { status: saveIngredientResponse.status });
-    return new Response(JSON.stringify({ ingredient: data }), {
+
+    const ingredient = data;
+    const ingredientPublicId = ingredient?.publicId;
+
+    if (!ingredientPublicId || !contentType)
+      return new Response(JSON.stringify({ ingredient }), { status: 200 });
+
+    const presignResponse = await fetch(
+      `${process.env.PRICEY_BACKEND_URL}/ingredient/${ingredientPublicId}/image/presign`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contentType }),
+      },
+    );
+
+    const {
+      success: presignSuccess,
+      data: presignData,
+    }: { success: boolean; data: PresignData } = await presignResponse.json();
+
+    if (!presignSuccess)
+      return new Response(JSON.stringify({ ingredient }), { status: 200 });
+
+    return new Response(JSON.stringify({ ingredient, presign: presignData }), {
       status: 200,
     });
   } catch (error) {

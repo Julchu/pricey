@@ -12,8 +12,9 @@ export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
         className="relative inline-flex aspect-square h-full cursor-pointer items-center justify-center rounded-full bg-blue-500 font-bold text-white select-none"
         aria-label="User menu"
       >
-        <UserAvatar />
-        {!userInfo?.image && (
+        {userInfo?.image ? (
+          <UserAvatar />
+        ) : (
           <>
             {firstName && lastName ? (
               <>

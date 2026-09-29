@@ -1,13 +1,10 @@
 import { NextRequest } from "next/server";
 import { GroceryListFormData } from "@/utils/interfaces";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/utils/server-actions/session-token";
 
 export const GET = async () => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     const groceryListsResponse = await fetch(
       `${process.env.PRICEY_BACKEND_URL}/grocery-list`,
@@ -34,10 +31,7 @@ export const GET = async () => {
 
 export const POST = async (req: NextRequest) => {
   try {
-    const browserCookies = await cookies();
-    const token =
-      process.env.MASTER_KEY ||
-      browserCookies.get(`${process.env.ACCESS_TOKEN_KEY}`)?.value;
+    const token = await getAccessToken();
 
     const groceryListData: GroceryListFormData = await req.json();
 

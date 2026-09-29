@@ -2,11 +2,14 @@ import { UserStoreProvider } from "./user-store-provider";
 import { IngredientStoreProvider } from "./ingredient-store-provider";
 import { GroceryListStoreProvider } from "./grocery-list-store-provider";
 import { RecipeStoreProvider } from "./recipe-store-provider";
+import { PantryStoreProvider } from "./pantry-store-provider";
+import { RouteDataFallback } from "@/components/route-data-fallback";
 import { PropsWithChildren } from "react";
 import { serverFetch } from "@/utils/server-actions/server-fetch";
 import {
   GroceryList,
   Ingredient,
+  PantryIngredient,
   Recipe,
   UserFormData,
 } from "@/utils/interfaces";
@@ -23,36 +26,52 @@ export const Providers = async ({ children }: PropsWithChildren) => {
 
   const userInfo = await serverFetch<UserFormData>({ endpoint: "user" });
 
-  let ingredients: Ingredient[] = [];
-  let groceryLists: GroceryList[] = [];
-  let recipes: Recipe[] = [];
-
   // if (isHome || isIngredients) {
   const fetchedIngredients = await serverFetch<Ingredient[]>({
     endpoint: "ingredient",
   });
-  // TODO: set all to const
-  ingredients = fetchedIngredients ? fetchedIngredients : [];
+  const ingredients = fetchedIngredients ?? [];
+  const ingredientsServerLoaded = fetchedIngredients !== null;
   // }
 
   // if (isGroceries) {
   const fetchedGroceryLists = await serverFetch<GroceryList[]>({
     endpoint: "grocery-list",
   });
-  groceryLists = fetchedGroceryLists ? fetchedGroceryLists : [];
+  const groceryLists = fetchedGroceryLists ?? [];
+  const groceryListsServerLoaded = fetchedGroceryLists !== null;
   // }
 
   // if (isRecipes) {
   const fetchedRecipes = await serverFetch<Recipe[]>({ endpoint: "recipe" });
-  recipes = fetchedRecipes ? fetchedRecipes : [];
+  const recipes = fetchedRecipes ?? [];
+  const recipesServerLoaded = fetchedRecipes !== null;
   // }
+
+  const fetchedPantryIngredients = await serverFetch<PantryIngredient[]>({
+    endpoint: "pantry",
+  });
+
+  const pantryIngredients = fetchedPantryIngredients ?? [];
 
   return (
     <UserStoreProvider userInfo={userInfo}>
-      <IngredientStoreProvider ingredients={ingredients}>
-        <GroceryListStoreProvider groceryLists={groceryLists}>
-          <RecipeStoreProvider recipes={recipes}>
-            {children}
+      <IngredientStoreProvider
+        ingredients={ingredients}
+        ingredientsServerLoaded={ingredientsServerLoaded}
+      >
+        <GroceryListStoreProvider
+          groceryLists={groceryLists}
+          groceryListsServerLoaded={groceryListsServerLoaded}
+        >
+          <RecipeStoreProvider
+            recipes={recipes}
+            recipesServerLoaded={recipesServerLoaded}
+          >
+            <PantryStoreProvider pantryIngredients={pantryIngredients}>
+              <RouteDataFallback />
+              {children}
+            </PantryStoreProvider>
           </RecipeStoreProvider>
         </GroceryListStoreProvider>
       </IngredientStoreProvider>

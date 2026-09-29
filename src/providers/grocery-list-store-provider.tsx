@@ -17,14 +17,18 @@ export const GroceryListsStoreContext = createContext<
 
 export type GroceryListsStoreProviderProps = PropsWithChildren<{
   groceryLists?: GroceryList[] | null;
+  groceryListsServerLoaded?: boolean;
 }>;
 
 export const GroceryListStoreProvider = ({
   children,
   groceryLists,
+  groceryListsServerLoaded = false,
 }: GroceryListsStoreProviderProps) => {
   const [groceryStoreState] = useState(() =>
-    createGroceryListsStore(initGroceryListsStore(groceryLists)),
+    createGroceryListsStore(
+      initGroceryListsStore(groceryLists, groceryListsServerLoaded),
+    ),
   );
 
   return (

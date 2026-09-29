@@ -20,11 +20,11 @@ export const {
   },
 });
 
-// TODO: check if switching to regular useForm works
 export const ingredientReset = () => {
   ingredientSetValue("name", "");
   ingredientSetValue("price", "" as unknown as number);
   ingredientSetValue("quantity", "" as unknown as number);
   ingredientSetValue("capacity", "" as unknown as number);
   ingredientSetValue("unit", "" as UnitType);
+  ingredientSetValue("image", undefined);
 };

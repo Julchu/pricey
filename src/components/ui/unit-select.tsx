@@ -2,9 +2,6 @@
 import { Select } from "@base-ui/react/select";
 import { CaretRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { UnitSelectDropdown } from "@/components/ingredients/calculator/unit-dropdown";
-import { useShallow } from "zustand/react/shallow";
-import { isMass, isVolume } from "@/utils/text-formatters";
-import { useUserStore } from "@/providers/user-store-provider";
 import { ReactNode } from "react";
 import {
   Controller,
@@ -43,18 +40,9 @@ const UnitController = ({
     | ControllerRenderProps<IngredientFormData, "unit">
     | ControllerRenderProps<GroceryListFormData, `ingredients.${number}.unit`>;
 }) => {
-  const { setMass, setLiquidVolume } = useUserStore(
-    useShallow(({ setMass, setLiquidVolume }) => ({
-      setMass,
-      setLiquidVolume,
-    })),
-  );
-
   const onChangeHandler = (value: string | null | undefined) => {
     if (!value) return;
     field.onChange(value);
-    if (isMass(value)) setMass(value);
-    else if (isVolume(value)) setLiquidVolume(value);
   };
 
   return (
@@ -70,7 +58,7 @@ const UnitController = ({
       </Select.Trigger>
 
       <Select.Portal key={"select-portal"}>
-        <Select.Positioner sideOffset={4}>
+        <Select.Positioner className={"w-(--anchor-width)"}>
           <UnitSelectDropdown />
         </Select.Positioner>
       </Select.Portal>

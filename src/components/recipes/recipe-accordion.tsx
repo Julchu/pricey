@@ -17,7 +17,7 @@ export const RecipeAccordion = () => {
       onValueChange={(values) => setOpenRecipe(values[0] ?? "")}
     >
       <AccordionItem value={"new-recipe"}>
-        <NewRecipeForm setOpenRecipeAction={setOpenRecipe} />
+        <NewRecipeForm setOpenRecipe={setOpenRecipe} />
       </AccordionItem>
 
       {recipes.map((recipe, index) => (

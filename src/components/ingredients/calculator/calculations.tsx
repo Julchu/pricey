@@ -18,12 +18,17 @@ import {
   TriangleDownIcon,
   TriangleUpIcon,
 } from "@radix-ui/react-icons";
-import { ChangeEvent } from "react";
+import { ChangeEvent, RefObject } from "react";
 import { useUserStore } from "@/providers/user-store-provider";
 import { useIngredientsStore } from "@/providers/ingredient-store-provider";
 import { ImageUploadIcon } from "@/components/icons/image-upload-icon";
+import Image from "next/image";
 
-export const Calculations = () => {
+export const Calculations = ({
+  imageFileRef,
+}: {
+  imageFileRef: RefObject<File | null>;
+}) => {
   const ingredients = useIngredientsStore(({ ingredients }) => ingredients);
   const { mass, liquidVolume } = useUserStore(
     useShallow(({ mass, liquidVolume }) => ({ mass, liquidVolume })),
@@ -32,6 +37,7 @@ export const Calculations = () => {
   const uploadFileHandler = (fileElement: ChangeEvent<HTMLInputElement>) => {
     const file = fileElement.target.files?.[0];
     if (file) {
+      imageFileRef.current = file;
       ingredientSetValue("image", URL.createObjectURL(file));
     }
   };
@@ -41,10 +47,11 @@ export const Calculations = () => {
     volume: liquidVolume,
   };
 
-  const [newName, newPrice, newUnit, newCapacity, newQuantity] = useWatch({
-    name: ["name", "price", "unit", "capacity", "quantity"],
-    control: ingredientControl,
-  });
+  const [newName, newPrice, newUnit, newCapacity, newQuantity, previewImage] =
+    useWatch({
+      name: ["name", "price", "unit", "capacity", "quantity", "image"],
+      control: ingredientControl,
+    });
 
   const newPricePerCapacity = calcIndividualPrice(
     newPrice,
@@ -115,6 +122,7 @@ export const Calculations = () => {
       <input
         type={"file"}
         id={"image"}
+        accept={"image/png, image/jpeg"}
         className={"invisible absolute h-full w-full"}
         onChange={uploadFileHandler}
       />
@@ -126,13 +134,18 @@ export const Calculations = () => {
         <div className={"absolute right-0 bottom-0 m-4 flex flex-row"}>
           <ImageUploadIcon />
         </div>
-        {/*<Image*/}
-        {/*  src={ImageUploadIcon}*/}
-        {/*  alt={"Uploaded Ingredient"}*/}
-        {/*  className={*/}
-        {/*    "absolute right-0 bottom-0 z-0 m-4 size-1/8 object-contain"*/}
-        {/*  }*/}
-        {/*/>*/}
+        {previewImage ? (
+          <Image
+            src={previewImage}
+            alt={"Uploaded ingredient preview"}
+            unoptimized
+            width={64}
+            height={64}
+            className={
+              "absolute right-0 bottom-0 z-0 m-4 size-16 object-contain"
+            }
+          />
+        ) : null}
       </label>
 
       {isInProgress ? (

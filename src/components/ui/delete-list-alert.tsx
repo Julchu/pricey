@@ -1,6 +1,6 @@
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 
-export const DeleteList = ({
+export const DeleteListDialog = ({
   title,
   subtitle,
   onDeleteHandler,

@@ -1,7 +1,7 @@
 // tabler: chef - hat - filled;
 import { SVGProps } from "react";
 
-export const ChefFilled = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const ChefFilled = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
