@@ -27,14 +27,14 @@ const listLinks = [
   {
     href: "/recipes",
     title: "Recipes",
-    description: "Meals built from what you already have.",
+    description: "Build meals to pre-fill your shopping lists",
   },
 ] as const;
 
 type NavLink = {
   href: string;
   title: string;
-  description: string;
+  description?: string;
 };
 
 export function LinksNavigationMenu() {
@@ -56,12 +56,14 @@ export function LinksNavigationMenu() {
             Pricey
           </NavigationMenu.Trigger>
 
-          <NavigationMenu.Content className={contentClassName}>
+          <NavigationMenu.Content className={"h-full w-max min-w-40 p-0"}>
             <ul className="m-0 flex list-none flex-col gap-0.5 p-2">
               {links.map((link) => (
                 <li key={link.href}>
                   <Link
-                    className={linkCardClassName}
+                    className={
+                      "group relative block h-full w-full rounded-md p-2 text-left text-inherit no-underline hover:bg-blue-500 hover:text-white focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-500 data-active:bg-blue-500 data-active:text-white"
+                    }
                     href={link.href}
                     active={pathname === link.href}
                     closeOnClick
@@ -92,7 +94,7 @@ export function LinksNavigationMenu() {
             ["--easing" as string]: "cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
-          <NavigationMenu.Popup className="relative h-[var(--popup-height)] w-[var(--popup-width)] origin-[var(--transform-origin)] rounded-md bg-white text-neutral-950 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] transition-[opacity,transform,width,height,scale] duration-[var(--duration)] ease-[var(--easing)] outline-none data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:transition-[opacity,scale] data-ending-style:duration-150 data-ending-style:ease-[ease] data-starting-style:scale-90 data-starting-style:opacity-0">
+          <NavigationMenu.Popup className="relative h-[var(--popup-height)] w-[var(--popup-width)] origin-[var(--transform-origin)] rounded-md bg-white text-neutral-950 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] transition-[scale,opacity] duration-100 ease-out outline-none data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-starting-style:scale-[0.98] data-starting-style:opacity-0">
             <NavigationMenu.Arrow className="relative block h-1.5 w-3 overflow-clip transition-[left,right] duration-[var(--duration)] ease-[var(--easing)] before:absolute before:bottom-0 before:left-1/2 before:h-[calc(6px*sqrt(2))] before:w-[calc(6px*sqrt(2))] before:[transform:translate(-50%,50%)_rotate(45deg)] before:bg-white before:content-[''] data-[side=bottom]:top-[-6px] data-[side=left]:right-[-9px] data-[side=left]:rotate-90 data-[side=right]:left-[-9px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-6px] data-[side=top]:rotate-180" />
             <NavigationMenu.Viewport className="relative h-full w-full overflow-hidden" />
           </NavigationMenu.Popup>
@@ -111,15 +113,3 @@ function Link({ href = "", ...props }: NavigationMenu.Link.Props) {
     />
   );
 }
-
-const sharedContentClassName =
-  "h-full w-[calc(100vw_-_40px)] " +
-  "transition-[opacity,translate] duration-[calc(var(--duration)*0.5),var(--duration)] ease-[ease,cubic-bezier(0.4,0,0.2,1)] " +
-  "data-starting-style:opacity-0 data-ending-style:opacity-0 " +
-  "data-ending-style:duration-[calc(var(--duration)*0.5)] data-ending-style:ease-[ease] " +
-  "data-starting-style:translate-y-2 data-ending-style:-translate-y-2";
-
-const contentClassName = `${sharedContentClassName} p-0 min-[700px]:[width:min(22rem,calc(100vw-40px))]`;
-
-const linkCardClassName =
-  "group relative block h-full w-full rounded-md p-2 text-left text-inherit no-underline hover:bg-blue-500 hover:text-white data-active:bg-blue-500 data-active:text-white focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-500";
