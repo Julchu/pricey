@@ -1,5 +1,5 @@
-import { Hamburger } from "@/components/header/hamburger";
 import { LinksNavigationMenu } from "@/components/header/links-navigation-menu";
+import { Hamburger } from "@/components/header/hamburger";
 
 export const Header = () => {
   return (

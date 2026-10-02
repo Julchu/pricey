@@ -1,11 +1,15 @@
+"use client";
+
 import { Menu } from "@base-ui/react/menu";
 import { UserMenu } from "@/components/header/user-menu";
 import { UserAvatar } from "@/components/header/user-avatar";
-import { UserFormData } from "@/utils/interfaces";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { useUserStore } from "@/providers/user-store-provider";
 
-export const Hamburger = ({ userInfo }: { userInfo?: UserFormData }) => {
+export const Hamburger = () => {
+  const userInfo = useUserStore(({ userInfo }) => userInfo);
   const [firstName, lastName] = userInfo?.name?.split(" ") ?? [];
+
   return (
     <Menu.Root>
       <Menu.Trigger

@@ -37,12 +37,12 @@ type NavLink = {
   description?: string;
 };
 
-export function LinksNavigationMenu() {
+export const LinksNavigationMenu = () => {
   const pathname = usePathname();
   const userInfo = useUserStore(({ userInfo }) => userInfo);
-  const links: readonly NavLink[] = userInfo
-    ? [...browseLinks, ...listLinks]
-    : browseLinks;
+  const links: readonly NavLink[] = (
+    userInfo ? [...browseLinks, ...listLinks] : browseLinks
+  ).filter((link) => link.href !== pathname);
 
   return (
     <NavigationMenu.Root className="text-neutral-950">
@@ -56,21 +56,20 @@ export function LinksNavigationMenu() {
             <ul className="m-0 flex list-none flex-col gap-0.5 p-2">
               {links.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <NavigationMenu.Link
                     className={
-                      "group relative block h-full w-full rounded-md p-2 text-left text-inherit no-underline hover:bg-blue-500 hover:text-white focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-500 data-active:bg-blue-500 data-active:text-white"
+                      "group relative block h-full w-full rounded-md p-2 text-left text-inherit no-underline hover:bg-blue-500 hover:text-white focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-500"
                     }
-                    href={link.href}
-                    active={pathname === link.href}
                     closeOnClick
+                    render={<NextLink href={link.href} />}
                   >
                     <h5 className="m-0 text-sm leading-4 font-medium tracking-widest">
                       {link.title}
                     </h5>
-                    <p className="m-0 text-sm text-neutral-500 group-hover:text-white/80 group-data-active:text-white/80">
+                    <p className="m-0 text-sm text-neutral-500 group-hover:text-white/80">
                       {link.description}
                     </p>
-                  </Link>
+                  </NavigationMenu.Link>
                 </li>
               ))}
             </ul>
@@ -98,14 +97,4 @@ export function LinksNavigationMenu() {
       </NavigationMenu.Portal>
     </NavigationMenu.Root>
   );
-}
-
-function Link({ href = "", ...props }: NavigationMenu.Link.Props) {
-  return (
-    <NavigationMenu.Link
-      href={href}
-      render={<NextLink href={href} />}
-      {...props}
-    />
-  );
-}
+};
